@@ -88,7 +88,33 @@
       border-radius: 999px;
       transition: 0.2s;
     }
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
 
+.nav-menu .nav-link {
+    border: none;
+    padding: 8px 0;
+    font-size: 15px;
+}
+
+.nav-cta {
+    color: var(--navy);
+    font-weight: 700;
+    border: 2px solid var(--navy);
+    padding: 12px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.nav-cta:hover {
+    background: var(--navy);
+    color: white;
+}
     .nav-link:hover {
       background: var(--navy);
       color: var(--white);
@@ -455,12 +481,22 @@
 
   <nav>
     <div class="container nav-inner">
-      <a href="#" class="logo">
-    <img src="juntigo-logo.png" alt="Juntigo">
-</a>
-      <a href="#wyjazdy" class="nav-link">Znajdź wyjazd</a>
+
+        <a href="#" class="logo">
+            <img src="juntigo-logo.png" alt="Juntigo">
+        </a>
+
+        <div class="nav-menu">
+            <a href="#jak-dziala" class="nav-link">Jak to działa?</a>
+            <a href="#wyjazdy" class="nav-link">Pierwsze wyjazdy</a>
+            <a href="#dolacz" class="nav-link">Dodaj wyjazd</a>
+            <a href="https://www.instagram.com/juntigo.pl/" class="nav-link" target="_blank">Instagram</a>
+        </div>
+
+        <a href="#wyjazdy" class="nav-cta">Znajdź wyjazd</a>
+
     </div>
-  </nav>
+</nav>
 
   <header class="hero">
     <div class="container">
