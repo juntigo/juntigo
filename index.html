@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Juntigo — Łączymy podróżników</title>
+  <meta name="description" content="Nie czekaj, aż ktoś pojedzie z Tobą. Znajdź ludzi na city break, wydarzenie kulturalne, rozrywkowe lub sportowe.">
+
+  <style>
+    :root {
+      --navy: #071b33;
+      --navy-light: #0d2948;
+      --orange: #ff7417;
+      --orange-light: #ff8b3d;
+      --cream: #fffaf4;
+      --white: #ffffff;
+      --text: #17283b;
+      --muted: #667587;
+      --border: #e7e1da;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+    }
+
+    /* NAVBAR */
+
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      color: var(--navy);
+    }
+
+    .logo span {
+      color: var(--orange);
+    }
+
+    .nav-link {
+      color: var(--navy);
+      font-weight: 700;
+      border: 2px solid var(--navy);
+      padding: 10px 18px;
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+
+    .nav-link:hover {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    /* HERO */
+
+    .hero {
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,116,23,0.13), transparent 28%),
+        linear-gradient(135deg, #071b33 0%, #0d2948 100%);
+      color: white;
+      padding: 105px 0 115px;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      max-width: 780px;
+    }
+
+    .eyebrow {
+      color: var(--orange-light);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 7vw, 82px);
+      line-height: 0.98;
+      letter-spacing: -4px;
+      margin-bottom: 28px;
+    }
+
+    h1 span {
+      color: var(--orange);
+    }
+
+    .hero-text {
+      max-width: 650px;
+      font-size: 21px;
+      color: #dbe4ee;
+      margin-bottom: 38px;
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      padding: 15px 27px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 16px;
+      transition: 0.2s;
+      border: 2px solid var(--orange);
+    }
+
+    .button:hover {
+      background: var(--orange-light);
+      transform: translateY(-2px);
+    }
+
+    .button-outline {
+      margin-left: 10px;
+      background: transparent;
+      border-color: white;
+    }
+
+    .button-outline:hover {
+      background: white;
+      color: var(--navy);
+    }
+
+    /* SECTIONS */
+
+    section {
+      padding: 85px 0;
+    }
+
+    .section-heading {
+      max-width: 700px;
+      margin-bottom: 45px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(34px, 5vw, 50px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      color: var(--navy);
+      margin-bottom: 14px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    /* CATEGORIES */
+
+    .categories {
+      background: white;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .category {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: 30px 22px;
+      border-radius: 18px;
+      transition: 0.2s;
+    }
+
+    .category:hover {
+      transform: translateY(-4px);
+      border-color: var(--orange);
+    }
+
+    .category-icon {
+      font-size: 32px;
+      margin-bottom: 18px;
+    }
+
+    .category h3 {
+      color: var(--navy);
+      margin-bottom: 7px;
+      font-size: 19px;
+    }
+
+    .category p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* HOW IT WORKS */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .step-number {
+      color: var(--orange);
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 15px;
+    }
+
+    .step h3 {
+      color: var(--navy);
+      margin-bottom: 8px;
+      font-size: 21px;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* TRIPS */
+
+    .trips {
+      background: var(--navy);
+      color: white;
+    }
+
+    .trips .section-heading h2 {
+      color: white;
+    }
+
+    .trips .section-heading p {
+      color: #bac9d9;
+    }
+
+    .trip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .trip {
+      background: white;
+      color: var(--text);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .trip-image {
+      height: 175px;
+      background: linear-gradient(135deg, #dfe8ef, #f8ede2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+    }
+
+    .trip-content {
+      padding: 23px;
+    }
+
+    .trip-tag {
+      color: var(--orange);
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .trip h3 {
+      font-size: 25px;
+      color: var(--navy);
+      margin: 7px 0;
+    }
+
+    .trip p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .trip-button {
+      display: block;
+      text-align: center;
+      border: 2px solid var(--navy);
+      border-radius: 999px;
+      padding: 9px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .trip-button:hover {
+      background: var(--navy);
+      color: white;
+    }
+
+    /* CTA */
+
+    .cta {
+      text-align: center;
+      background: var(--orange);
+      color: white;
+    }
+
+    .cta h2 {
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 18px;
+    }
+
+    .cta p {
+      max-width: 650px;
+      margin: 0 auto 28px;
+      font-size: 18px;
+    }
+
+    .cta .button {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #041426;
+      color: #aebdcd;
+      padding: 35px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    footer .logo {
+      color: white;
+    }
+
+    footer .logo span {
+      color: var(--orange);
+    }
+
+    footer p {
+      font-size: 13px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 800px) {
+      .category-grid,
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .trip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 75px 0 85px;
+      }
+
+      h1 {
+        letter-spacing: -2.5px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .nav-inner {
+        height: 68px;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
+      .nav-link {
+        padding: 8px 13px;
+        font-size: 13px;
+      }
+
+      .hero-text {
+        font-size: 18px;
+      }
+
+      .button {
+        display: block;
+        text-align: center;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .button-outline {
+        margin-left: 0;
+      }
+
+      .category-grid,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 65px 0;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="logo">JUNTI<span>GO</span></a>
+      <a href="#wyjazdy" class="nav-link">Znajdź wyjazd</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-content">
+
+        <div class="eyebrow">Juntigo — łączymy podróżników</div>
+
+        <h1>
+          Nie czekaj,<br>
+          aż ktoś <span>pojedzie z Tobą.</span>
+        </h1>
+
+        <p class="hero-text">
+          Chcesz pojechać na city break, koncert, mecz albo inne wydarzenie,
+          ale nie masz z kim? Znajdź ludzi, którzy chcą przeżyć to samo.
+        </p>
+
+        <a href="#wyjazdy" class="button">
+          Znajdź swój wyjazd
+        </a>
+
+        <a href="#jak-dziala" class="button button-outline">
+          Jak to działa?
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+
+  <section class="categories">
+    <div class="container">
+
+      <div class="section-heading">
+        <h2>Jedź po to, co Cię interesuje.</h2>
+        <p>
+          Juntigo łączy ludzi wokół konkretnych wyjazdów i wydarzeń.
+        </p>
+      </div>
+
+      <div class="category-grid">
+
+        <div class="category">
+          <div class="category-icon">✈️</div>
+          <h3>City breaki</h3>
+          <p>Krótki wyjazd do miasta, które chcesz odkryć.</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">🎭</div>
+          <h3>Kulturalne</h3>
+          <p>Wystawy, teatry, festiwale, opera i wyjątkowe wydarzenia.</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">🎵</div>
+          <h3>Rozrywkowe</h3>
+          <p>Koncerty, festiwale, musicale, stand-up i inne wydarzenia.</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">⚽</div>
+          <h3>Sportowe</h3>
+          <p>Mecze, F1, tenis, koszykówka i największe wydarzenia sportowe.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <section id="jak-dziala">
+    <div class="container">
+
+      <div class="section-heading">
+        <h2>Jak działa Juntigo?</h2>
+        <p>
+          Ty wybierasz kierunek lub wydarzenie. My pomagamy znaleźć ludzi,
+          którzy chcą jechać razem z Tobą.
+        </p>
+      </div>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-number">01</div>
+          <h3>Wybierz</h3>
+          <p>Znajdź wyjazd lub wydarzenie, które Cię interesuje.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">02</div>
+          <h3>Zgłoś się</h3>
+          <p>Powiedz nam, że chcesz jechać.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">03</div>
+          <h3>Poznaj ekipę</h3>
+          <p>Połączymy Cię z osobami zainteresowanymi tym samym wyjazdem.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">04</div>
+          <h3>Jedź</h3>
+          <p>Tworzycie ekipę i ruszacie w drogę.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <section class="trips" id="wyjazdy">
+    <div class="container">
+
+      <div class="section-heading">
+        <h2>Pierwsze wyjazdy Juntigo</h2>
+        <p>
+          Dopiero zaczynamy. Wybierz to, na co chcesz pojechać,
+          a sprawdzimy, kto jeszcze chce dołączyć.
+        </p>
+      </div>
+
+      <div class="trip-grid">
+
+        <div class="trip">
+          <div class="trip-image">🇪🇸</div>
+          <div class="trip-content">
+            <div class="trip-tag">City break</div>
+            <h3>Barcelona</h3>
+            <p>
+              Chcesz polecieć do Barcelony, ale nie masz z kim?
+              Zgłoś zainteresowanie.
+            </p>
+            <a href="#dolacz" class="trip-button">Chcę jechać</a>
+          </div>
+        </div>
+
+        <div class="trip">
+          <div class="trip-image">⚽</div>
+          <div class="trip-content">
+            <div class="trip-tag">Sport</div>
+            <h3>Mecz</h3>
+            <p>
+              Chcesz pojechać na ważny mecz i szukasz ludzi,
+              którzy też chcą tam być?
+            </p>
+            <a href="#dolacz" class="trip-button">Chcę jechać</a>
+          </div>
+        </div>
+
+        <div class="trip">
+          <div class="trip-image">🎵</div>
+          <div class="trip-content">
+            <div class="trip-tag">Rozrywka</div>
+            <h3>Koncert</h3>
+            <p>
+              Znajdź ludzi, którzy chcą przeżyć ten sam koncert
+              co Ty.
+            </p>
+            <a href="#dolacz" class="trip-button">Chcę jechać</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <section class="cta" id="dolacz">
+    <div class="container">
+
+      <h2>Masz kierunek?<br>Znajdziemy ludzi.</h2>
+
+      <p>
+        Juntigo dopiero startuje. Zostaw nam informację,
+        na jaki wyjazd lub wydarzenie chcesz pojechać.
+      </p>
+
+      <a href="https://www.instagram.com/juntigo.pl/" class="button">
+        Obserwuj Juntigo na Instagramie
+      </a>
+
+    </div>
+  </section>
+
+
+  <footer>
+    <div class="container footer-inner">
+
+      <div class="logo">
+        JUNTI<span>GO</span>
+      </div>
+
+      <p>
+        © 2026 Juntigo. Łączymy podróżników.
+      </p>
+
+    </div>
+  </footer>
+
+</body>
+</html>
