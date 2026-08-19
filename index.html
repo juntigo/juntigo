@@ -153,7 +153,16 @@
     .hero-content {
       max-width: 780px;
     }
+.hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: nowrap;
+}
 
+.hero-buttons .button {
+    white-space: nowrap;
+}
     .eyebrow {
       color: var(--orange-light);
       font-size: 14px;
@@ -533,16 +542,21 @@
   Juntigo łączy Cię z ludźmi, którzy chcą jechać w to samo miejsce.
 </p>
 
-        <a href="https://forms.gle/L2dQYNYDJvpgMgH39" class="button" target="_blank">
-  Znajdź swój wyjazd
-</a>
+       <div class="hero-buttons">
 
-        <a href="#jak-dziala" class="button button-outline">
-          Jak to działa?
-        </a>
-<a href="https://www.instagram.com/juntigo.pl/" class="button button-outline" target="_blank">
-    Instagram Juntigo
-</a>
+    <a href="https://forms.gle/L2dQYNYDJvpgMgH39" class="button" target="_blank">
+        Znajdź swój wyjazd
+    </a>
+
+    <a href="#jak-dziala" class="button button-outline">
+        Jak to działa?
+    </a>
+
+    <a href="https://www.instagram.com/juntigo.pl/" class="button button-outline" target="_blank">
+        Instagram Juntigo
+    </a>
+
+</div>
       </div>
       <div class="hero-image">
     <img src="juntigo-hero.jpg" alt="Juntigo - wspólna podróż">
