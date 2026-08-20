@@ -1384,13 +1384,12 @@ function escapeHtml(value) {
   })
   .then(response => response.json())
   .then(data => {
-    if (data.success) {
-      window.open(
+   if (data.success) {
+    window.location.href =
         "https://www.instagram.com/" +
         encodeURIComponent(String(toInstagram).replace("@", "").trim()) +
-        "/",
-        "_blank"
-      );
+        "/";
+}
     } else {
       alert("Nie udało się zapisać zainteresowania.");
       console.error(data.error);
