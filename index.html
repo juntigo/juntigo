@@ -992,7 +992,7 @@
         <button
           class="trip-team"
           type="button"
-          onclick="showTeam('City break - Mediolan')">
+          onclick="showTeam('City break - Mediolan', this)">
           Zobacz ekipę
         </button>
 
@@ -1032,7 +1032,7 @@
         <button
           class="trip-team"
           type="button"
-          onclick="showTeam('Wydarzenie - Oktoberfest')">
+          onclick="showTeam('Wydarzenie - Oktoberfest', this)">
           Zobacz ekipę
         </button>
 
@@ -1072,7 +1072,7 @@
         <button
           class="trip-team"
           type="button"
-          onclick="showTeam('Sport - Mecz Malaga CF - Espanyol')">
+          onclick="showTeam('Sport - Mecz Malaga CF - Espanyol', this)">
           Zobacz ekipę
         </button>
 
@@ -1129,25 +1129,104 @@
 <script>
 const JUNTIGO_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
 
-function showTeam(trip) {
+function showTeam(trip, button) {
+  const card = button.closest(".trip");
+  let results = card.querySelector(".team-results");
+
+  if (results) {
+    results.remove();
+    return;
+  }
+
+  results = document.createElement("div");
+  results.className = "team-results";
+  results.innerHTML = "<div class='team-loading'>Szukamy ekipy...</div>";
+
+  const content = card.querySelector(".trip-content");
+  content.appendChild(results);
+
   const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
 
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log("Ekipa Juntigo:", data);
 
       if (!data.success) {
-        alert("Nie udało się pobrać ekipy.");
+        results.innerHTML = `
+          <div class="team-empty">
+            Nie udało się pobrać danych.
+          </div>
+        `;
         return;
       }
 
-      alert("Znaleziono osób: " + data.count);
+      if (!data.people || data.people.length === 0) {
+        results.innerHTML = `
+          <div class="team-empty">
+            <strong>Na razie nikogo tu nie ma.</strong>
+            <span>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</span>
+          </div>
+        `;
+        return;
+      }
+
+      results.innerHTML = `
+        <div class="team-heading">
+          <strong>Ekipa na wyjazd</strong>
+          <span>${data.count} ${data.count === 1 ? "osoba" : "osoby"}</span>
+        </div>
+
+        ${data.people.map(person => `
+          <div class="person-card">
+
+            <h4>${escapeHtml(person.name)}</h4>
+
+            <div class="person-meta">
+              ${person.age ? person.age + " lat" : ""}
+              ${person.city ? " · " + escapeHtml(person.city) : ""}
+            </div>
+
+            ${person.instagram ? `
+              <div class="person-instagram">
+                ${escapeHtml(person.instagram)}
+              </div>
+            ` : ""}
+
+            ${person.interests ? `
+              <div class="person-interests">
+                ${escapeHtml(person.interests)}
+              </div>
+            ` : ""}
+
+            ${person.about ? `
+              <p class="person-about">
+                „${escapeHtml(person.about)}”
+              </p>
+            ` : ""}
+
+          </div>
+        `).join("")}
+      `;
     })
     .catch(error => {
       console.error(error);
-      alert("Wystąpił błąd podczas pobierania ekipy.");
+
+      results.innerHTML = `
+        <div class="team-empty">
+          Wystąpił błąd podczas pobierania ekipy.
+        </div>
+      `;
     });
+}
+
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 </script>
 </body>
