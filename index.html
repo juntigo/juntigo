@@ -464,11 +464,21 @@
     margin-bottom: 20px;
 }
 
- .trip-button {
+ .trip-actions {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.trip-button {
     display: block;
-    width: auto;
+    width: 100%;
     margin: 0;
-    padding: 14px 20px;
+    padding: 13px 20px;
     background: white;
     color: var(--navy);
     border: 2px solid var(--navy);
@@ -477,11 +487,44 @@
     font-weight: 800;
     text-decoration: none;
     transition: all 0.25s ease;
+    box-sizing: border-box;
+}
 
-    position: absolute;
-    left: 28px;
-    right: 28px;
-    bottom: 28px;
+.trip-button:hover {
+    background: var(--navy);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(7, 27, 51, 0.16);
+}
+
+.trip-team {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    background: var(--navy);
+    color: white;
+    border: 2px solid var(--navy);
+    border-radius: 999px;
+    text-align: center;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+}
+
+.trip-team:hover {
+    background: white;
+    color: var(--navy);
+    transform: translateY(-3px);
+}
+
+.trip-count {
+    margin-top: auto;
+    margin-bottom: 14px;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .trip-button:hover {
@@ -918,11 +961,44 @@
         Jesień 2026. Termin dopasujemy do osób zainteresowanych.
         Moda, włoska kuchnia, aperitivo i klimat Mediolanu.
       </p>
-      <a href="https://forms.gle/L2dQYNYDJvpgMgH39"
-         class="trip-button"
-         target="_blank">
-        Dołącz do wyjazdu
-      </a>
+     <div class="trip-actions">
+
+  <button
+    class="trip-team"
+    type="button"
+    onclick="showTeam('City break - Mediolan')">
+    Zobacz ekipę
+  </button>
+
+  <div class="trip-actions">
+
+  <button
+    class="trip-team"
+    type="button"
+    onclick="showTeam('Wydarzenie - Oktoberfest')">
+    Zobacz ekipę
+  </button>
+
+  <div class="trip-actions">
+
+  <button
+    class="trip-team"
+    type="button"
+    onclick="showTeam('Sport - Mecz Malaga CF - Espanyol')">
+    Zobacz ekipę
+  </button>
+
+  <a href="https://forms.gle/L2dQYNYDJvpgMgH39"
+     class="trip-button"
+     target="_blank">
+    Dołącz do wyjazdu
+  </a>
+
+</div>
+
+</div>
+
+</div>
     </div>
   </div>
 
