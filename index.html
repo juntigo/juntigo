@@ -1317,13 +1317,14 @@ function showTeam(trip, button) {
   </a>
 
   <a
-    class="person-contact"
-    href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Napisz na Instagramie
-  </a>
+  class="person-contact"
+  href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
+  target="_blank"
+  rel="noopener noreferrer"
+  onclick="saveInterest('${escapeHtml(trip)}', '${escapeHtml(person.instagram)}', '${escapeHtml(person.name)}')"
+>
+  Napisz na Instagramie
+</a>
 ` : ""}
 
             ${person.interests ? `
@@ -1361,6 +1362,36 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+  function saveInterest(trip, toInstagram, toName) {
+  const fromInstagram = prompt("Podaj swój Instagram:");
+
+  if (!fromInstagram) {
+    return;
+  }
+
+  const formData = new URLSearchParams();
+
+  formData.append("trip", trip);
+  formData.append("fromInstagram", fromInstagram);
+  formData.append("toInstagram", toInstagram);
+  formData.append("toName", toName);
+
+  fetch(JUNTIGO_API, {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log("Zainteresowanie zapisane:", data);
+    } else {
+      console.error("Błąd:", data.error);
+    }
+  })
+  .catch(error => {
+    console.error("Błąd zapisu zainteresowania:", error);
+  });
+}
 }
 </script>
 </body>
