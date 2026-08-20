@@ -606,10 +606,33 @@
 }
 
 .person-instagram {
+  display: block;
   color: var(--navy);
   font-size: 14px;
   font-weight: 800;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  text-decoration: none;
+}
+
+.person-instagram:hover {
+  text-decoration: underline;
+}
+
+.person-contact {
+  display: inline-block;
+  padding: 9px 14px;
+  background: var(--navy);
+  color: white;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.person-contact:hover {
+  background: var(--orange);
+  transform: translateY(-2px);
 }
 
 .person-interests {
@@ -1283,11 +1306,25 @@ function showTeam(trip, button) {
               ${person.city ? " · " + escapeHtml(person.city) : ""}
             </div>
 
-            ${person.instagram ? `
-              <div class="person-instagram">
-                ${escapeHtml(person.instagram)}
-              </div>
-            ` : ""}
+           ${person.instagram ? `
+  <a
+    class="person-instagram"
+    href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    ${escapeHtml(person.instagram)}
+  </a>
+
+  <a
+    class="person-contact"
+    href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Napisz na Instagramie
+  </a>
+` : ""}
 
             ${person.interests ? `
               <div class="person-interests">
