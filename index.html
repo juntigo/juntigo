@@ -330,27 +330,38 @@
       gap: 20px;
     }
 
-    .trip {
-      background: white;
-      color: var(--text);
-      border-radius: 20px;
-      overflow: hidden;
-    }
+   .trip {
+  background: white;
+  color: var(--text);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(7, 27, 51, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trip:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(7, 27, 51, 0.18);
+}
 
     .trip-image {
-      height: 175px;
-      background: linear-gradient(135deg, #dfe8ef, #f8ede2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 52px;
-    }
+  height: 220px;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
 .trip-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s ease;
 }
+
+.trip:hover .trip-image img {
+  transform: scale(1.05);
+}
+
     .trip-content {
       padding: 23px;
     }
