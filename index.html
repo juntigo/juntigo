@@ -1401,29 +1401,7 @@ function escapeHtml(value) {
     alert("Wystąpił błąd podczas zapisywania zainteresowania.");
   });
 }
-  const formData = new URLSearchParams();
-
-  formData.append("trip", trip);
-  formData.append("fromInstagram", fromInstagram);
-  formData.append("toInstagram", toInstagram);
-  formData.append("toName", toName);
-
-  fetch(JUNTIGO_API, {
-    method: "POST",
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      console.log("Zainteresowanie zapisane:", data);
-    } else {
-      console.error("Błąd:", data.error);
-    }
-  })
-  .catch(error => {
-    console.error("Błąd zapisu zainteresowania:", error);
-  });
-}
+  
 </script>
 </body>
 </html>
