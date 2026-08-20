@@ -1127,8 +1127,27 @@
     </div>
   </footer>
 <script>
+const JUNTIGO_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
+
 function showTeam(trip) {
-  alert("Sprawdzam ekipę na wyjazd: " + trip);
+  const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      console.log("Ekipa Juntigo:", data);
+
+      if (!data.success) {
+        alert("Nie udało się pobrać ekipy.");
+        return;
+      }
+
+      alert("Znaleziono osób: " + data.count);
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Wystąpił błąd podczas pobierania ekipy.");
+    });
 }
 </script>
 </body>
