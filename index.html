@@ -285,24 +285,39 @@
 
     /* HOW IT WORKS */
 
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
+   .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+.step {
+    background: white;
+    border: 1px solid #e6e9ee;
+    border-radius: 20px;
+    padding: 28px;
+    min-height: 190px;
+    box-shadow: 0 10px 30px rgba(7, 27, 51, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
-    .step-number {
-      color: var(--orange);
-      font-size: 14px;
-      font-weight: 900;
-      margin-bottom: 15px;
-    }
+.step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 35px rgba(7, 27, 51, 0.12);
+}
+   .step-number {
+    color: var(--orange);
+    font-size: 14px;
+    font-weight: 900;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
 
     .step h3 {
-      color: var(--navy);
-      margin-bottom: 8px;
-      font-size: 21px;
-    }
+    color: var(--navy);
+    margin-bottom: 10px;
+    font-size: 22px;
+    line-height: 1.2;
+}
 
     .step p {
       color: var(--muted);
