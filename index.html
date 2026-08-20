@@ -80,14 +80,19 @@
     object-fit: contain;
     display: block;
 }
-    .nav-link {
-      color: var(--navy);
-      font-weight: 700;
-      border: 2px solid var(--navy);
-      padding: 10px 18px;
-      border-radius: 999px;
-      transition: 0.2s;
-    }
+   .nav-link {
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 999px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--orange);
+  background: rgba(255, 107, 26, 0.08);
+}
 .nav-menu {
     display: flex;
     align-items: center;
@@ -101,24 +106,29 @@
 }
 
 .nav-cta {
-    color: var(--navy);
-    font-weight: 700;
-    border: 2px solid var(--navy);
-    padding: 12px 22px;
-    border-radius: 999px;
-    text-decoration: none;
-    font-size: 15px;
-    white-space: nowrap;
+  color: var(--navy);
+  font-weight: 700;
+  border: 2px solid var(--navy);
+  padding: 12px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 15px;
+  white-space: nowrap;
+  background: white;
+  transition: all 0.25s ease;
 }
 
 .nav-cta:hover {
-    background: var(--navy);
-    color: white;
+  background: var(--navy);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(7, 27, 51, 0.14);
 }
-    .nav-link:hover {
-      background: var(--navy);
-      color: var(--white);
-    }
+
+.nav-link:hover {
+  color: var(--orange);
+  background: rgba(255, 107, 26, 0.08);
+}
 
     /* HERO */
 
@@ -144,11 +154,16 @@
 }
 
 .hero-image img {
-    width: 100%;
-    height: 520px;
-    object-fit: cover;
-    border-radius: 24px;
-    display: block;
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  border-radius: 24px;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.03);
 }
     .hero-content {
       max-width: 780px;
@@ -161,7 +176,18 @@
 }
 
 .hero-buttons .button {
-    white-space: nowrap;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.hero-buttons .button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(7, 27, 51, 0.16);
+}
+    .hero-buttons .button-outline:hover {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
 }
     .eyebrow {
       color: var(--orange-light);
@@ -254,18 +280,19 @@
       gap: 18px;
     }
 
-    .category {
-      background: var(--cream);
-      border: 1px solid var(--border);
-      padding: 30px 22px;
-      border-radius: 18px;
-      transition: 0.2s;
-    }
+   .category {
+  background: #fffaf5;
+  border: 1px solid #e6e0d8;
+  border-radius: 18px;
+  padding: 28px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
 
-    .category:hover {
-      transform: translateY(-4px);
-      border-color: var(--orange);
-    }
+.category:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(7, 27, 51, 0.10);
+  border-color: var(--orange);
+}
 
     .category-icon {
       font-size: 32px;
@@ -476,10 +503,20 @@
     line-height: 1.6;
 }
 
-    .cta .button {
-      background: var(--navy);
-      border-color: var(--navy);
-    }
+   .cta .button {
+  background: var(--navy);
+  border: 2px solid var(--navy);
+  color: white;
+  transition: all 0.25s ease;
+}
+
+.cta .button:hover {
+  background: white;
+  color: var(--navy);
+  border-color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(7, 27, 51, 0.18);
+}
 
     /* FOOTER */
 
@@ -665,10 +702,15 @@
   }
 
   .hero-image img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-  }
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.03);
+}
 
   /* SEKCJE */
 
