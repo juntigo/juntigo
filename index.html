@@ -1116,12 +1116,12 @@
           Zobacz ekipę
         </button>
 
-        <a
-          href="https://forms.gle/L2dQYNYDJvpgMgH39"
-          class="trip-button"
-          target="_blank">
-          Dołącz do wyjazdu
-        </a>
+       <button
+    type="button"
+    class="trip-button"
+    onclick="openJoinForm('City break - Mediolan')">
+    Dołącz do wyjazdu
+</button>
 
       </div>
 
@@ -1353,7 +1353,120 @@ function showTeam(trip, button) {
     });
 }
 
+function openJoinForm(trip) {
+    const existingModal = document.getElementById("join-modal");
 
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement("div");
+    modal.id = "join-modal";
+
+    modal.innerHTML = `
+        <div class="join-overlay">
+            <div class="join-modal-box">
+
+                <button type="button" class="join-close" onclick="closeJoinForm()">
+                    ×
+                </button>
+
+                <div class="join-modal-tag">
+                    JUNTIGO
+                </div>
+
+                <h2>Dołącz do wyjazdu</h2>
+
+                <p class="join-trip-name">${escapeHtml(trip)}</p>
+
+                <p class="join-description">
+                    Zostaw swoje dane, a znajdziemy osoby zainteresowane tym samym wyjazdem.
+                </p>
+
+                <form id="join-form">
+
+                    <label>
+                        Imię / pseudonim
+                        <input
+                            type="text"
+                            id="join-name"
+                            placeholder="Np. Jan"
+                            required>
+                    </label>
+
+                    <label>
+                        Instagram
+                        <input
+                            type="text"
+                            id="join-instagram"
+                            placeholder="@twojinstagram"
+                            required>
+                    </label>
+
+                    <label>
+                        E-mail
+                        <input
+                            type="email"
+                            id="join-email"
+                            placeholder="twoj@email.com"
+                            required>
+                    </label>
+
+                    <label>
+                        Wiek
+                        <input
+                            type="number"
+                            id="join-age"
+                            placeholder="Np. 25"
+                            min="18"
+                            max="99"
+                            required>
+                    </label>
+
+                    <label>
+                        Miasto
+                        <input
+                            type="text"
+                            id="join-city"
+                            placeholder="Np. Toruń"
+                            required>
+                    </label>
+
+                    <label>
+                        Kilka słów o Tobie
+                        <textarea
+                            id="join-about"
+                            placeholder="Napisz kilka słów o sobie..."
+                            rows="4"></textarea>
+                    </label>
+
+                    <button type="submit" class="join-submit">
+                        Zgłoś zainteresowanie
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("join-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        alert("Formularz działa. Następnym krokiem będzie zapis danych.");
+    });
+}
+
+
+function closeJoinForm() {
+    const modal = document.getElementById("join-modal");
+
+    if (modal) {
+        modal.remove();
+    }
+}
 function escapeHtml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
