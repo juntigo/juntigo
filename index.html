@@ -496,7 +496,161 @@
     transform: translateY(-3px);
     box-shadow: 0 8px 18px rgba(7, 27, 51, 0.16);
 }
+/* JOIN FORM MODAL */
 
+#join-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
+
+.join-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(7, 27, 51, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.join-modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    background: white;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+}
+
+.join-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: #f1f3f5;
+    color: var(--navy);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.join-close:hover {
+    background: var(--navy);
+    color: white;
+}
+
+.join-modal-tag {
+    color: var(--orange);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.join-modal-box h2 {
+    margin: 0 0 8px;
+    color: var(--navy);
+    font-size: 32px;
+}
+
+.join-trip-name {
+    margin: 0 0 10px;
+    color: var(--orange);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.join-description {
+    margin: 0 0 28px;
+    color: #61708a;
+    line-height: 1.6;
+}
+
+#join-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#join-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#join-form input,
+#join-form textarea {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #d7dce3;
+    border-radius: 10px;
+    background: #f8f9fb;
+    color: var(--navy);
+    font-family: inherit;
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#join-form input:focus,
+#join-form textarea:focus {
+    border-color: var(--orange);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.12);
+}
+
+#join-form textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+.join-submit {
+    width: 100%;
+    margin-top: 6px;
+    padding: 15px 20px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--navy);
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.join-submit:hover {
+    background: var(--orange);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .join-overlay {
+        padding: 12px;
+    }
+
+    .join-modal-box {
+        max-height: calc(100vh - 24px);
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+
+    .join-modal-box h2 {
+        font-size: 26px;
+    }
+}
 .trip-team {
     display: block;
     width: 100%;
