@@ -1606,11 +1606,41 @@ function openJoinForm(trip) {
 
     document.body.appendChild(modal);
 
-    document.getElementById("join-form").addEventListener("submit", function(event) {
-        event.preventDefault();
+   document.getElementById("join-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-        alert("Formularz działa. Następnym krokiem będzie zapis danych.");
-    });
+    const formData = new URLSearchParams();
+
+    formData.append("type", "join");
+    formData.append("trip", trip);
+    formData.append("name", document.getElementById("join-name").value.trim());
+    formData.append("instagram", document.getElementById("join-instagram").value.trim());
+    formData.append("email", document.getElementById("join-email").value.trim());
+    formData.append("age", document.getElementById("join-age").value.trim());
+    formData.append("city", document.getElementById("join-city").value.trim());
+    formData.append("about", document.getElementById("join-about").value.trim());
+
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Zgłoszenie zostało zapisane. Skontaktujemy się z Tobą, gdy znajdziemy ekipę.");
+            closeJoinForm();
+        } else {
+            alert("Nie udało się wysłać zgłoszenia.");
+            console.error(data.error);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Wystąpił błąd podczas wysyłania zgłoszenia.");
+    }
+});
 }
 
 
