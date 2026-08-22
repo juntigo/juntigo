@@ -1537,68 +1537,108 @@ function openJoinForm(trip) {
                     Zostaw swoje dane, a znajdziemy osoby zainteresowane tym samym wyjazdem.
                 </p>
 
-                <form id="join-form">
+               <form id="join-form">
 
-                    <label>
-                        Imię / pseudonim
-                        <input
-                            type="text"
-                            id="join-name"
-                            placeholder="Np. Jan"
-                            required>
-                    </label>
+    <div class="join-form-intro">
+        <p class="join-form-note">
+            Podaj kilka informacji o sobie. Dzięki nim łatwiej znajdziemy osoby,
+            z którymi możesz dobrze spędzić wyjazd.
+        </p>
+    </div>
 
-                    <label>
-                        Instagram
-                        <input
-                            type="text"
-                            id="join-instagram"
-                            placeholder="@twojinstagram"
-                            required>
-                    </label>
+    <div class="join-form-section">
+        <div class="join-form-section-title">Twoje dane</div>
 
-                    <label>
-                        E-mail
-                        <input
-                            type="email"
-                            id="join-email"
-                            placeholder="twoj@email.com"
-                            required>
-                    </label>
+        <label>
+            Imię lub pseudonim
+            <input
+                type="text"
+                id="join-name"
+                placeholder="Np. Jan"
+                required
+            >
+        </label>
 
-                    <label>
-                        Wiek
-                        <input
-                            type="number"
-                            id="join-age"
-                            placeholder="Np. 25"
-                            min="18"
-                            max="99"
-                            required>
-                    </label>
+        <label>
+            Instagram
+            <input
+                type="text"
+                id="join-instagram"
+                placeholder="@twojinstagram"
+                required
+            >
+            <span class="join-field-hint">
+                Dzięki Instagramowi łatwiej będzie się poznać przed wyjazdem.
+            </span>
+        </label>
 
-                    <label>
-                        Miasto
-                        <input
-                            type="text"
-                            id="join-city"
-                            placeholder="Np. Toruń"
-                            required>
-                    </label>
+        <label>
+            E-mail
+            <input
+                type="email"
+                id="join-email"
+                placeholder="twoj@email.com"
+                required
+            >
+        </label>
+    </div>
 
-                    <label>
-                        Kilka słów o Tobie
-                        <textarea
-                            id="join-about"
-                            placeholder="Napisz kilka słów o sobie..."
-                            rows="4"></textarea>
-                    </label>
+    <div class="join-form-section">
+        <div class="join-form-section-title">Kilka informacji o Tobie</div>
 
-                    <button type="submit" class="join-submit">
-                        Zgłoś zainteresowanie
-                    </button>
+        <div class="join-form-row">
 
-                </form>
+            <label>
+                Wiek
+                <input
+                    type="number"
+                    id="join-age"
+                    placeholder="Np. 25"
+                    min="18"
+                    max="99"
+                    required
+                >
+            </label>
+
+            <label>
+                Miasto
+                <input
+                    type="text"
+                    id="join-city"
+                    placeholder="Np. Toruń"
+                    required
+                >
+            </label>
+
+        </div>
+
+        <label>
+            Kilka słów o Tobie
+            <textarea
+                id="join-about"
+                placeholder="Np. Lubię zwiedzać, poznawać nowych ludzi i próbować lokalnej kuchni..."
+                rows="4"
+            ></textarea>
+            <span class="join-field-hint">
+                Napisz coś, co może pomóc innym osobom Cię poznać.
+            </span>
+        </label>
+    </div>
+
+    <div class="join-form-info">
+        <strong>Jak to działa?</strong>
+        <p>
+            Zapiszemy Twoje zgłoszenie i będziemy szukać osób zainteresowanych
+            tym samym wyjazdem. Jeśli znajdziemy odpowiednią ekipę,
+            skontaktujemy się z Tobą.
+        </p>
+    </div>
+
+    <button type="submit" class="join-submit">
+        Zgłoś zainteresowanie
+    </button>
+
+</form>
 
             </div>
         </div>
