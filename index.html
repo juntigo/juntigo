@@ -1640,7 +1640,7 @@ function showTeam(trip, button) {
   
   onclick="saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.instagram)}', '${escapeHtml(person.name)}')"
 >
-  Napisz na Instagramie
+Jestem zainteresowany
 </a>
 ` : ""}
 
@@ -1881,43 +1881,39 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
   }
-  function saveInterest(event, trip, toInstagram, toName) {
-  event.preventDefault();
+ function saveInterest(event, trip, toInstagram, toName) {
+    event.preventDefault();
 
-  const fromInstagram = prompt("Podaj swój Instagram:");
+    const fromInstagram = prompt("Podaj swój Instagram:");
 
-  if (!fromInstagram) {
-    return;
-  }
-
-  const formData = new URLSearchParams();
-
-  formData.append("trip", trip);
-  formData.append("fromInstagram", fromInstagram);
-  formData.append("toInstagram", toInstagram);
-  formData.append("toName", toName);
-
-  fetch(JUNTIGO_API, {
-    method: "POST",
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-   if (data.success) {
-    window.location.href =
-        "https://www.instagram.com/" +
-        encodeURIComponent(String(toInstagram).replace("@", "").trim()) +
-        "/";
-}
-    else {
-      alert("Nie udało się zapisać zainteresowania.");
-      console.error(data.error);
+    if (!fromInstagram) {
+        return;
     }
-  })
-  .catch(error => {
-    console.error(error);
-    alert("Wystąpił błąd podczas zapisywania zainteresowania.");
-  });
+
+    const formData = new URLSearchParams();
+
+    formData.append("trip", trip);
+    formData.append("fromInstagram", fromInstagram);
+    formData.append("toInstagram", toInstagram);
+    formData.append("toName", toName);
+
+    fetch(JUNTIGO_API, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Zainteresowanie zostało zapisane.");
+        } else {
+            alert("Nie udało się zapisać zainteresowania.");
+            console.error(data.error);
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        alert("Wystąpił błąd podczas zapisywania zainteresowania.");
+    });
 }
   
 </script>
