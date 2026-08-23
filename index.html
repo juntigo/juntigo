@@ -1851,8 +1851,7 @@ formData.append(
         const data = await response.json();
 
         if (data.success) {
-            alert("Zgłoszenie zostało zapisane. Skontaktujemy się z Tobą, gdy znajdziemy ekipę.");
-            closeJoinForm();
+            
         } else {
             alert("Nie udało się wysłać zgłoszenia.");
             console.error(data.error);
@@ -1865,7 +1864,51 @@ formData.append(
 });
 }
 
+function showJoinSuccess(trip) {
+    const modal = document.getElementById("join-modal");
 
+    if (!modal) {
+        return;
+    }
+
+    const box = modal.querySelector(".join-modal-box");
+
+    if (!box) {
+        return;
+    }
+
+    box.innerHTML = `
+        <button type="button" class="join-close" onclick="closeJoinForm()">
+            ×
+        </button>
+
+        <div class="join-modal-tag">
+            JUNTIGO
+        </div>
+
+        <div class="join-success">
+            <h2>Zgłoszenie wysłane</h2>
+
+            <p class="join-trip-name">
+                ${escapeHtml(trip)}
+            </p>
+
+            <p>
+                Twoje zgłoszenie zostało zapisane.
+                Jeśli znajdziemy osoby zainteresowane tym samym wyjazdem,
+                będziemy mogli Cię z nimi połączyć.
+            </p>
+
+            <button
+                type="button"
+                class="join-submit"
+                onclick="closeJoinForm()"
+            >
+                Gotowe
+            </button>
+        </div>
+    `;
+}
 function closeJoinForm() {
     const modal = document.getElementById("join-modal");
 
