@@ -1905,22 +1905,37 @@ function escapeHtml(value) {
     .then(data => {
        if (data.success) {
 
-    if (data.match === true) {
-        const goToInstagram = confirm(
-            "Mamy match!\n\n" +
-            "Ty i " + toName + " jesteście zainteresowani sobą nawzajem.\n\n" +
-            "Czy chcesz przejść na Instagram?"
-        );
+   if (data.alreadyMatched === true) {
 
-        if (goToInstagram) {
-            window.location.href =
-                "https://www.instagram.com/" +
-                encodeURIComponent(
-                    String(toInstagram).replace("@", "").trim()
-                ) +
-                "/";
-        }
+    alert(
+        "Już macie match!\n\n" +
+        "Ty i " + toName + " jesteście już połączeni."
+    );
 
+} else if (data.match === true) {
+
+    const goToInstagram = confirm(
+        "Mamy match!\n\n" +
+        "Ty i " + toName + " jesteście zainteresowani sobą nawzajem.\n\n" +
+        "Czy chcesz przejść na Instagram?"
+    );
+
+    if (goToInstagram) {
+        window.location.href =
+            "https://www.instagram.com/" +
+            encodeURIComponent(
+                String(toInstagram).replace("@", "").trim()
+            ) +
+            "/";
+    }
+
+} else {
+
+    alert(
+        "Zainteresowanie zostało zapisane.\n\n" +
+        "Jeśli druga osoba również będzie zainteresowana Tobą, pojawi się match."
+    );
+}
     } else {
         alert(
             "Zainteresowanie zostało zapisane.\n\n" +
