@@ -1838,7 +1838,10 @@ function openJoinForm(trip) {
     formData.append("age", document.getElementById("join-age").value.trim());
     formData.append("city", document.getElementById("join-city").value.trim());
     formData.append("about", document.getElementById("join-about").value.trim());
-
+formData.append(
+    "showProfile",
+    document.getElementById("join-show-profile").checked ? "Tak" : "Nie"
+);
     try {
         const response = await fetch(JUNTIGO_API, {
             method: "POST",
