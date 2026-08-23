@@ -1850,12 +1850,13 @@ formData.append(
 
         const data = await response.json();
 
-        if (data.success) {
-            
-        } else {
-            alert("Nie udało się wysłać zgłoszenia.");
-            console.error(data.error);
-        }
+       if (data.success) {
+    alert("Zgłoszenie zostało zapisane. Skontaktujemy się z Tobą, gdy znajdziemy ekipę.");
+    closeJoinForm();
+} else {
+    alert("Nie udało się wysłać zgłoszenia.");
+    console.error(data.error);
+}
 
     } catch (error) {
         console.error(error);
