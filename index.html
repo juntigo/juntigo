@@ -2087,7 +2087,7 @@ function escapeHtml(value) {
   }
  function saveInterest(event, trip, toInstagram, toName) {
     event.preventDefault();
-
+const interestButton = event.currentTarget;
     const fromInstagram = prompt("Podaj swój Instagram:");
 
     if (!fromInstagram) {
@@ -2144,11 +2144,9 @@ function escapeHtml(value) {
     }
 
 } else {
-
-    alert(
-        "Zainteresowanie zostało zapisane.\n\n" +
-        "Jeśli druga osoba również będzie zainteresowana Tobą, pojawi się match."
-    );
+    interestButton.textContent = "Zainteresowanie wysłane";
+    interestButton.classList.add("interest-sent");
+    interestButton.style.pointerEvents = "none";
 }
    
 
