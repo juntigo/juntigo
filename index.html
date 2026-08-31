@@ -1800,15 +1800,26 @@ function showTeam(trip, button) {
     ${escapeHtml(person.instagram)}
   </a>
 
-  <a
-  class="person-contact"
-  data-trip="${escapeHtml(trip)}"
-data-instagram="${escapeHtml(person.instagram)}"
-  
-  onclick="saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.instagram)}', '${escapeHtml(person.name)}')"
->
-Jestem zainteresowany
-</a>
+ ${(() => {
+    const interestKey =
+        "juntigoInterest_" +
+        String(trip).trim() + "_" +
+        String(localStorage.getItem("juntigoUserInstagram") || "").trim().replace("@", "").toLowerCase() + "_" +
+        String(person.instagram || "").trim().replace("@", "").toLowerCase();
+
+    const interestSent = localStorage.getItem(interestKey) === "sent";
+
+    return `
+        <a
+            class="person-contact${interestSent ? " interest-sent" : ""}"
+            data-trip="${escapeHtml(trip)}"
+            data-instagram="${escapeHtml(person.instagram)}"
+            onclick="${interestSent ? "return false;" : `saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.instagram)}', '${escapeHtml(person.name)}')`}"
+        >
+            ${interestSent ? "Zainteresowanie wysłane" : "Jestem zainteresowany"}
+        </a>
+    `;
+})()}
 ` : ""}
 
             ${person.interests ? `
@@ -2101,7 +2112,10 @@ function escapeHtml(value) {
     if (!fromInstagram) {
         return;
     }
-
+localStorage.setItem(
+    "juntigoUserInstagram",
+    fromInstagram.trim().replace("@", "").toLowerCase()
+);
     const formData = new URLSearchParams();
 
     formData.append("trip", trip);
@@ -2116,7 +2130,13 @@ function escapeHtml(value) {
     .then(response => response.json())
     .then(data => {
        if (data.success) {
-
+localStorage.setItem(
+    "juntigoInterest_" +
+    trip.trim() + "_" +
+    fromInstagram.trim().replace("@", "").toLowerCase() + "_" +
+    toInstagram.trim().replace("@", "").toLowerCase(),
+    "sent"
+);
   if (data.alreadyMatched === true) {
 
     const modal = document.getElementById("juntigoMatchModal");
