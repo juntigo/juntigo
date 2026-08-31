@@ -1252,24 +1252,40 @@
 }
     /* ===== JUNTIGO MATCH MODAL ===== */
 
-.juntigo-match-overlay {
+.juntigo-match-modal {
     position: fixed;
     inset: 0;
-    background: rgba(15, 35, 60, 0.65);
+    z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 99999;
     padding: 20px;
+
     opacity: 0;
-    transition: opacity 0.2s ease;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.juntigo-match-overlay.show {
+.juntigo-match-modal.active {
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
-.juntigo-match-modal {
+.juntigo-match-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 35, 60, 0.65);
+}
+
+.juntigo-match-modal > div:not(.juntigo-match-overlay) {
+    position: relative;
+    z-index: 1;
+}
+
+.juntigo-match-modal > div:not(.juntigo-match-overlay) {
     width: 100%;
     max-width: 430px;
     background: #ffffff;
@@ -1281,7 +1297,7 @@
     transition: transform 0.2s ease;
 }
 
-.juntigo-match-overlay.show .juntigo-match-modal {
+.juntigo-match-modal.active > div:not(.juntigo-match-overlay) {
     transform: translateY(0) scale(1);
 }
 
@@ -2133,7 +2149,7 @@ function goToJuntigoInstagram() {
 
   <div class="juntigo-match-box">
     
-    <button type="button" class="juntigo-match-close" onclick="closeJuntigoMatchModal()">
+    <button type="button" class="juntigo-match-close" onclick="document.getElementById('juntigoMatchModal').classList.remove('active')"
       ×
     </button>
 
@@ -2152,7 +2168,7 @@ function goToJuntigoInstagram() {
     </p>
 
     <div class="juntigo-match-actions">
-      <button type="button" class="juntigo-match-secondary" onclick="closeJuntigoMatchModal()">
+      <button type="button" class="juntigo-match-secondary" onclick="document.getElementById('juntigoMatchModal').classList.remove('active')"
         Później
       </button>
 
