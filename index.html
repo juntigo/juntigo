@@ -2047,19 +2047,19 @@ function escapeHtml(value) {
 
   if (data.alreadyMatched === true) {
 
-    const goToInstagram = confirm(
-        "Już macie match!\n\n" +
-        "Ty i " + toName + " jesteście już połączeni.\n\n" +
-        "Czy chcesz przejść na Instagram?"
-    );
+    const modal = document.getElementById("juntigoMatchModal");
+    const message = document.getElementById("juntigoMatchMessage");
 
-    if (goToInstagram) {
-        window.location.href =
-            "https://www.instagram.com/" +
-            encodeURIComponent(
-                String(toInstagram).replace("@", "").trim()
-            ) +
-            "/";
+    if (message) {
+        message.textContent =
+            "Ty i " + toName + " jesteście już połączeni.";
+    }
+
+    if (modal) {
+        modal.classList.add("active");
+        modal.dataset.instagram = String(toInstagram || "")
+            .replace("@", "")
+            .trim();
     }
 
 } else if (data.match === true) {
