@@ -1802,7 +1802,8 @@ function showTeam(trip, button) {
 
   <a
   class="person-contact"
-  
+  data-trip="${escapeHtml(trip)}"
+data-instagram="${escapeHtml(person.instagram)}"
   
   onclick="saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.instagram)}', '${escapeHtml(person.name)}')"
 >
@@ -2093,7 +2094,8 @@ function escapeHtml(value) {
   }
  function saveInterest(event, trip, toInstagram, toName) {
     event.preventDefault();
-const interestButton = event.currentTarget;
+   const contactButton = event.currentTarget;
+
     const fromInstagram = prompt("Podaj swój Instagram:");
 
     if (!fromInstagram) {
@@ -2150,9 +2152,10 @@ const interestButton = event.currentTarget;
     }
 
 } else {
-    interestButton.textContent = "Zainteresowanie wysłane";
-    interestButton.classList.add("interest-sent");
-    interestButton.style.pointerEvents = "none";
+    contactButton.textContent = "Zainteresowanie wysłane";
+    contactButton.classList.add("interest-sent");
+    contactButton.removeAttribute("onclick");
+    contactButton.style.pointerEvents = "none";
 }
    
 
