@@ -1949,12 +1949,22 @@ function escapeHtml(value) {
     .then(data => {
        if (data.success) {
 
-   if (data.alreadyMatched === true) {
+  if (data.alreadyMatched === true) {
 
-    alert(
+    const goToInstagram = confirm(
         "Już macie match!\n\n" +
-        "Ty i " + toName + " jesteście już połączeni."
+        "Ty i " + toName + " jesteście już połączeni.\n\n" +
+        "Czy chcesz przejść na Instagram?"
     );
+
+    if (goToInstagram) {
+        window.location.href =
+            "https://www.instagram.com/" +
+            encodeURIComponent(
+                String(toInstagram).replace("@", "").trim()
+            ) +
+            "/";
+    }
 
 } else if (data.match === true) {
 
