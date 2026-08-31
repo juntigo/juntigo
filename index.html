@@ -2149,9 +2149,9 @@ function goToJuntigoInstagram() {
 
   <div class="juntigo-match-box">
     
-    <button type="button" class="juntigo-match-close" onclick="document.getElementById('juntigoMatchModal').classList.remove('active')"
-      ×
-    </button>
+    <button type="button" class="juntigo-match-close" onclick="closeJuntigoMatchModal()" aria-label="Zamknij">
+    ×
+</button>
 
     <div class="juntigo-match-icon">
       ♥
@@ -2168,9 +2168,9 @@ function goToJuntigoInstagram() {
     </p>
 
     <div class="juntigo-match-actions">
-      <button type="button" class="juntigo-match-secondary" onclick="document.getElementById('juntigoMatchModal').classList.remove('active')"
-        Później
-      </button>
+      <button type="button" class="juntigo-match-secondary" onclick="closeJuntigoMatchModal()">
+    Później
+</button>
 
       <button type="button" class="juntigo-match-primary" onclick="goToJuntigoInstagram()">
         Przejdź na Instagram
