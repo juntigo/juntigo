@@ -1250,6 +1250,102 @@
         min-height: 52px;
     }
 }
+    /* ===== JUNTIGO MATCH MODAL ===== */
+
+.juntigo-match-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 35, 60, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.juntigo-match-overlay.show {
+    opacity: 1;
+}
+
+.juntigo-match-modal {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+    transform: translateY(15px) scale(0.98);
+    transition: transform 0.2s ease;
+}
+
+.juntigo-match-overlay.show .juntigo-match-modal {
+    transform: translateY(0) scale(1);
+}
+
+.juntigo-match-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: #fff1e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.juntigo-match-modal h3 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    color: #102a43;
+}
+
+.juntigo-match-modal p {
+    margin: 0 0 26px;
+    color: #52677d;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.juntigo-match-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.juntigo-match-buttons button {
+    flex: 1;
+    min-height: 48px;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.juntigo-match-instagram {
+    border: none;
+    background: #ff6b00;
+    color: #ffffff;
+}
+
+.juntigo-match-instagram:hover {
+    background: #e85f00;
+    transform: translateY(-1px);
+}
+
+.juntigo-match-close {
+    border: 1px solid #d9e1e8;
+    background: #ffffff;
+    color: #52677d;
+}
+
+.juntigo-match-close:hover {
+    background: #f5f7f9;
+}
   </style>
 </head>
 
@@ -1968,19 +2064,19 @@ function escapeHtml(value) {
 
 } else if (data.match === true) {
 
-    const goToInstagram = confirm(
-        "Mamy match!\n\n" +
-        "Ty i " + toName + " jesteście zainteresowani sobą nawzajem.\n\n" +
-        "Czy chcesz przejść na Instagram?"
-    );
+    const modal = document.getElementById("juntigoMatchModal");
+    const message = document.getElementById("juntigoMatchMessage");
 
-    if (goToInstagram) {
-        window.location.href =
-            "https://www.instagram.com/" +
-            encodeURIComponent(
-                String(toInstagram).replace("@", "").trim()
-            ) +
-            "/";
+    if (message) {
+        message.textContent =
+            "Ty i " + toName + " jesteście zainteresowani sobą nawzajem.";
+    }
+
+    if (modal) {
+        modal.classList.add("active");
+        modal.dataset.instagram = String(toInstagram || "")
+            .replace("@", "")
+            .trim();
     }
 
 } else {
@@ -2004,5 +2100,41 @@ function escapeHtml(value) {
 }
   
 </script>
+  <!-- ===== JUNTIGO MATCH MODAL ===== -->
+<div id="juntigoMatchModal" class="juntigo-match-modal">
+  <div class="juntigo-match-overlay"></div>
+
+  <div class="juntigo-match-box">
+    
+    <button type="button" class="juntigo-match-close" onclick="closeJuntigoMatchModal()">
+      ×
+    </button>
+
+    <div class="juntigo-match-icon">
+      ♥
+    </div>
+
+    <h2>Macie match!</h2>
+
+    <p id="juntigoMatchMessage">
+      Ty i ta osoba jesteście zainteresowani sobą nawzajem.
+    </p>
+
+    <p class="juntigo-match-question">
+      Czy chcesz przejść na Instagram?
+    </p>
+
+    <div class="juntigo-match-actions">
+      <button type="button" class="juntigo-match-secondary" onclick="closeJuntigoMatchModal()">
+        Później
+      </button>
+
+      <button type="button" class="juntigo-match-primary" onclick="goToJuntigoInstagram()">
+        Przejdź na Instagram
+      </button>
+    </div>
+
+  </div>
+</div>
 </body>
 </html>
