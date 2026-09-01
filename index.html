@@ -473,7 +473,14 @@
     flex-direction: column;
     gap: 10px;
 }
+.trip-content:has(.team-results) {
+    padding-bottom: 28px;
+}
 
+.trip-content:has(.team-results) .trip-actions {
+    position: static;
+    margin-top: 20px;
+}
 .trip-button {
     display: block;
     width: 100%;
