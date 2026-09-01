@@ -2300,6 +2300,60 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
   }
   let juntigoPendingInterest = null;
+  function openJuntigoInstagramModal() {
+    const modal = document.getElementById("juntigoInstagramModal");
+    const input = document.getElementById("juntigoInstagramInput");
+
+    if (!modal) return;
+
+    modal.classList.add("active");
+
+    if (input) {
+        input.value = "";
+        setTimeout(() => input.focus(), 100);
+    }
+}
+
+function closeJuntigoInstagramModal() {
+    const modal = document.getElementById("juntigoInstagramModal");
+
+    if (!modal) return;
+
+    modal.classList.remove("active");
+    juntigoPendingInterest = null;
+}
+
+function submitJuntigoInstagram() {
+    if (!juntigoPendingInterest) return;
+
+    const input = document.getElementById("juntigoInstagramInput");
+
+    if (!input) return;
+
+    const fromInstagram = input.value.trim();
+
+    if (!fromInstagram) {
+        input.focus();
+        return;
+    }
+
+    localStorage.setItem(
+        "juntigoUserInstagram",
+        fromInstagram.replace("@", "").toLowerCase()
+    );
+
+    const pending = juntigoPendingInterest;
+
+    closeJuntigoInstagramModal();
+
+    saveInterest(
+        null,
+        pending.trip,
+        pending.toInstagram,
+        pending.toName,
+        fromInstagram
+    );
+}
   function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
     if (event) {
         event.preventDefault();
