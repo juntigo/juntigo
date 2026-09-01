@@ -2350,17 +2350,19 @@ function submitJuntigoInstagram() {
 
     const modal = document.getElementById("juntigoInstagramModal");
 
-    if (modal) {
-        modal.classList.remove("active");
-    }
+   saveInterest(
+    null,
+    pending.trip,
+    pending.toInstagram,
+    pending.toName,
+    fromInstagram
+);
 
-    saveInterest(
-        null,
-        pending.trip,
-        pending.toInstagram,
-        pending.toName,
-        fromInstagram
-    );
+const modal = document.getElementById("juntigoInstagramModal");
+
+if (modal) {
+    modal.classList.remove("active");
+}
 }
 
 
