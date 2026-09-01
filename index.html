@@ -2344,7 +2344,10 @@ function submitJuntigoInstagram() {
 
     const pending = juntigoPendingInterest;
 
-    closeJuntigoInstagramModal();
+const modal = document.getElementById("juntigoInstagramModal");
+if (modal) {
+    modal.classList.remove("active");
+}
 
     saveInterest(
         null,
