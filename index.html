@@ -2363,13 +2363,21 @@ if (modal) {
     modal.classList.remove("active");
 }
 
-    saveInterest(
-        null,
-        pending.trip,
-        pending.toInstagram,
-        pending.toName,
-        fromInstagram
-    );
+   alert(
+    "Przekazuję do saveInterest:\n" +
+    "trip: " + pending.trip + "\n" +
+    "Instagram osoby: " + pending.toInstagram + "\n" +
+    "nazwa: " + pending.toName + "\n" +
+    "Twój Instagram: " + fromInstagram
+);
+
+saveInterest(
+    null,
+    pending.trip,
+    pending.toInstagram,
+    pending.toName,
+    fromInstagram
+);
 }
   function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
     if (event) {
