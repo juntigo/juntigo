@@ -2003,7 +2003,7 @@ function showTeam(trip, button) {
         String(localStorage.getItem("juntigoUserInstagram") || "").trim().replace("@", "").toLowerCase() + "_" +
         String(person.instagram || "").trim().replace("@", "").toLowerCase();
 
-    const interestSent = localStorage.getItem(interestKey) === "sent";
+    const interestSent = false;
 
     return `
         <a
