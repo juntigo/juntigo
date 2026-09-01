@@ -2375,13 +2375,11 @@ function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
         (juntigoPendingInterest && juntigoPendingInterest.contactButton);
 
     const fromInstagram = String(
-        instagramOverride ||
-        localStorage.getItem("juntigoUserInstagram") ||
-        ""
-    )
-        .trim()
-        .replace("@", "")
-        .toLowerCase();
+    instagramOverride || ""
+)
+.trim()
+.replace("@", "")
+.toLowerCase();
 
     if (!fromInstagram) {
         juntigoPendingInterest = {
