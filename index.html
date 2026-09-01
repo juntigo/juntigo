@@ -1013,6 +1013,23 @@
   .nav-menu {
     display: none;
   }
+  .nav-menu {
+    display: none;
+}
+
+.nav-menu.mobile-open {
+    display: flex;
+    position: absolute;
+    top: 76px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 20px 22px;
+    gap: 8px;
+    box-shadow: 0 10px 25px rgba(7, 27, 51, 0.12);
+    z-index: 1000;
+}
 .mobile-menu-toggle {
     display: block;
     background: none;
@@ -1953,7 +1970,13 @@
   </footer>
 <script>
 const JUNTIGO_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
+function toggleMobileMenu() {
+    const menu = document.querySelector(".nav-menu");
 
+    if (!menu) return;
+
+    menu.classList.toggle("mobile-open");
+}
 function showTeam(trip, button) {
   const card = button.closest(".trip");
   let results = card.querySelector(".team-results");
