@@ -2454,7 +2454,12 @@ function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
                     "Ty i " + toName +
                     " jesteście zainteresowani sobą nawzajem.";
             }
-
+if (contactButton) {
+    contactButton.textContent = "Zainteresowanie wysłane";
+    contactButton.classList.add("interest-sent");
+    contactButton.removeAttribute("onclick");
+    contactButton.style.pointerEvents = "none";
+}
             if (modal) {
                 modal.classList.add("active");
 
