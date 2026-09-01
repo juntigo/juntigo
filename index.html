@@ -2346,10 +2346,15 @@ alert("Pole Instagram znalezione");
         return;
     }
 alert("Instagram został odczytany: " + fromInstagram);
+    try {
     localStorage.setItem(
         "juntigoUserInstagram",
         fromInstagram.replace("@", "").toLowerCase()
     );
+} catch (error) {
+    alert("Błąd localStorage: " + error.message);
+    return;
+}
 
     const pending = juntigoPendingInterest;
 
