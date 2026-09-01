@@ -2348,9 +2348,13 @@ function submitJuntigoInstagram() {
         fromInstagram.replace("@", "").trim().toLowerCase()
     );
 
-    const modal = document.getElementById("juntigoInstagramModal");
+   const modal = document.getElementById("juntigoInstagramModal");
 
-   saveInterest(
+if (modal) {
+    modal.classList.remove("active");
+}
+
+saveInterest(
     null,
     pending.trip,
     pending.toInstagram,
