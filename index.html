@@ -970,7 +970,9 @@
       }
     }
     /* ===== MOBILE ===== */
-
+.mobile-menu-toggle {
+    display: none;
+}
 @media (max-width: 600px) {
 
   * {
@@ -1011,7 +1013,16 @@
   .nav-menu {
     display: none;
   }
-
+.mobile-menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--navy);
+    cursor: pointer;
+    padding: 6px;
+}
   .nav-cta {
     padding: 10px 16px;
     font-size: 14px;
@@ -1642,7 +1653,9 @@
             <a href="#dolacz" class="nav-link">Dodaj wyjazd</a>
             <a href="https://www.instagram.com/juntigo.pl/" class="nav-link" target="_blank">Instagram</a>
         </div>
-
+<button class="mobile-menu-toggle" type="button" onclick="toggleMobileMenu()" aria-label="Otwórz menu">
+    ☰
+</button>
         <a href="#wyjazdy" class="nav-cta">Znajdź wyjazd</a>
 
     </div>
