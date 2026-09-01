@@ -2332,7 +2332,12 @@ function submitJuntigoInstagram() {
 alert("Dane zainteresowania są dostępne");
     const input = document.getElementById("juntigoInstagramInput");
 
-    if (!input) return;
+    if (!input) {
+    alert("Nie znaleziono pola Instagram");
+    return;
+}
+
+alert("Pole Instagram znalezione");
 
     const fromInstagram = input.value.trim();
 
