@@ -2324,20 +2324,15 @@ function closeJuntigoInstagramModal() {
 }
 
 function submitJuntigoInstagram() {
-  
     if (!juntigoPendingInterest) {
-    alert("Brak danych zainteresowania. Odśwież stronę i spróbuj ponownie.");
-    return;
-}
-alert("Dane zainteresowania są dostępne");
+        return;
+    }
+
     const input = document.getElementById("juntigoInstagramInput");
 
     if (!input) {
-    alert("Nie znaleziono pola Instagram");
-    return;
-}
-
-alert("Pole Instagram znalezione");
+        return;
+    }
 
     const fromInstagram = input.value.trim();
 
@@ -2345,41 +2340,31 @@ alert("Pole Instagram znalezione");
         input.focus();
         return;
     }
-alert("Instagram został odczytany: " + fromInstagram);
-    try {
-    localStorage.setItem(
-        "juntigoUserInstagram",
-        fromInstagram.replace("@", "").toLowerCase()
-    );
-} catch (error) {
-    alert("Błąd localStorage: " + error.message);
-    return;
-}
-alert("Instagram zapisany. Przechodzę do zapisu zainteresowania.");
+
     const pending = juntigoPendingInterest;
 
-const modal = document.getElementById("juntigoInstagramModal");
-if (modal) {
-    modal.classList.remove("active");
+    localStorage.setItem(
+        "juntigoUserInstagram",
+        fromInstagram.replace("@", "").trim().toLowerCase()
+    );
+
+    const modal = document.getElementById("juntigoInstagramModal");
+
+    if (modal) {
+        modal.classList.remove("active");
+    }
+
+    saveInterest(
+        null,
+        pending.trip,
+        pending.toInstagram,
+        pending.toName,
+        fromInstagram
+    );
 }
 
-   alert(
-    "Przekazuję do saveInterest:\n" +
-    "trip: " + pending.trip + "\n" +
-    "Instagram osoby: " + pending.toInstagram + "\n" +
-    "nazwa: " + pending.toName + "\n" +
-    "Twój Instagram: " + fromInstagram
-);
 
-saveInterest(
-    null,
-    pending.trip,
-    pending.toInstagram,
-    pending.toName,
-    fromInstagram
-);
-}
-  function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
+function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
     if (event) {
         event.preventDefault();
     }
@@ -2388,7 +2373,14 @@ saveInterest(
         (event && event.currentTarget) ||
         (juntigoPendingInterest && juntigoPendingInterest.contactButton);
 
-    const fromInstagram = instagramOverride || "";
+    const fromInstagram = String(
+        instagramOverride ||
+        localStorage.getItem("juntigoUserInstagram") ||
+        ""
+    )
+        .trim()
+        .replace("@", "")
+        .toLowerCase();
 
     if (!fromInstagram) {
         juntigoPendingInterest = {
@@ -2402,90 +2394,91 @@ saveInterest(
         return;
     }
 
-    if (!fromInstagram) {
-        return;
-    }
-localStorage.setItem(
-    "juntigoUserInstagram",
-    fromInstagram.trim().replace("@", "").toLowerCase()
-);
     const formData = new URLSearchParams();
 
-    formData.append("trip", trip);
+    formData.append("trip", String(trip || "").trim());
     formData.append("fromInstagram", fromInstagram);
-    formData.append("toInstagram", toInstagram);
-    formData.append("toName", toName);
+    formData.append("toInstagram", String(toInstagram || "").trim());
+    formData.append("toName", String(toName || "").trim());
 
     fetch(JUNTIGO_API, {
         method: "POST",
         body: formData
     })
-    .then(response => {
-    alert("API odpowiedziało. Status: " + response.status);
-    return response.json();
-})
+    .then(response => response.json())
     .then(data => {
-       if (data.success) {
-localStorage.setItem(
-    "juntigoInterest_" +
-    trip.trim() + "_" +
-    fromInstagram.trim().replace("@", "").toLowerCase() + "_" +
-    toInstagram.trim().replace("@", "").toLowerCase(),
-    "sent"
-);
-  if (data.alreadyMatched === true) {
 
-    const modal = document.getElementById("juntigoMatchModal");
-    const message = document.getElementById("juntigoMatchMessage");
+        if (!data.success) {
+            console.error("JUNTIGO API:", data.error);
+            return;
+        }
 
-    if (message) {
-        message.textContent =
-            "Ty i " + toName + " jesteście już połączeni.";
-    }
+        const interestKey =
+            "juntigoInterest_" +
+            String(trip || "").trim() + "_" +
+            fromInstagram + "_" +
+            String(toInstagram || "")
+                .trim()
+                .replace("@", "")
+                .toLowerCase();
 
-    if (modal) {
-        modal.classList.add("active");
-        modal.dataset.instagram = String(toInstagram || "")
-            .replace("@", "")
-            .trim();
-    }
+        localStorage.setItem(interestKey, "sent");
 
-} else if (data.match === true) {
+        if (data.alreadyMatched === true) {
 
-    const modal = document.getElementById("juntigoMatchModal");
-    const message = document.getElementById("juntigoMatchMessage");
+            const modal = document.getElementById("juntigoMatchModal");
+            const message = document.getElementById("juntigoMatchMessage");
 
-    if (message) {
-        message.textContent =
-            "Ty i " + toName + " jesteście zainteresowani sobą nawzajem.";
-    }
+            if (message) {
+                message.textContent =
+                    "Ty i " + toName + " jesteście już połączeni.";
+            }
 
-    if (modal) {
-        modal.classList.add("active");
-        modal.dataset.instagram = String(toInstagram || "")
-            .replace("@", "")
-            .trim();
-    }
+            if (modal) {
+                modal.classList.add("active");
 
-} else {
-    contactButton.textContent = "Zainteresowanie wysłane";
-    contactButton.classList.add("interest-sent");
-    contactButton.removeAttribute("onclick");
-    contactButton.style.pointerEvents = "none";
-}
-   
+                modal.dataset.instagram =
+                    String(toInstagram || "")
+                        .replace("@", "")
+                        .trim();
+            }
 
-} else {
-    alert("Nie udało się zapisać zainteresowania.");
-    console.error(data.error);
-}
+        } else if (data.match === true) {
+
+            const modal = document.getElementById("juntigoMatchModal");
+            const message = document.getElementById("juntigoMatchMessage");
+
+            if (message) {
+                message.textContent =
+                    "Ty i " + toName +
+                    " jesteście zainteresowani sobą nawzajem.";
+            }
+
+            if (modal) {
+                modal.classList.add("active");
+
+                modal.dataset.instagram =
+                    String(toInstagram || "")
+                        .replace("@", "")
+                        .trim();
+            }
+
+        } else {
+
+            if (contactButton) {
+                contactButton.textContent = "Zainteresowanie wysłane";
+                contactButton.classList.add("interest-sent");
+                contactButton.removeAttribute("onclick");
+                contactButton.style.pointerEvents = "none";
+            }
+        }
+
+        juntigoPendingInterest = null;
     })
     .catch(error => {
-        console.error(error);
-        alert("Wystąpił błąd podczas zapisywania zainteresowania.");
+        console.error("Błąd JUNTIGO:", error);
     });
 }
-  function closeJuntigoMatchModal() {
     const modal = document.getElementById("juntigoMatchModal");
 
     if (modal) {
