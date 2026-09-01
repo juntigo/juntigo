@@ -993,34 +993,39 @@
   /* NAVIGACJA */
 .nav-inner {
     position: relative;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
     height: 76px;
+    width: 100%;
     padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .logo {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .mobile-menu-toggle {
-    grid-column: 1;
-    grid-row: 1;
-    justify-self: start;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 44px;
     height: 44px;
     margin: 0;
 }
 
 .nav-cta {
-    grid-column: 3;
-    grid-row: 1;
-    justify-self: end;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     padding: 9px 14px;
     font-size: 13px;
+    white-space: nowrap;
 }
   nav {
     width: 100%;
@@ -1053,7 +1058,7 @@
     top: 76px;
     left: 0;
     bottom: 0;
-    width: min(320px, 82vw);
+    width: min(360px, 86vw);
     background: white;
     flex-direction: column;
     align-items: stretch;
@@ -2047,6 +2052,15 @@ function toggleMobileMenu() {
 
     menu.classList.toggle("mobile-open");
 }
+  document.querySelectorAll('.nav-menu .nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        const menu = document.querySelector('.nav-menu');
+
+        if (menu) {
+            menu.classList.remove('mobile-open');
+        }
+    });
+});
 function showTeam(trip, button) {
   const card = button.closest(".trip");
   let results = card.querySelector(".team-results");
