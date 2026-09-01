@@ -2324,7 +2324,10 @@ function closeJuntigoInstagramModal() {
 }
 
 function submitJuntigoInstagram() {
-    if (!juntigoPendingInterest) return;
+    if (!juntigoPendingInterest) {
+    alert("Brak danych zainteresowania. Odśwież stronę i spróbuj ponownie.");
+    return;
+}
 
     const input = document.getElementById("juntigoInstagramInput");
 
