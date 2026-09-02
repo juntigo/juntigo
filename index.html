@@ -323,10 +323,27 @@
 }
     /* HOW IT WORKS */
 
-   .steps {
+  .steps {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
+    position: relative;
+}
+
+.steps::before {
+    content: "";
+    position: absolute;
+    top: 50px;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: #e6e9ee;
+    z-index: 0;
+}
+
+.step {
+    position: relative;
+    z-index: 1;
 }
 .step {
     background: white;
