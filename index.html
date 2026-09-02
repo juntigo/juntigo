@@ -1729,6 +1729,31 @@
     box-shadow: 0 8px 20px rgba(255, 107, 0, 0.22);
 }
 
+.join-submit:disabled {
+    cursor: wait;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+}
+
+.join-status {
+    display: none;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.join-status.is-visible {
+    display: block;
+}
+
+.join-status--error {
+    border: 1px solid #f3c2c2;
+    background: #fff1f1;
+    color: #9f1d1d;
+}
+
 .join-submit:active {
     transform: translateY(0);
 }
@@ -2886,6 +2911,8 @@ function openJoinForm(trip) {
         </p>
     </div>
 
+    <div id="join-status" class="join-status" role="alert" aria-live="polite"></div>
+
     <button type="submit" class="join-submit">
         Zgłoś zainteresowanie
     </button>
@@ -2901,6 +2928,9 @@ function openJoinForm(trip) {
    document.getElementById("join-form").addEventListener("submit", async function(event) {
     event.preventDefault();
 
+    const form = event.currentTarget;
+    const submitButton = form.querySelector(".join-submit");
+    const status = form.querySelector("#join-status");
     const formData = new URLSearchParams();
 
     formData.append("type", "join");
@@ -2915,6 +2945,10 @@ formData.append(
     "showProfile",
     document.getElementById("join-show-profile").checked ? "Tak" : "Nie"
 );
+    status.textContent = "";
+    status.className = "join-status";
+    submitButton.disabled = true;
+    submitButton.textContent = "Wysyłamy...";
     try {
         const response = await fetch(JUNTIGO_API, {
             method: "POST",
@@ -2924,16 +2958,21 @@ formData.append(
         const data = await response.json();
 
        if (data.success) {
-    alert("Zgłoszenie zostało zapisane. Skontaktujemy się z Tobą, gdy znajdziemy ekipę.");
-    closeJoinForm();
+    showJoinSuccess(trip);
 } else {
-    alert("Nie udało się wysłać zgłoszenia.");
     console.error(data.error);
+    status.textContent = "Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.";
+    status.className = "join-status join-status--error is-visible";
+    submitButton.disabled = false;
+    submitButton.textContent = "Zgłoś zainteresowanie";
 }
 
     } catch (error) {
         console.error(error);
-        alert("Wystąpił błąd podczas wysyłania zgłoszenia.");
+        status.textContent = "Wystąpił błąd podczas wysyłania zgłoszenia. Spróbuj ponownie za chwilę.";
+        status.className = "join-status join-status--error is-visible";
+        submitButton.disabled = false;
+        submitButton.textContent = "Zgłoś zainteresowanie";
     }
 });
 }
