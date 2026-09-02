@@ -340,7 +340,11 @@
     background: #e6e9ee;
     z-index: 0;
 }
-
+@media (max-width: 600px) {
+    .steps::before {
+        display: none;
+    }
+}
 .step {
     position: relative;
     z-index: 1;
