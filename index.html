@@ -502,14 +502,6 @@
     flex-direction: column;
     gap: 10px;
 }
-.trip-content:has(.team-results) {
-    padding-bottom: 28px;
-}
-
-.trip-content:has(.team-results) .trip-actions {
-    position: static;
-    margin-top: 20px;
-}
 .trip-button {
     display: block;
     width: 100%;
@@ -750,10 +742,90 @@
 }
 /* EKIPA WYJAZDU */
 
+#team-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.team-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 27, 51, 0.72);
+}
+
+.team-modal-box {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 860px;
+  max-height: calc(100vh - 48px);
+  background: white;
+  border-radius: 24px;
+  padding: 34px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.team-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #f1f3f5;
+  color: var(--navy);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.team-modal-close:hover {
+  background: var(--navy);
+  color: white;
+}
+
+.team-modal-tag {
+  color: var(--orange);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.team-modal-box h2 {
+  margin: 0 0 6px;
+  color: var(--navy);
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.team-modal-trip-name {
+  margin: 0 0 22px;
+  color: var(--orange);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.team-modal-content {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 .team-results {
-  margin-top: 22px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e9ef;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .team-heading {
@@ -761,7 +833,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   color: var(--navy);
 }
 
@@ -776,9 +848,19 @@
   font-weight: 700;
 }
 
+.team-results > .team-heading {
+  display: none;
+}
+
+.team-results:has(.person-card) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
 .person-card {
   padding: 18px;
-  margin-bottom: 12px;
+  margin: 0;
   background: #f7f9fc;
   border: 1px solid #e4e9ef;
   border-radius: 18px;
@@ -850,6 +932,7 @@
 }
 
 .team-empty {
+  grid-column: 1 / -1;
   padding: 18px;
   background: #f7f9fc;
   border: 1px solid #e4e9ef;
@@ -868,6 +951,40 @@
 
 .team-empty span {
   display: block;
+}
+
+.team-loading {
+  grid-column: 1 / -1;
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  background: #f7f9fc;
+  border: 1px solid #e4e9ef;
+  border-radius: 18px;
+}
+
+@media (max-width: 700px) {
+  #team-modal {
+    padding: 12px;
+  }
+
+  .team-modal-box {
+    max-height: calc(100vh - 24px);
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .team-modal-box h2 {
+    font-size: 26px;
+  }
+
+  .team-results:has(.person-card) {
+    grid-template-columns: 1fr;
+  }
+
+  .team-modal-trip-name {
+    margin-bottom: 18px;
+  }
 }
     /* CTA */
 
@@ -2092,22 +2209,57 @@ function toggleMobileMenu() {
         }
     });
 });
-function showTeam(trip, button) {
-  const card = button.closest(".trip");
-  let results = card.querySelector(".team-results");
+function closeTeamModal() {
+  const modal = document.getElementById("team-modal");
 
-  if (results) {
-    results.remove();
+  if (modal) {
+    modal.remove();
+  }
+
+  document.body.style.overflow = "";
+}
+
+function showTeam(trip, button) {
+  const existingModal = document.getElementById("team-modal");
+
+  if (existingModal) {
+    closeTeamModal();
     return;
   }
 
-  results = document.createElement("div");
-  results.className = "team-results";
-  results.innerHTML = "<div class='team-loading'>Szukamy ekipy...</div>";
+  const modal = document.createElement("div");
+  modal.id = "team-modal";
 
-  const content = card.querySelector(".trip-content");
-  content.appendChild(results);
+  modal.innerHTML = `
+    <div class="team-modal-overlay" onclick="closeTeamModal()"></div>
 
+    <div class="team-modal-box" role="dialog" aria-modal="true" aria-label="Ekipa na wyjazd">
+      <button
+        type="button"
+        class="team-modal-close"
+        onclick="closeTeamModal()"
+        aria-label="Zamknij">
+        ×
+      </button>
+
+      <div class="team-modal-tag">JUNTIGO</div>
+
+      <h2>Ekipa na wyjazd</h2>
+
+      <p class="team-modal-trip-name">${escapeHtml(trip)}</p>
+
+      <div class="team-modal-content">
+        <div class="team-results">
+          <div class="team-loading">Szukamy ekipy...</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.body.style.overflow = "hidden";
+
+  const results = modal.querySelector(".team-results");
   const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
 
   fetch(url)
