@@ -502,6 +502,17 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.trip-interest-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: -8px 0 0;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 800;
+}
+
 .trip-button {
     display: block;
     width: 100%;
@@ -2328,6 +2339,8 @@
         Moda, włoska kuchnia, aperitivo i klimat Mediolanu.
       </p>
 
+      <div class="trip-interest-count" data-trip-interest-count data-trip="City break - Mediolan" hidden aria-live="polite"></div>
+
       <div class="trip-actions">
 
         <button
@@ -2368,6 +2381,8 @@
         Wybierz termin i znajdź ekipę na wspólny wyjazd.
       </p>
 
+      <div class="trip-interest-count" data-trip-interest-count data-trip="Wydarzenie - Oktoberfest" hidden aria-live="polite"></div>
+
       <div class="trip-actions">
 
         <button
@@ -2407,6 +2422,8 @@
         Málaga · 11 października 2026.
         La Rosaleda i wspólne przeżywanie meczu na żywo.
       </p>
+
+      <div class="trip-interest-count" data-trip-interest-count data-trip="Sport - Mecz Malaga CF - Espanyol" hidden aria-live="polite"></div>
 
       <div class="trip-actions">
 
@@ -2469,6 +2486,42 @@
   </footer>
 <script>
 const JUNTIGO_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
+
+function formatTripInterestCount(count) {
+    if (count === 1) {
+        return "1 osoba zainteresowana";
+    }
+
+    if (count >= 2 && count <= 4) {
+        return count + " osoby zainteresowane";
+    }
+
+    return count + " osób zainteresowanych";
+}
+
+function loadTripInterestCounts() {
+    document.querySelectorAll("[data-trip-interest-count]").forEach(element => {
+        const trip = element.dataset.trip;
+        const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const count = Number(data.count);
+
+                if (data.success !== true || !Number.isInteger(count) || count < 0) {
+                    return;
+                }
+
+                element.textContent = "👥 " + formatTripInterestCount(count);
+                element.hidden = false;
+            })
+            .catch(() => {});
+    });
+}
+
+document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
+
 function toggleMobileMenu() {
     const menu = document.querySelector(".nav-menu");
 
