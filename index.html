@@ -2761,7 +2761,7 @@ function showTeam(trip, button) {
         `;
         return;
       }
-
+window.juntigoTeamPeople = data.people;
       results.innerHTML = `
         <div class="team-heading">
           <strong>Ekipa na wyjazd</strong>
@@ -2853,7 +2853,7 @@ ${person.trips ? `
     })
     .catch(error => {
       console.error(error);
-window.juntigoTeamPeople = data.people;
+
       results.innerHTML = `
         <div class="team-empty">
           Wystąpił błąd podczas pobierania ekipy.
