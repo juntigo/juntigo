@@ -2825,10 +2825,10 @@ ${person.trips ? `
                 return `
                 <div class="person-card-actions">
 
-  <button
+ <button
   type="button"
   class="person-profile-button"
-  onclick="showPersonProfile(window.juntigoTeamPeople[${index}])"
+  data-person-index="${index}"
 >
   Zobacz profil
 </button>
@@ -2850,6 +2850,12 @@ ${person.trips ? `
           </div>
         `).join("")}
       `;
+            results.querySelectorAll(".person-profile-button").forEach(button => {
+        button.addEventListener("click", () => {
+          const index = Number(button.dataset.personIndex);
+          showPersonProfile(window.juntigoTeamPeople[index]);
+        });
+      });
     })
     .catch(error => {
       console.error(error);
