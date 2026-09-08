@@ -471,6 +471,8 @@
     </div>
   </main>
 <script>
+  const profileStorageKey = "juntigoProfile";
+
   document.querySelectorAll(".profile-options button").forEach(button => {
     button.addEventListener("click", () => {
       const group = button.closest(".profile-form-group");
@@ -478,7 +480,8 @@
       const isInterests = label && label.textContent.trim() === "Zainteresowania";
 
       if (isInterests && !button.classList.contains("selected")) {
-        const selectedCount = group.querySelectorAll(".profile-options button.selected").length;
+        const selectedCount =
+          group.querySelectorAll(".profile-options button.selected").length;
 
         if (selectedCount >= 6) {
           return;
@@ -488,6 +491,74 @@
       button.classList.toggle("selected");
     });
   });
+
+  document.querySelector(".profile-submit").addEventListener("click", () => {
+    const profile = {
+      name: document.getElementById("profile-name").value.trim(),
+      age: document.getElementById("profile-age").value.trim(),
+      city: document.getElementById("profile-city").value.trim(),
+      instagram: document.getElementById("profile-instagram").value.trim(),
+      about: document.getElementById("profile-about").value.trim(),
+
+      interests: Array.from(
+        document.querySelectorAll(
+          ".profile-form-group:nth-of-type(6) .profile-options button.selected"
+        )
+      ).map(button => button.textContent.trim()),
+
+      travelStyle: Array.from(
+        document.querySelectorAll(
+          ".profile-form-group:nth-of-type(7) .profile-options button.selected"
+        )
+      ).map(button => button.textContent.trim()),
+
+      trips: Array.from(
+        document.querySelectorAll(".profile-trip-option input:checked")
+      ).map(input => input.value)
+    };
+
+    localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+
+    alert("Profil został zapisany.");
+  });
+
+  const savedProfile = localStorage.getItem(profileStorageKey);
+
+  if (savedProfile) {
+    const profile = JSON.parse(savedProfile);
+
+    document.getElementById("profile-name").value = profile.name || "";
+    document.getElementById("profile-age").value = profile.age || "";
+    document.getElementById("profile-city").value = profile.city || "";
+    document.getElementById("profile-instagram").value = profile.instagram || "";
+    document.getElementById("profile-about").value = profile.about || "";
+
+    const interestButtons = document.querySelectorAll(
+      ".profile-form-group:nth-of-type(6) .profile-options button"
+    );
+
+    interestButtons.forEach(button => {
+      if ((profile.interests || []).includes(button.textContent.trim())) {
+        button.classList.add("selected");
+      }
+    });
+
+    const travelButtons = document.querySelectorAll(
+      ".profile-form-group:nth-of-type(7) .profile-options button"
+    );
+
+    travelButtons.forEach(button => {
+      if ((profile.travelStyle || []).includes(button.textContent.trim())) {
+        button.classList.add("selected");
+      }
+    });
+
+    const tripInputs = document.querySelectorAll(".profile-trip-option input");
+
+    tripInputs.forEach(input => {
+      input.checked = (profile.trips || []).includes(input.value);
+    });
+  }
 </script>
 </body>
 </html>
