@@ -2938,9 +2938,11 @@ function showPersonProfile(person) {
             ${person.city ? " · " + escapeHtml(person.city) : ""}
           </div>
 
-          <div class="person-profile-verified">
-            ✓ Profil zweryfikowany
-          </div>
+          ${person.verified ? `
+  <div class="person-profile-verified">
+    ✓ Profil zweryfikowany
+  </div>
+` : ""}
         </div>
 
       </div>
