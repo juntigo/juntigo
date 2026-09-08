@@ -147,7 +147,157 @@
       border-radius: 16px;
       color: var(--muted);
     }
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
+.profile-photo-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-photo-section h2 {
+  color: var(--navy);
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.profile-photo-section p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.profile-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-form-group label {
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.profile-form-group input,
+.profile-form-group textarea {
+  width: 100%;
+  border: 1px solid #d8dde3;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font: inherit;
+  color: var(--text);
+  background: white;
+  outline: none;
+}
+
+.profile-form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.profile-form-group input:focus,
+.profile-form-group textarea:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 116, 23, 0.10);
+}
+
+.profile-form-group small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.profile-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.profile-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-options button {
+  border: 1px solid #d8dde3;
+  background: white;
+  color: var(--navy);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profile-options button:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.profile-trips {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-trip-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #d8dde3;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.profile-trip-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--orange);
+}
+
+.profile-trip-option span {
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.profile-submit {
+  width: 100%;
+  min-height: 54px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--orange);
+  color: white;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-submit:hover {
+  background: var(--navy);
+}
+
+@media (max-width: 600px) {
+  .profile-photo-section {
+    align-items: flex-start;
+  }
+
+  .profile-photo-section h2 {
+    font-size: 24px;
+  }
+
+  .profile-form-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
     @media (max-width: 600px) {
       nav {
         height: 76px;
@@ -206,20 +356,113 @@
 
       <div class="profile-card">
 
-        <div class="profile-placeholder">J</div>
+  <div class="profile-form">
 
-        <h2>Twój profil Juntigo</h2>
+    <div class="profile-photo-section">
+      <div class="profile-placeholder">J</div>
 
-        <div class="profile-status">
-          ✓ Profil zweryfikowany
-        </div>
-
-        <div class="profile-empty">
-          Tutaj będziemy później dodawać Twoje informacje, zainteresowania,
-          styl podróżowania oraz wyjazdy, którymi jesteś zainteresowany.
-        </div>
-
+      <div>
+        <h2>Stwórz swój profil</h2>
+        <p>Dodaj kilka informacji, żeby inni mogli Cię lepiej poznać.</p>
       </div>
+    </div>
+
+    <div class="profile-form-group">
+      <label for="profile-name">Imię lub pseudonim</label>
+      <input type="text" id="profile-name" placeholder="np. Maks">
+    </div>
+
+    <div class="profile-form-row">
+
+      <div class="profile-form-group">
+        <label for="profile-age">Wiek</label>
+        <input type="number" id="profile-age" placeholder="np. 25" min="18" max="100">
+      </div>
+
+      <div class="profile-form-group">
+        <label for="profile-city">Miasto</label>
+        <input type="text" id="profile-city" placeholder="np. Warszawa">
+      </div>
+
+    </div>
+
+    <div class="profile-form-group">
+      <label for="profile-instagram">Instagram</label>
+      <input type="text" id="profile-instagram" placeholder="@twojprofil">
+    </div>
+
+    <div class="profile-form-group">
+      <label for="profile-about">O mnie</label>
+      <textarea
+        id="profile-about"
+        maxlength="300"
+        placeholder="Napisz kilka zdań o sobie..."
+      ></textarea>
+      <small>Do 300 znaków</small>
+    </div>
+
+    <div class="profile-form-group">
+      <label>Zainteresowania</label>
+
+      <div class="profile-options">
+        <button type="button">Podróże</button>
+        <button type="button">Sport</button>
+        <button type="button">Muzyka</button>
+        <button type="button">Jedzenie</button>
+        <button type="button">Imprezy</button>
+        <button type="button">Fotografia</button>
+        <button type="button">Zwiedzanie</button>
+        <button type="button">Plaża</button>
+        <button type="button">Góry</button>
+        <button type="button">Piłka nożna</button>
+        <button type="button">Festiwale</button>
+        <button type="button">Kultura</button>
+      </div>
+    </div>
+
+    <div class="profile-form-group">
+      <label>Styl podróżowania</label>
+
+      <div class="profile-options">
+        <button type="button">Zwiedzanie</button>
+        <button type="button">Relaks</button>
+        <button type="button">Imprezy</button>
+        <button type="button">Jedzenie i lokalny klimat</button>
+        <button type="button">Sport</button>
+        <button type="button">Fotografia</button>
+        <button type="button">Aktywnie</button>
+        <button type="button">Chill</button>
+      </div>
+    </div>
+
+    <div class="profile-form-group">
+      <label>Wyjazdy, które Cię interesują</label>
+
+      <div class="profile-trips">
+        <label class="profile-trip-option">
+          <input type="checkbox" value="Mediolan">
+          <span>Mediolan</span>
+        </label>
+
+        <label class="profile-trip-option">
+          <input type="checkbox" value="Oktoberfest 2026">
+          <span>Oktoberfest 2026</span>
+        </label>
+
+        <label class="profile-trip-option">
+          <input type="checkbox" value="Malaga CF – Espanyol">
+          <span>Málaga CF – Espanyol</span>
+        </label>
+      </div>
+    </div>
+
+    <button type="button" class="profile-submit">
+      Zapisz profil
+    </button>
+
+  </div>
+
+</div>
 
     </div>
   </main>
