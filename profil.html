@@ -888,6 +888,7 @@ if (profile.photo) {
     tripInputs.forEach(input => {
       input.checked = (profile.trips || []).includes(input.value);
     });
+    showProfile(profile);
   }
   document.getElementById("profile-edit-button").addEventListener("click", () => {
   document.querySelector(".profile-form").style.display = "flex";
