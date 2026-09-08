@@ -117,7 +117,35 @@
   background: white;
   transition: all 0.25s ease;
 }
+.profile-nav-button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
+.profile-nav-button svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.profile-nav-button:hover {
+    color: var(--orange);
+    background: rgba(255, 107, 26, 0.08);
+}
 .nav-cta:hover {
   background: var(--navy);
   color: white;
@@ -2182,7 +2210,16 @@
         </div>
 <button class="mobile-menu-toggle" type="button" onclick="toggleMobileMenu()" aria-label="Otwórz menu">
     ☰
-
+<button
+    type="button"
+    class="profile-nav-button"
+    aria-label="Otwórz profil"
+>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="8" r="4"></circle>
+        <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
+    </svg>
+</button>
 </button>
         <a href="#wyjazdy" class="nav-cta">Znajdź wyjazd</a>
 
