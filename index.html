@@ -2826,12 +2826,13 @@ ${person.trips ? `
                 <div class="person-card-actions">
 
   <button
-    type="button"
-    class="person-profile-button"
-    onclick='showPersonProfile(${JSON.stringify(person).replace(/'/g, "&#039;")})'
-  >
-    Zobacz profil
-  </button>
+  type="button"
+  class="person-profile-button"
+  data-person="${escapeHtml(JSON.stringify(person))}"
+  onclick="showPersonProfile(JSON.parse(this.dataset.person))"
+>
+  Zobacz profil
+</button>
 
   <a
     class="person-contact${interestSent ? " interest-sent" : ""}"
