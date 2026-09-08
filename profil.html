@@ -239,7 +239,11 @@
   border-color: var(--orange);
   color: var(--orange);
 }
-
+.profile-options button.selected {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+}
 .profile-trips {
   display: flex;
   flex-direction: column;
@@ -466,6 +470,24 @@
 
     </div>
   </main>
+<script>
+  document.querySelectorAll(".profile-options button").forEach(button => {
+    button.addEventListener("click", () => {
+      const group = button.closest(".profile-form-group");
+      const label = group.querySelector("label");
+      const isInterests = label && label.textContent.trim() === "Zainteresowania";
 
+      if (isInterests && !button.classList.contains("selected")) {
+        const selectedCount = group.querySelectorAll(".profile-options button.selected").length;
+
+        if (selectedCount >= 6) {
+          return;
+        }
+      }
+
+      button.classList.toggle("selected");
+    });
+  });
+</script>
 </body>
 </html>
