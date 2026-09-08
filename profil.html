@@ -583,7 +583,9 @@ profilePhotoInput.addEventListener("change", () => {
       city: document.getElementById("profile-city").value.trim(),
       instagram: document.getElementById("profile-instagram").value.trim(),
       about: document.getElementById("profile-about").value.trim(),
-
+photo: profilePhotoPreview.querySelector("img")
+  ? profilePhotoPreview.querySelector("img").src
+  : "",
       interests: Array.from(
         document.querySelectorAll(
           ".profile-form-group:nth-of-type(6) .profile-options button.selected"
@@ -622,7 +624,10 @@ setTimeout(() => {
     document.getElementById("profile-city").value = profile.city || "";
     document.getElementById("profile-instagram").value = profile.instagram || "";
     document.getElementById("profile-about").value = profile.about || "";
-
+if (profile.photo) {
+  profilePhotoPreview.innerHTML =
+    `<img src="${profile.photo}" alt="Zdjęcie profilowe">`;
+}
     const interestButtons = document.querySelectorAll(
       ".profile-form-group:nth-of-type(6) .profile-options button"
     );
