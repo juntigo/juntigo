@@ -3112,19 +3112,34 @@ function showJoinSuccess(trip) {
             JUNTIGO
         </div>
 
-        <div class="join-success">
-            <h2>Zgłoszenie wysłane</h2>
+      <div class="join-success">
+    <h2>Zgłoszenie wysłane</h2>
 
-            <p class="join-trip-name">
-                ${escapeHtml(trip)}
-            </p>
+    <p class="join-trip-name">
+        ${escapeHtml(trip)}
+    </p>
 
-            <p>
-                Twoje zgłoszenie zostało zapisane.
-                Jeśli znajdziemy osoby zainteresowane tym samym wyjazdem,
-                będziesz mógł zobaczyć ich profile i wysłać zainteresowanie wybranym osobom.
-                Jeśli zainteresowanie będzie wzajemne, połączymy Was.
-            </p>
+    <p>
+        Twoje zgłoszenie zostało zapisane.
+        Jeśli znajdziemy osoby zainteresowane tym samym wyjazdem,
+        będziesz mógł zobaczyć ich profile i wysłać zainteresowanie wybranym osobom.
+        Jeśli zainteresowanie będzie wzajemne, połączymy Was.
+    </p>
+
+    <div class="join-profile-prompt">
+        <strong>Chcesz pokazać innym więcej o sobie?</strong>
+        <span>
+            Utwórz profil Juntigo, dodaj zdjęcie, zainteresowania i kilka informacji o sobie.
+        </span>
+    </div>
+
+    <button
+        type="button"
+        class="join-submit"
+        onclick="window.location.href='profil.html'"
+    >
+        Utwórz profil
+    </button>
 
             <button
                 type="button"
