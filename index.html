@@ -2768,7 +2768,7 @@ function showTeam(trip, button) {
           <span>${data.count} ${data.count === 1 ? "osoba" : "osoby"}</span>
         </div>
 
-        ${data.people.map(person => `
+        ${data.people.map((person, index) => `
           <div class="person-card">
 
             <h4>${escapeHtml(person.name)}</h4>
@@ -2828,8 +2828,7 @@ ${person.trips ? `
   <button
   type="button"
   class="person-profile-button"
-  data-person="${escapeHtml(JSON.stringify(person))}"
-  onclick="showPersonProfile(JSON.parse(this.dataset.person))"
+  onclick="showPersonProfile(window.juntigoTeamPeople[${index}])"
 >
   Zobacz profil
 </button>
@@ -2854,7 +2853,7 @@ ${person.trips ? `
     })
     .catch(error => {
       console.error(error);
-
+window.juntigoTeamPeople = data.people;
       results.innerHTML = `
         <div class="team-empty">
           Wystąpił błąd podczas pobierania ekipy.
