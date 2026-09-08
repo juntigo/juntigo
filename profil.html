@@ -288,7 +288,20 @@
 .profile-submit:hover {
   background: var(--navy);
 }
+.profile-save-message {
+  display: none;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #edf8f1;
+  color: #176b3a;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
 
+.profile-save-message.show {
+  display: block;
+}
 @media (max-width: 600px) {
   .profile-photo-section {
     align-items: flex-start;
@@ -460,9 +473,13 @@
       </div>
     </div>
 
-    <button type="button" class="profile-submit">
-      Zapisz profil
-    </button>
+    <div class="profile-save-message" id="profile-save-message">
+  ✓ Profil został zapisany
+</div>
+
+<button type="button" class="profile-submit">
+  Zapisz profil
+</button>
 
   </div>
 
@@ -519,7 +536,13 @@
 
     localStorage.setItem(profileStorageKey, JSON.stringify(profile));
 
-    alert("Profil został zapisany.");
+const saveMessage = document.getElementById("profile-save-message");
+
+saveMessage.classList.add("show");
+
+setTimeout(() => {
+  saveMessage.classList.remove("show");
+}, 3000);
   });
 
   const savedProfile = localStorage.getItem(profileStorageKey);
