@@ -794,6 +794,31 @@ photo: profilePhotoPreview.querySelector("img")
     };
 
     localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+
+const formData = new URLSearchParams();
+
+formData.append("type", "profile");
+formData.append("instagram", profile.instagram);
+formData.append("name", profile.name);
+formData.append("age", profile.age);
+formData.append("city", profile.city);
+formData.append("about", profile.about);
+formData.append("interests", profile.interests.join(", "));
+formData.append("travelStyle", profile.travelStyle.join(", "));
+formData.append("trips", profile.trips.join(", "));
+
+fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec", {
+  method: "POST",
+  body: formData
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log("Profil wysłany:", data);
+  })
+  .catch(error => {
+    console.error("Błąd zapisu profilu:", error);
+  });
+
 showProfile(profile);
 const saveMessage = document.getElementById("profile-save-message");
 
