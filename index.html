@@ -1251,7 +1251,12 @@
   font-size: 32px;
   font-weight: 900;
 }
-
+.person-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .person-profile-header h2 {
   margin: 0 0 4px;
   color: var(--navy);
@@ -2919,7 +2924,10 @@ function showPersonProfile(person) {
       <div class="person-profile-header">
 
         <div class="person-profile-avatar">
-          ${escapeHtml((person.name || "J").charAt(0).toUpperCase())}
+         ${person.photo
+    ? `<img src="${escapeHtml(person.photo)}" alt="Zdjęcie profilowe">`
+    : escapeHtml((person.name || "J").charAt(0).toUpperCase())
+  }
         </div>
 
         <div>
