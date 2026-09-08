@@ -171,7 +171,41 @@
   color: var(--muted);
   font-size: 15px;
 }
+.profile-photo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
 
+.profile-photo-button {
+  color: var(--navy);
+  border: 1px solid #d8dde3;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-photo-button:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.profile-placeholder {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.profile-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .profile-form-group {
   display: flex;
   flex-direction: column;
@@ -375,14 +409,29 @@
 
   <div class="profile-form">
 
-    <div class="profile-photo-section">
-      <div class="profile-placeholder">J</div>
+   <div class="profile-photo-section">
 
-      <div>
-        <h2>Stwórz swój profil</h2>
-        <p>Dodaj kilka informacji, żeby inni mogli Cię lepiej poznać.</p>
-      </div>
-    </div>
+  <div class="profile-photo-wrapper">
+    <div class="profile-placeholder" id="profile-photo-preview">J</div>
+
+    <label for="profile-photo" class="profile-photo-button">
+      Dodaj zdjęcie
+    </label>
+
+    <input
+      type="file"
+      id="profile-photo"
+      accept="image/*"
+      hidden
+    >
+  </div>
+
+  <div>
+    <h2>Stwórz swój profil</h2>
+    <p>Dodaj kilka informacji, żeby inni mogli Cię lepiej poznać.</p>
+  </div>
+
+</div>
 
     <div class="profile-form-group">
       <label for="profile-name">Imię lub pseudonim</label>
@@ -489,7 +538,25 @@
   </main>
 <script>
   const profileStorageKey = "juntigoProfile";
+const profilePhotoInput = document.getElementById("profile-photo");
+const profilePhotoPreview = document.getElementById("profile-photo-preview");
 
+profilePhotoInput.addEventListener("change", () => {
+  const file = profilePhotoInput.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = event => {
+    profilePhotoPreview.innerHTML =
+      `<img src="${event.target.result}" alt="Zdjęcie profilowe">`;
+  };
+
+  reader.readAsDataURL(file);
+});
   document.querySelectorAll(".profile-options button").forEach(button => {
     button.addEventListener("click", () => {
       const group = button.closest(".profile-form-group");
