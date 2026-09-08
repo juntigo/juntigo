@@ -2692,7 +2692,17 @@ function showTeam(trip, button) {
                 ${escapeHtml(person.interests)}
               </div>
             ` : ""}
+${person.travelStyle ? `
+  <div class="person-interests">
+    Styl: ${escapeHtml(person.travelStyle)}
+  </div>
+` : ""}
 
+${person.trips ? `
+  <div class="person-interests">
+    Wyjazdy: ${escapeHtml(person.trips)}
+  </div>
+` : ""}
             ${person.about ? `
               <p class="person-about">
                 „${escapeHtml(person.about)}”
