@@ -336,6 +336,110 @@
 .profile-save-message.show {
   display: block;
 }
+    .profile-view {
+  display: none;
+}
+
+.profile-view.active {
+  display: block;
+}
+
+.profile-view-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.profile-view-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  font-weight: 800;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-view-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-view-name {
+  color: var(--navy);
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.profile-view-meta {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.profile-view-status {
+  color: #176b3a;
+  font-size: 14px;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+.profile-view-section {
+  margin-top: 28px;
+}
+
+.profile-view-section h3 {
+  color: var(--navy);
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+.profile-view-about {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.profile-view-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-view-tag {
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: #f1f3f5;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.profile-edit-button {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 32px;
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+  background: white;
+  color: var(--navy);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-edit-button:hover {
+  background: var(--navy);
+  color: white;
+}
 @media (max-width: 600px) {
   .profile-photo-section {
     align-items: flex-start;
@@ -533,7 +637,57 @@
   </div>
 
 </div>
+<div class="profile-view" id="profile-view">
 
+  <div class="profile-view-header">
+
+    <div class="profile-view-photo" id="profile-view-photo">
+      J
+    </div>
+
+    <div>
+      <div class="profile-view-name" id="profile-view-name">
+        —
+      </div>
+
+      <div class="profile-view-meta" id="profile-view-meta">
+        —
+      </div>
+
+      <div class="profile-view-status">
+        ✓ Profil zweryfikowany
+      </div>
+    </div>
+
+  </div>
+
+  <div class="profile-view-section">
+    <h3>O mnie</h3>
+    <div class="profile-view-about" id="profile-view-about">
+      —
+    </div>
+  </div>
+
+  <div class="profile-view-section">
+    <h3>Zainteresowania</h3>
+    <div class="profile-view-tags" id="profile-view-interests"></div>
+  </div>
+
+  <div class="profile-view-section">
+    <h3>Styl podróżowania</h3>
+    <div class="profile-view-tags" id="profile-view-style"></div>
+  </div>
+
+  <div class="profile-view-section">
+    <h3>Interesujące mnie wyjazdy</h3>
+    <div class="profile-view-tags" id="profile-view-trips"></div>
+  </div>
+
+  <button type="button" class="profile-edit-button" id="profile-edit-button">
+    Edytuj profil
+  </button>
+
+</div>
     </div>
   </main>
 <script>
@@ -642,7 +796,7 @@ photo: profilePhotoPreview.querySelector("img")
     };
 
     localStorage.setItem(profileStorageKey, JSON.stringify(profile));
-
+showProfile(profile);
 const saveMessage = document.getElementById("profile-save-message");
 
 saveMessage.classList.add("show");
@@ -651,7 +805,52 @@ setTimeout(() => {
   saveMessage.classList.remove("show");
 }, 3000);
   });
+function showProfile(profile) {
+  document.querySelector(".profile-form").style.display = "none";
 
+  const profileView = document.getElementById("profile-view");
+  profileView.classList.add("active");
+
+  const photo = document.getElementById("profile-view-photo");
+
+  if (profile.photo) {
+    photo.innerHTML =
+      `<img src="${profile.photo}" alt="Zdjęcie profilowe">`;
+  } else {
+    photo.textContent = (profile.name || "J").charAt(0).toUpperCase();
+  }
+
+  document.getElementById("profile-view-name").textContent =
+    profile.name || "—";
+
+  document.getElementById("profile-view-meta").textContent =
+    [profile.age ? `${profile.age} lat` : "", profile.city || ""]
+      .filter(Boolean)
+      .join(" · ") || "—";
+
+  document.getElementById("profile-view-about").textContent =
+    profile.about || "Brak opisu.";
+
+  const interests = document.getElementById("profile-view-interests");
+
+  interests.innerHTML = (profile.interests || [])
+    .map(item => `<span class="profile-view-tag">${item}</span>`)
+    .join("");
+
+  const style = document.getElementById("profile-view-style");
+
+  style.innerHTML = (profile.travelStyle || [])
+    .map(item => `<span class="profile-view-tag">${item}</span>`)
+    .join("");
+
+  const trips = document.getElementById("profile-view-trips");
+
+  trips.innerHTML = (profile.trips || [])
+    .map(item => `<span class="profile-view-tag">${item}</span>`)
+    .join("");
+}
+
+const savedProfile = localStorage.getItem(profileStorageKey);
   const savedProfile = localStorage.getItem(profileStorageKey);
 
   if (savedProfile) {
@@ -692,6 +891,10 @@ if (profile.photo) {
       input.checked = (profile.trips || []).includes(input.value);
     });
   }
+  document.getElementById("profile-edit-button").addEventListener("click", () => {
+  document.querySelector(".profile-form").style.display = "flex";
+  document.getElementById("profile-view").classList.remove("active");
+});
 </script>
 </body>
 </html>
