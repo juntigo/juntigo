@@ -577,6 +577,44 @@ profilePhotoInput.addEventListener("change", () => {
   });
 
   document.querySelector(".profile-submit").addEventListener("click", () => {
+        const requiredFields = [
+      {
+        id: "profile-name",
+        message: "Wpisz imię lub pseudonim."
+      },
+      {
+        id: "profile-age",
+        message: "Podaj swój wiek."
+      },
+      {
+        id: "profile-city",
+        message: "Podaj swoje miasto."
+      },
+      {
+        id: "profile-instagram",
+        message: "Podaj swój Instagram."
+      }
+    ];
+
+    const missingField = requiredFields.find(field => {
+      return !document.getElementById(field.id).value.trim();
+    });
+
+    if (missingField) {
+      const field = document.getElementById(missingField.id);
+      const saveMessage = document.getElementById("profile-save-message");
+
+      field.focus();
+
+      saveMessage.textContent = missingField.message;
+      saveMessage.classList.add("show");
+
+      setTimeout(() => {
+        saveMessage.classList.remove("show");
+      }, 3000);
+
+      return;
+    }
     const profile = {
       name: document.getElementById("profile-name").value.trim(),
       age: document.getElementById("profile-age").value.trim(),
