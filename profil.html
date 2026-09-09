@@ -727,7 +727,63 @@
   const GOOGLE_CLIENT_ID = "853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 
 let juntigoGoogleId = "";
+function loadProfileFromBackend(idToken) {
+  fetch(
+    "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&idToken=" +
+    encodeURIComponent(idToken)
+  )
+    .then(response => response.json())
+    .then(data => {
+      if (!data.success || !data.profile) {
+        return;
+      }
 
+      const profile = data.profile;
+
+      document.getElementById("profile-name").value = profile.name || "";
+      document.getElementById("profile-age").value = profile.age || "";
+      document.getElementById("profile-city").value = profile.city || "";
+      document.getElementById("profile-instagram").value = profile.instagram || "";
+      document.getElementById("profile-about").value = profile.about || "";
+
+      if (profile.photo) {
+        profilePhotoPreview.innerHTML =
+          `<img src="${profile.photo}" alt="Zdjęcie profilowe">`;
+      }
+
+      const interests = (profile.interests || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
+      document.querySelectorAll('input[name="interests"]').forEach(input => {
+        input.checked = interests.includes(input.value);
+      });
+
+      const travelStyle = (profile.travelStyle || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
+      document.querySelectorAll('input[name="travel-style"]').forEach(input => {
+        input.checked = travelStyle.includes(input.value);
+      });
+
+      const trips = (profile.trips || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
+      document.querySelectorAll('input[name="trips"]').forEach(input => {
+        input.checked = trips.includes(input.value);
+      });
+
+      showProfile(profile);
+    })
+    .catch(error => {
+      console.error("Błąd ładowania profilu:", error);
+    });
+}
 function handleGoogleCredential(response) {
     const token = response.credential;
 
@@ -744,6 +800,7 @@ function handleGoogleCredential(response) {
 juntigoGoogleId = response.credential;
     document.getElementById("google-login-status").textContent =
       "Zalogowano jako: " + (payload.name || payload.email || "użytkownik");
+  loadProfileFromBackend(response.credential);
   }
 
   window.addEventListener("load", function() {
@@ -763,7 +820,7 @@ juntigoGoogleId = response.credential;
     );
   });
 
-  const profileStorageKey = "juntigoProfile";
+  
 const profilePhotoInput = document.getElementById("profile-photo");
 const profilePhotoPreview = document.getElementById("profile-photo-preview");
 
@@ -867,7 +924,7 @@ photo: profilePhotoPreview.querySelector("img")
       ).map(input => input.value)
     };
 
-    localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+    
 
 const formData = new URLSearchParams();
 
