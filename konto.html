@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moje konto — Juntigo</title>
+  <meta name="description" content="Panel konta użytkownika Juntigo.">
+  <style>
+    :root {
+      --navy: #071b33;
+      --navy-light: #0d2948;
+      --orange: #ff7417;
+      --cream: #fffaf4;
+      --white: #ffffff;
+      --text: #17283b;
+      --muted: #667587;
+      --border: #e7e1da;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    nav {
+      height: 100px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    .nav-inner {
+      width: min(1400px, 92%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      display: block;
+    }
+    .back-link {
+      color: var(--navy);
+      font-weight: 700;
+      border: 2px solid var(--navy);
+      padding: 12px 22px;
+      border-radius: 999px;
+      transition: all .25s ease;
+    }
+    .back-link:hover { background: var(--navy); color: white; }
+
+    main {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+      padding: 70px 0 100px;
+    }
+    .eyebrow {
+      color: var(--orange);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    h1 {
+      color: var(--navy);
+      font-size: clamp(38px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+    }
+    .intro { color: var(--muted); font-size: 18px; max-width: 700px; margin-bottom: 38px; }
+
+    .account-header {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 35px rgba(7,27,51,.07);
+    }
+    .avatar {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 800;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .account-header h2 { color: var(--navy); font-size: 28px; margin-bottom: 3px; }
+    .account-header p { color: var(--muted); }
+    .verified { color: var(--orange); font-weight: 800; font-size: 14px; margin-top: 5px; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .dashboard-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 120px;
+      padding: 24px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,116,23,.45);
+      box-shadow: 0 12px 28px rgba(7,27,51,.08);
+    }
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255,116,23,.10);
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .dashboard-card h3 { color: var(--navy); font-size: 19px; margin-bottom: 3px; }
+    .dashboard-card p { color: var(--muted); font-size: 14px; }
+    .arrow { margin-left: auto; color: var(--muted); font-size: 22px; }
+
+    .section {
+      margin-top: 34px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+    }
+    .section h2 { color: var(--navy); font-size: 24px; margin-bottom: 8px; }
+    .section-intro { color: var(--muted); margin-bottom: 20px; }
+    .trip-list { display: flex; flex-direction: column; gap: 10px; }
+    .trip-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 16px 18px;
+      background: #f7f8fa;
+      border-radius: 14px;
+    }
+    .trip-item strong { color: var(--navy); }
+    .trip-item span { color: var(--muted); font-size: 14px; }
+    .empty { color: var(--muted); padding: 8px 0; }
+
+    @media (max-width: 700px) {
+      nav { height: 82px; }
+      .logo img { width: 58px; height: 58px; }
+      .back-link { padding: 9px 15px; font-size: 14px; }
+      main { padding: 45px 0 70px; }
+      .account-header { padding: 22px; }
+      .account-header h2 { font-size: 23px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .dashboard-card { min-height: 105px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo" aria-label="Juntigo">
+        <img src="juntigo-logo.png" alt="Juntigo">
+      </a>
+      <a href="index.html" class="back-link">Wróć na stronę</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="eyebrow">Juntigo</div>
+    <h1>Moje konto</h1>
+    <p class="intro">Zarządzaj swoim profilem, wyjazdami i dopasowaniami w jednym miejscu.</p>
+
+    <section class="account-header">
+      <div class="avatar" id="account-avatar">J</div>
+      <div>
+        <h2 id="account-name">Twój profil</h2>
+        <p id="account-city">Uzupełnij profil, aby pokazać więcej o sobie.</p>
+        <div class="verified" id="account-status">Profil Juntigo</div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" aria-label="Nawigacja konta">
+      <a href="profil.html" class="dashboard-card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path></svg></div>
+        <div><h3>Mój profil</h3><p>Edytuj zdjęcie, opis, zainteresowania i styl podróżowania.</p></div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a href="#moje-wyjazdy" class="dashboard-card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 7h18v13H3z"></path><path d="M7 7V4h10v3M8 12h8M8 16h5"></path></svg></div>
+        <div><h3>Moje wyjazdy</h3><p>Wyjazdy, którymi jesteś zainteresowany.</p></div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a href="#zainteresowania" class="dashboard-card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8A4.6 4.6 0 0 1 12 6.2a4.6 4.6 0 0 1 8.8 2.6Z"></path></svg></div>
+        <div><h3>Wysłane zainteresowania</h3><p>Sprawdzaj osoby, którymi jesteś zainteresowany.</p></div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a href="#dopasowania" class="dashboard-card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM16 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM2.5 20c.5-3 2.5-5 5.5-5s5 2 5.5 5M10.5 20c.5-3 2.5-5 5.5-5s5 2 5.5 5"></path></svg></div>
+        <div><h3>Dopasowania</h3><p>Wasze wzajemne zainteresowania i przyszłe połączenia.</p></div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a href="#ustawienia" class="dashboard-card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path><circle cx="12" cy="12" r="4"></circle></svg></div>
+        <div><h3>Ustawienia</h3><p>Ustawienia konta i prywatności.</p></div>
+        <span class="arrow">›</span>
+      </a>
+    </section>
+
+    <section class="section" id="moje-wyjazdy">
+      <h2>Moje wyjazdy</h2>
+      <p class="section-intro">Wyjazdy zapisane na Twoim profilu.</p>
+      <div class="trip-list" id="trip-list"><div class="empty">Brak wybranych wyjazdów.</div></div>
+    </section>
+
+    <section class="section" id="zainteresowania">
+      <h2>Wysłane zainteresowania</h2>
+      <p class="section-intro">Tutaj pojawi się historia osób, którym wysłałeś zainteresowanie.</p>
+      <div class="empty">Funkcja zostanie podłączona do systemu dopasowań.</div>
+    </section>
+
+    <section class="section" id="dopasowania">
+      <h2>Dopasowania</h2>
+      <p class="section-intro">Tutaj pojawią się wzajemne dopasowania.</p>
+      <div class="empty">Brak dopasowań.</div>
+    </section>
+
+    <section class="section" id="ustawienia">
+      <h2>Ustawienia</h2>
+      <p class="section-intro">Ustawienia konta zostaną podłączone razem z logowaniem Google.</p>
+    </section>
+  </main>
+
+  <script>
+    const profile = JSON.parse(localStorage.getItem("juntigoProfile") || "null");
+
+    if (profile) {
+      const name = profile.name || "Twój profil";
+      document.getElementById("account-name").textContent = name;
+      document.getElementById("account-city").textContent = profile.city || "Profil Juntigo";
+      document.getElementById("account-status").textContent = "✓ Profil Juntigo";
+
+      const avatar = document.getElementById("account-avatar");
+      if (profile.photo) {
+        avatar.innerHTML = `<img src="${profile.photo}" alt="Zdjęcie profilowe">`;
+      } else {
+        avatar.textContent = name.charAt(0).toUpperCase();
+      }
+
+      const trips = Array.isArray(profile.trips) ? profile.trips : [];
+      const tripList = document.getElementById("trip-list");
+      if (trips.length) {
+        tripList.innerHTML = trips.map(trip => `<div class="trip-item"><strong>${trip}</strong><span>Wybrany w profilu</span></div>`).join("");
+      }
+    }
+  </script>
+</body>
+</html>
