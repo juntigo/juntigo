@@ -881,6 +881,7 @@ formData.append("interests", profile.interests.join(", "));
 formData.append("travelStyle", profile.travelStyle.join(", "));
 formData.append("trips", profile.trips.join(", "));
 formData.append("photo", profile.photo || "");
+formData.append("googleId", juntigoGoogleId);
 fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec", {
   method: "POST",
   body: formData
