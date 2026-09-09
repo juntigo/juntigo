@@ -741,7 +741,7 @@ function handleGoogleCredential(response) {
           .join("")
       )
     );
-
+juntigoGoogleId = payload.sub || "";
     document.getElementById("google-login-status").textContent =
       "Zalogowano jako: " + (payload.name || payload.email || "użytkownik");
   }
