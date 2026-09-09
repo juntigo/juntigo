@@ -6,7 +6,31 @@
 
   <title>Profil — Juntigo</title>
   <meta name="description" content="Twój profil Juntigo.">
+.google-login-section {
+  padding: 24px;
+  margin-bottom: 28px;
+  background: #f7f8fa;
+  border-radius: 16px;
+}
 
+.google-login-section h2 {
+  color: var(--navy);
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.google-login-section p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+#google-login-status {
+  margin-top: 14px;
+  color: #176b3a;
+  font-size: 14px;
+  font-weight: 700;
+}
   <style>
     :root {
       --navy: #071b33;
@@ -479,6 +503,7 @@
       }
     }
   </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
@@ -509,7 +534,16 @@
         </p>
       </div>
 
-      <div class="profile-card">
+     <div class="profile-card">
+
+  <div class="google-login-section">
+    <h2>Zaloguj się przez Google</h2>
+    <p>Zalogowanie pozwoli nam przypisać Twój profil do Twojego konta.</p>
+
+    <div id="google-login-button"></div>
+
+    <div id="google-login-status"></div>
+  </div>
 
   <div class="profile-form">
 
@@ -689,6 +723,44 @@
     </div>
   </main>
 <script>
+  <script>
+  const GOOGLE_CLIENT_ID = "853762917641-gape97elm42hcn15ukhknlitlftuhtkf.apps.googleusercontent.com";
+
+  function handleGoogleCredential(response) {
+    const token = response.credential;
+
+    const payload = JSON.parse(
+      decodeURIComponent(
+        atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
+          .split("")
+          .map(function(character) {
+            return "%" + ("00" + character.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      )
+    );
+
+    document.getElementById("google-login-status").textContent =
+      "Zalogowano jako: " + (payload.name || payload.email || "użytkownik");
+  }
+
+  window.addEventListener("load", function() {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("google-login-button"),
+      {
+        theme: "outline",
+        size: "large",
+        text: "signin_with",
+        shape: "rectangular"
+      }
+    );
+  });
+
   const profileStorageKey = "juntigoProfile";
 const profilePhotoInput = document.getElementById("profile-photo");
 const profilePhotoPreview = document.getElementById("profile-photo-preview");
