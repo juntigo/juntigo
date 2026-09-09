@@ -726,7 +726,9 @@
 <script>
   const GOOGLE_CLIENT_ID = "853762917641-gape97elm42hcn15ukhknlitftuhtkf.apps.googleusercontent.com";
 
-  function handleGoogleCredential(response) {
+let juntigoGoogleId = "";
+
+function handleGoogleCredential(response) {
     const token = response.credential;
 
     const payload = JSON.parse(
