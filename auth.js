@@ -1,5 +1,6 @@
 const JUNTIGO_AUTH_SESSION_KEY = "juntigoSessionToken";
 const JUNTIGO_AUTH_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
+const JUNTIGO_API = JUNTIGO_AUTH_API;
 
 function getJuntigoSessionToken() {
   return localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY) || "";
