@@ -504,7 +504,8 @@
   font-weight: 700;
 }
   </style>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+ <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="auth.js"></script>
 </head>
 
 <body>
@@ -843,29 +844,20 @@ async function handleGoogleCredential(response) {
   }
 }
 
-  window.addEventListener("load", function() {
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleCredential,
-    auto_select: true
-  });
+window.addEventListener("load", async function() {
+  const session = await protectJuntigoPage();
 
-  google.accounts.id.renderButton(
-    document.getElementById("google-login-button"),
-    {
-      theme: "outline",
-      size: "large",
-      text: "signin_with",
-      shape: "rectangular"
-    }
-  );
+  if (!session) {
+    return;
+  }
 
-  if (juntigoSessionToken) {
-  document.querySelector(".google-login-section").style.display = "none";
-  loadProfileFromBackend(juntigoSessionToken);
-} else {
-  google.accounts.id.prompt();
-}
+  const loginSection = document.querySelector(".google-login-section");
+
+  if (loginSection) {
+    loginSection.style.display = "none";
+  }
+
+  loadProfileFromBackend(getJuntigoSessionToken());
 });
 
   
