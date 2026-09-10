@@ -182,23 +182,21 @@ function ensureJuntigoNavStyles() {
     }
 
     .juntigo-auth-menu {
-      position: absolute;
-      top: calc(100% + 10px);
-      right: 0;
-      min-width: 170px;
-      padding: 7px;
+      position: fixed;
+      min-width: 190px;
+      padding: 6px;
       background: #fff;
       border: 1px solid #e7e1da;
       border-radius: 14px;
-      box-shadow: 0 14px 30px rgba(7,27,51,.14);
-      z-index: 1000;
+      box-shadow: 0 16px 38px rgba(7,27,51,.16);
+      z-index: 100000;
     }
 
     .juntigo-auth-menu a,
     .juntigo-auth-menu button {
       width: 100%;
       display: block;
-      padding: 10px 12px;
+      padding: 11px 13px;
       border: 0;
       border-radius: 9px;
       background: transparent;
@@ -233,10 +231,9 @@ function toggleJuntigoAuthMenu() {
   }
 
   const profileButton = document.querySelector(".profile-nav-button");
-  if (!profileButton || !profileButton.parentElement) return;
+  if (!profileButton) return;
 
-  const parent = profileButton.parentElement;
-  parent.style.position = "relative";
+  const rect = profileButton.getBoundingClientRect();
 
   const menu = document.createElement("div");
   menu.className = "juntigo-auth-menu";
@@ -245,8 +242,31 @@ function toggleJuntigoAuthMenu() {
     <button type="button">Wyloguj się</button>
   `;
 
+  document.body.appendChild(menu);
+
+  const menuRect = menu.getBoundingClientRect();
+  const gap = 10;
+  const margin = 12;
+
+  let left = rect.right - menuRect.width;
+  let top = rect.bottom + gap;
+
+  if (left < margin) {
+    left = margin;
+  }
+
+  if (left + menuRect.width > window.innerWidth - margin) {
+    left = window.innerWidth - menuRect.width - margin;
+  }
+
+  if (top + menuRect.height > window.innerHeight - margin) {
+    top = rect.top - menuRect.height - gap;
+  }
+
+  menu.style.left = `${Math.round(left)}px`;
+  menu.style.top = `${Math.round(top)}px`;
+
   menu.querySelector("button").addEventListener("click", logoutJuntigo);
-  parent.appendChild(menu);
 }
 
 document.addEventListener("click", function(event) {
