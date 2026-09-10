@@ -626,7 +626,7 @@
     <div class="profile-form-group">
       <label>💗 Zainteresowania</label>
 
-     <div class="profile-options">
+     <div class="profile-options" id="profile-interests-options">
   <button type="button">🏔️ Góry</button>
   <button type="button">🌊 Morze</button>
   <button type="button">🏛️ Historia i zabytki</button>
@@ -648,7 +648,7 @@
     <div class="profile-form-group">
       <label>🧳 Styl podróżowania</label>
 
-      <div class="profile-options">
+      <div class="profile-options" id="profile-style-options">
   <button type="button">🎒 Backpacking</button>
   <button type="button">💰 Budżetowo</button>
   <button type="button">💎 Luksusowo</button>
@@ -784,12 +784,34 @@ function loadProfileFromBackend(sessionToken) {
       .map(item => item.trim())
       .filter(Boolean);
 
-      document.querySelectorAll(
-  ".profile-form-group:nth-of-type(6) .profile-options button"
+      const interestAliases = {
+  "Sport": "⚽ Sport",
+  "Muzyka": "🎶 Muzyka i festiwale",
+  "Jedzenie": "🍷 Lokalne smaki",
+  "Fotografia": "📸 Fotografia",
+  "Góry": "🏔️ Góry",
+  "Morze": "🌊 Morze",
+  "Plaża": "🌊 Morze",
+  "Piłka nożna": "⚽ Sport",
+  "Festiwale": "🎶 Muzyka i festiwale",
+  "Kultura": "🎨 Kultura i sztuka",
+  "Zwiedzanie": "🏛️ Historia i zabytki"
+};
+
+const normalizedInterests = interests
+  .map(item => interestAliases[item] || item)
+  .filter(item =>
+    Array.from(
+      document.querySelectorAll("#profile-interests-options button")
+    ).some(button => button.textContent.trim() === item)
+  );
+
+document.querySelectorAll(
+  "#profile-interests-options button"
 ).forEach(button => {
   button.classList.toggle(
     "selected",
-    interests.includes(button.textContent.trim())
+    normalizedInterests.includes(button.textContent.trim())
   );
 });
 
@@ -801,11 +823,26 @@ function loadProfileFromBackend(sessionToken) {
       .filter(Boolean);
 
       document.querySelectorAll(
-  ".profile-form-group:nth-of-type(7) .profile-options button"
+ const styleAliases = {
+  "Aktywnie": "🥾 Aktywnie",
+  "Chill": "😎 Na luzie",
+  "Imprezy": "🎉 Imprezowo"
+};
+
+const normalizedTravelStyle = travelStyle
+  .map(item => styleAliases[item] || item)
+  .filter(item =>
+    Array.from(
+      document.querySelectorAll("#profile-style-options button")
+    ).some(button => button.textContent.trim() === item)
+  );
+
+document.querySelectorAll(
+  "#profile-style-options button"
 ).forEach(button => {
   button.classList.toggle(
     "selected",
-    travelStyle.includes(button.textContent.trim())
+    normalizedTravelStyle.includes(button.textContent.trim())
   );
 });
 
@@ -905,23 +942,39 @@ profilePhotoInput.addEventListener("change", () => {
   reader.readAsDataURL(file);
 });
   document.querySelectorAll(".profile-options button").forEach(button => {
-    button.addEventListener("click", () => {
-      const group = button.closest(".profile-form-group");
-      const label = group.querySelector("label");
-      const isInterests = label && label.textContent.trim() === "Zainteresowania";
+  button.addEventListener("click", () => {
+    const interestsGroup = document.getElementById("profile-interests-options");
+    const styleGroup = document.getElementById("profile-style-options");
 
-      if (isInterests && !button.classList.contains("selected")) {
-        const selectedCount =
-          group.querySelectorAll(".profile-options button.selected").length;
+    if (
+      interestsGroup &&
+      interestsGroup.contains(button) &&
+      !button.classList.contains("selected")
+    ) {
+      const selectedCount =
+        interestsGroup.querySelectorAll("button.selected").length;
 
-        if (selectedCount >= 6) {
-          return;
-        }
+      if (selectedCount >= 7) {
+        return;
       }
+    }
 
-      button.classList.toggle("selected");
-    });
+    if (
+      styleGroup &&
+      styleGroup.contains(button) &&
+      !button.classList.contains("selected")
+    ) {
+      const selectedCount =
+        styleGroup.querySelectorAll("button.selected").length;
+
+      if (selectedCount >= 6) {
+        return;
+      }
+    }
+
+    button.classList.toggle("selected");
   });
+});
 
   document.querySelector(".profile-submit").addEventListener("click", () => {
         const requiredFields = [
@@ -972,20 +1025,16 @@ photo: profilePhotoPreview.querySelector("img")
   ? profilePhotoPreview.querySelector("img").src
   : "",
       interests: Array.from(
-        document.querySelectorAll(
-          ".profile-form-group:nth-of-type(6) .profile-options button.selected"
-        )
-      ).map(button => button.textContent.trim()),
+  document.querySelectorAll(
+    "#profile-interests-options button.selected"
+  )
+).map(button => button.textContent.trim()),
 
-      travelStyle: Array.from(
-        document.querySelectorAll(
-          ".profile-form-group:nth-of-type(7) .profile-options button.selected"
-        )
-      ).map(button => button.textContent.trim()),
-
-      trips: Array.from(
-        document.querySelectorAll(".profile-trip-option input:checked")
-      ).map(input => input.value)
+travelStyle: Array.from(
+  document.querySelectorAll(
+    "#profile-style-options button.selected"
+  )
+).map(button => button.textContent.trim()),
     };
 
     
