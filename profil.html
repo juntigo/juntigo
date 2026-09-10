@@ -726,11 +726,12 @@
 <script>
   const GOOGLE_CLIENT_ID = "853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 
-let juntigoGoogleId = sessionStorage.getItem("juntigoGoogleIdToken") || "";
-function loadProfileFromBackend(idToken) {
+const JUNTIGO_SESSION_KEY = "juntigoSessionToken";
+let juntigoSessionToken = sessionStorage.getItem(JUNTIGO_SESSION_KEY) || "";
+function loadProfileFromBackend(sessionToken) {
   fetch(
-    "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&idToken=" +
-    encodeURIComponent(idToken)
+    "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&sessionToken=" +
+    encodeURIComponent(sessionToken)
   )
     .then(response => response.json())
     .then(data => {
@@ -800,25 +801,47 @@ function loadProfileFromBackend(idToken) {
       console.error("Błąd ładowania profilu:", error);
     });
 }
-function handleGoogleCredential(response) {
-    const token = response.credential;
+async function handleGoogleCredential(response) {
+  const idToken = response.credential || "";
 
-    const payload = JSON.parse(
-      decodeURIComponent(
-        atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
-          .split("")
-          .map(function(character) {
-            return "%" + ("00" + character.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      )
-    );
-juntigoGoogleId = response.credential;
-sessionStorage.setItem("juntigoGoogleIdToken", response.credential);
-    document.getElementById("google-login-status").textContent =
-      "Zalogowano jako: " + (payload.name || payload.email || "użytkownik");
-  loadProfileFromBackend(response.credential);
+  if (!idToken) {
+    return;
   }
+
+  try {
+    const responseSession = await fetch(
+      "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=session&idToken=" +
+      encodeURIComponent(idToken)
+    );
+
+    const result = await responseSession.json();
+
+    if (!result.success || !result.sessionToken) {
+      throw new Error(
+        result.error || "Nie udało się utworzyć sesji Juntigo."
+      );
+    }
+
+    juntigoSessionToken = result.sessionToken;
+
+    sessionStorage.setItem(
+      JUNTIGO_SESSION_KEY,
+      juntigoSessionToken
+    );
+
+    document.getElementById("google-login-status").textContent =
+      "Zalogowano jako: " +
+      (result.identity?.name || result.identity?.email || "użytkownik");
+
+    loadProfileFromBackend(juntigoSessionToken);
+
+  } catch (error) {
+    console.error("Błąd logowania Juntigo:", error);
+
+    document.getElementById("google-login-status").textContent =
+      error.message || "Nie udało się zalogować.";
+  }
+}
 
   window.addEventListener("load", function() {
   google.accounts.id.initialize({
@@ -837,8 +860,8 @@ sessionStorage.setItem("juntigoGoogleIdToken", response.credential);
     }
   );
 
-  if (juntigoGoogleId) {
-    loadProfileFromBackend(juntigoGoogleId);
+  if (juntigoSessionToken) {
+    loadProfileFromBackend(juntigoSessionToken);
   } else {
     google.accounts.id.prompt();
   }
@@ -962,7 +985,7 @@ formData.append("interests", profile.interests.join(", "));
 formData.append("travelStyle", profile.travelStyle.join(", "));
 formData.append("trips", profile.trips.join(", "));
 formData.append("photo", profile.photo || "");
-formData.append("idToken", juntigoGoogleId);
+formData.append("sessionToken", juntigoSessionToken);
 fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec", {
   method: "POST",
   body: formData
