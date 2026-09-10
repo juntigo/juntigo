@@ -861,10 +861,11 @@ async function handleGoogleCredential(response) {
   );
 
   if (juntigoSessionToken) {
-    loadProfileFromBackend(juntigoSessionToken);
-  } else {
-    google.accounts.id.prompt();
-  }
+  document.querySelector(".google-login-section").style.display = "none";
+  loadProfileFromBackend(juntigoSessionToken);
+} else {
+  google.accounts.id.prompt();
+}
 });
 
   
