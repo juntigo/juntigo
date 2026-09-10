@@ -1038,10 +1038,11 @@ travelStyle: Array.from(
     "#profile-style-options button.selected"
   )
 ).map(button => button.textContent.trim()),
-    };
+
 trips: Array.from(
   document.querySelectorAll(".profile-trip-option input:checked")
-).map(input => input.value),
+).map(input => input.value)
+};
     
 
 const formData = new URLSearchParams();
