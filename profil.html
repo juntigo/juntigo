@@ -941,16 +941,18 @@ profilePhotoInput.addEventListener("change", () => {
 
   reader.readAsDataURL(file);
 });
-  document.querySelectorAll(".profile-options button").forEach(button => {
-  button.addEventListener("click", () => {
-    const interestsGroup = document.getElementById("profile-interests-options");
-    const styleGroup = document.getElementById("profile-style-options");
+  document.addEventListener("click", function(event) {
+  const button = event.target.closest(".profile-options button");
 
-    if (
-      interestsGroup &&
-      interestsGroup.contains(button) &&
-      !button.classList.contains("selected")
-    ) {
+  if (!button) {
+    return;
+  }
+
+  const interestsGroup = document.getElementById("profile-interests-options");
+  const styleGroup = document.getElementById("profile-style-options");
+
+  if (interestsGroup && interestsGroup.contains(button)) {
+    if (!button.classList.contains("selected")) {
       const selectedCount =
         interestsGroup.querySelectorAll("button.selected").length;
 
@@ -959,11 +961,12 @@ profilePhotoInput.addEventListener("change", () => {
       }
     }
 
-    if (
-      styleGroup &&
-      styleGroup.contains(button) &&
-      !button.classList.contains("selected")
-    ) {
+    button.classList.toggle("selected");
+    return;
+  }
+
+  if (styleGroup && styleGroup.contains(button)) {
+    if (!button.classList.contains("selected")) {
       const selectedCount =
         styleGroup.querySelectorAll("button.selected").length;
 
@@ -973,7 +976,7 @@ profilePhotoInput.addEventListener("change", () => {
     }
 
     button.classList.toggle("selected");
-  });
+  }
 });
 
   document.querySelector(".profile-submit").addEventListener("click", () => {
