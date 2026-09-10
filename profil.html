@@ -726,7 +726,7 @@
 <script>
   const GOOGLE_CLIENT_ID = "853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 
-let juntigoGoogleId = "";
+let juntigoGoogleId = sessionStorage.getItem("juntigoGoogleIdToken") || "";
 function loadProfileFromBackend(idToken) {
   fetch(
     "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&idToken=" +
@@ -814,6 +814,7 @@ function handleGoogleCredential(response) {
       )
     );
 juntigoGoogleId = response.credential;
+sessionStorage.setItem("juntigoGoogleIdToken", response.credential);
     document.getElementById("google-login-status").textContent =
       "Zalogowano jako: " + (payload.name || payload.email || "użytkownik");
   loadProfileFromBackend(response.credential);
@@ -836,7 +837,11 @@ juntigoGoogleId = response.credential;
     }
   );
 
-  google.accounts.id.prompt();
+  if (juntigoGoogleId) {
+    loadProfileFromBackend(juntigoGoogleId);
+  } else {
+    google.accounts.id.prompt();
+  }
 });
 
   
