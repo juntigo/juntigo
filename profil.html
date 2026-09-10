@@ -956,19 +956,42 @@ fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV
   .then(response => response.json())
   .then(data => {
     console.log("Profil wysłany:", data);
+
+    const saveMessage = document.getElementById("profile-save-message");
+
+    if (!data.success) {
+      saveMessage.textContent =
+        data.error || "Nie udało się zapisać profilu.";
+      saveMessage.classList.add("show");
+
+      setTimeout(() => {
+        saveMessage.classList.remove("show");
+      }, 4000);
+
+      return;
+    }
+
+    showProfile(profile);
+
+    saveMessage.textContent = "✓ Profil został zapisany";
+    saveMessage.classList.add("show");
+
+    setTimeout(() => {
+      saveMessage.classList.remove("show");
+    }, 3000);
   })
   .catch(error => {
     console.error("Błąd zapisu profilu:", error);
+
+    const saveMessage = document.getElementById("profile-save-message");
+
+    saveMessage.textContent = "Nie udało się zapisać profilu.";
+    saveMessage.classList.add("show");
+
+    setTimeout(() => {
+      saveMessage.classList.remove("show");
+    }, 4000);
   });
-
-showProfile(profile);
-const saveMessage = document.getElementById("profile-save-message");
-
-saveMessage.classList.add("show");
-
-setTimeout(() => {
-  saveMessage.classList.remove("show");
-}, 3000);
   });
 function showProfile(profile) {
   document.querySelector(".profile-form").style.display = "none";
