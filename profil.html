@@ -756,27 +756,37 @@ function loadProfileFromBackend(idToken) {
         .map(item => item.trim())
         .filter(Boolean);
 
-      document.querySelectorAll('input[name="interests"]').forEach(input => {
-        input.checked = interests.includes(input.value);
-      });
+      document.querySelectorAll(
+  ".profile-form-group:nth-of-type(6) .profile-options button"
+).forEach(button => {
+  button.classList.toggle(
+    "selected",
+    interests.includes(button.textContent.trim())
+  );
+});
 
       const travelStyle = (profile.travelStyle || "")
         .split(",")
         .map(item => item.trim())
         .filter(Boolean);
 
-      document.querySelectorAll('input[name="travel-style"]').forEach(input => {
-        input.checked = travelStyle.includes(input.value);
-      });
+      document.querySelectorAll(
+  ".profile-form-group:nth-of-type(7) .profile-options button"
+).forEach(button => {
+  button.classList.toggle(
+    "selected",
+    travelStyle.includes(button.textContent.trim())
+  );
+});
 
       const trips = (profile.trips || "")
         .split(",")
         .map(item => item.trim())
         .filter(Boolean);
 
-      document.querySelectorAll('input[name="trips"]').forEach(input => {
-        input.checked = trips.includes(input.value);
-      });
+      document.querySelectorAll(".profile-trip-option input").forEach(input => {
+  input.checked = trips.includes(input.value);
+});
 
       showProfile(profile);
     })
