@@ -89,12 +89,6 @@ async function protectJuntigoPage() {
   return session;
 }
 
-/*
- * Udział w wyjeździe nie wymaga logowania.
- * Jeśli użytkownik jest zalogowany, do istniejącego formularza join
- * automatycznie dokładamy jego podpisaną sesję Juntigo.
- * Dla gościa żadne dane autoryzacyjne nie są dodawane.
- */
 const JUNTIGO_NATIVE_FETCH = window.fetch.bind(window);
 
 function isJuntigoGetRequest(input, init) {
@@ -140,6 +134,7 @@ window.fetch = function(input, init) {
 
   if (url === JUNTIGO_AUTH_API && init && init.body instanceof URLSearchParams) {
     const body = new URLSearchParams(init.body.toString());
+    const method = String(init.method || "GET").toUpperCase();
 
     if (body.get("type") === "join") {
       const sessionToken = getJuntigoSessionToken();
@@ -150,7 +145,26 @@ window.fetch = function(input, init) {
 
       return JUNTIGO_NATIVE_FETCH(input, {
         ...init,
-        body
+        body: body.toString(),
+        redirect: "follow",
+        credentials: "omit",
+        headers: {
+          ...(init.headers || {}),
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        }
+      });
+    }
+
+    if (method === "POST" && body.get("type") === "profile") {
+      return JUNTIGO_NATIVE_FETCH(input, {
+        ...init,
+        body: body.toString(),
+        redirect: "follow",
+        credentials: "omit",
+        headers: {
+          ...(init.headers || {}),
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        }
       });
     }
   }
