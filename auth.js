@@ -132,24 +132,8 @@ window.fetch = function(input, init) {
     ? input
     : (input && input.url) || "";
 
-  if (
-    url === JUNTIGO_AUTH_API &&
-    init &&
-    (init.body instanceof URLSearchParams || init.body instanceof FormData)
-  ) {
-    const body = new URLSearchParams();
-
-    if (init.body instanceof URLSearchParams) {
-      init.body.forEach((value, key) => body.append(key, value));
-    } else {
-      init.body.forEach((value, key) => {
-        if (typeof value === "string") {
-          body.append(key, value);
-        }
-      });
-    }
-
-    const method = String(init.method || "GET").toUpperCase();
+  if (url === JUNTIGO_AUTH_API && init && init.body instanceof URLSearchParams) {
+    const body = new URLSearchParams(init.body.toString());
 
     if (body.get("type") === "join") {
       const sessionToken = getJuntigoSessionToken();
@@ -160,26 +144,7 @@ window.fetch = function(input, init) {
 
       return JUNTIGO_NATIVE_FETCH(input, {
         ...init,
-        body: body.toString(),
-        redirect: "follow",
-        credentials: "omit",
-        headers: {
-          ...(init.headers || {}),
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-        }
-      });
-    }
-
-    if (method === "POST" && body.get("type") === "profile") {
-      return JUNTIGO_NATIVE_FETCH(input, {
-        ...init,
-        body: body.toString(),
-        redirect: "follow",
-        credentials: "omit",
-        headers: {
-          ...(init.headers || {}),
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-        }
+        body
       });
     }
   }
