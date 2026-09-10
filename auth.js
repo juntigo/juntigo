@@ -132,8 +132,23 @@ window.fetch = function(input, init) {
     ? input
     : (input && input.url) || "";
 
-  if (url === JUNTIGO_AUTH_API && init && init.body instanceof URLSearchParams) {
-    const body = new URLSearchParams(init.body.toString());
+  if (
+    url === JUNTIGO_AUTH_API &&
+    init &&
+    (init.body instanceof URLSearchParams || init.body instanceof FormData)
+  ) {
+    const body = new URLSearchParams();
+
+    if (init.body instanceof URLSearchParams) {
+      init.body.forEach((value, key) => body.append(key, value));
+    } else {
+      init.body.forEach((value, key) => {
+        if (typeof value === "string") {
+          body.append(key, value);
+        }
+      });
+    }
+
     const method = String(init.method || "GET").toUpperCase();
 
     if (body.get("type") === "join") {
