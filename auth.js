@@ -90,6 +90,12 @@ window.fetch = function(input, init) {
 
 document.addEventListener("DOMContentLoaded", async function () {
   const profileButton = document.querySelector(".profile-nav-button");
+  const backLink = document.querySelector(".back-link");
+
+  if (backLink && window.location.pathname.endsWith("/profil.html")) {
+    backLink.href = "konto.html";
+    backLink.textContent = "Moje konto";
+  }
 
   if (!profileButton) return;
 
