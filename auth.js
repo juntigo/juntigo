@@ -65,6 +65,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   profileButton.dataset.authenticated = session.authenticated ? "true" : "false";
   profileButton.setAttribute(
     "aria-label",
-    session.authenticated ? "Otwórz moje konto" : "Zaloguj się lub otwórz konto"
+    session.authenticated ? "Otwórz mój profil" : "Zaloguj się lub otwórz konto"
   );
+
+  profileButton.onclick = function () {
+    window.location.href = session.authenticated ? "profil.html" : "konto.html";
+  };
 });
