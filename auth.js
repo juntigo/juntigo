@@ -2,6 +2,39 @@ const JUNTIGO_AUTH_SESSION_KEY = "juntigoSessionToken";
 const JUNTIGO_AUTH_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
 const JUNTIGO_API = JUNTIGO_AUTH_API;
 
+const interestAliases = {
+  "Sport": "⚽ Sport",
+  "Muzyka": "🎶 Muzyka i festiwale",
+  "Jedzenie": "🍷 Lokalne smaki",
+  "Fotografia": "📸 Fotografia",
+  "Góry": "🏔️ Góry",
+  "Morze": "🌊 Morze",
+  "Plaża": "🌊 Morze",
+  "Piłka nożna": "⚽ Sport",
+  "Festiwale": "🎶 Muzyka i festiwale",
+  "Kultura": "🎨 Kultura i sztuka",
+  "Zwiedzanie": "🏛️ Historia i zabytki"
+};
+
+const styleAliases = {
+  "Aktywnie": "🥾 Aktywnie",
+  "Chill": "😎 Na luzie",
+  "Imprezy": "🎉 Imprezowo"
+};
+
+function normalizeTagList(values, aliases) {
+  const list = Array.isArray(values)
+    ? values
+    : String(values || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
+  return list
+    .map(item => aliases[item] || item)
+    .filter(Boolean);
+}
+
 function getJuntigoSessionToken() {
   return localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY) || "";
 }
