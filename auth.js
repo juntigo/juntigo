@@ -1,12 +1,12 @@
-const JUNTIGO_SESSION_KEY = "juntigoSessionToken";
-const JUNTIGO_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
+const JUNTIGO_AUTH_SESSION_KEY = "juntigoSessionToken";
+const JUNTIGO_AUTH_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
 
 function getJuntigoSessionToken() {
-  return localStorage.getItem(JUNTIGO_SESSION_KEY) || "";
+  return localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY) || "";
 }
 
 function clearJuntigoSession() {
-  localStorage.removeItem(JUNTIGO_SESSION_KEY);
+  localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
 }
 
 async function validateJuntigoSession() {
@@ -18,7 +18,7 @@ async function validateJuntigoSession() {
 
   try {
     const response = await fetch(
-      JUNTIGO_API + "?action=profile&sessionToken=" + encodeURIComponent(sessionToken),
+      JUNTIGO_AUTH_API + "?action=profile&sessionToken=" + encodeURIComponent(sessionToken),
       { method: "GET" }
     );
     const result = await response.json();
