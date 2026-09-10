@@ -822,7 +822,7 @@ document.querySelectorAll(
       .map(item => item.trim())
       .filter(Boolean);
 
-      document.querySelectorAll(
+      
  const styleAliases = {
   "Aktywnie": "🥾 Aktywnie",
   "Chill": "😎 Na luzie",
@@ -1039,7 +1039,9 @@ travelStyle: Array.from(
   )
 ).map(button => button.textContent.trim()),
     };
-
+trips: Array.from(
+  document.querySelectorAll(".profile-trip-option input:checked")
+).map(input => input.value),
     
 
 const formData = new URLSearchParams();
