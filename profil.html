@@ -55,6 +55,12 @@
       display: block;
     }
 
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .back-link {
       color: var(--navy);
       text-decoration: none;
@@ -463,6 +469,10 @@
         height: 54px;
       }
 
+      .nav-links {
+        gap: 6px;
+      }
+
       .back-link {
         padding: 9px 14px;
         font-size: 13px;
@@ -517,9 +527,15 @@
         <img src="juntigo-logo.png" alt="Juntigo">
       </a>
 
-      <a href="index.html" class="back-link">
-        Wróć do Juntigo
-      </a>
+      <div class="nav-links">
+        <a href="konto.html" class="back-link">
+          Moje konto
+        </a>
+
+        <a href="index.html" class="back-link">
+          Wróć do Juntigo
+        </a>
+      </div>
 
     </div>
   </nav>
