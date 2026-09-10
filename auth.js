@@ -6,7 +6,7 @@ function getJuntigoSessionToken() {
 }
 
 function clearJuntigoSession() {
-  localStorage.removeItem(JUNTIGO_SESSION_KEY || JUNTIGO_AUTH_SESSION_KEY);
+  localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
 }
 
 async function validateJuntigoSession() {
