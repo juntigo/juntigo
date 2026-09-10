@@ -1102,6 +1102,18 @@ fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV
     }, 4000);
   });
   });
+  function normalizeTagList(values, aliases) {
+  const list = Array.isArray(values)
+    ? values
+    : String(values || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
+  return list
+    .map(item => aliases[item] || item)
+    .filter(Boolean);
+}
 function showProfile(profile) {
   document.querySelector(".profile-form").style.display = "none";
 
