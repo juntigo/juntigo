@@ -6,7 +6,7 @@ function getJuntigoSessionToken() {
 }
 
 function clearJuntigoSession() {
-  localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+  localStorage.removeItem(JUNTIGO_SESSION_KEY || JUNTIGO_AUTH_SESSION_KEY);
 }
 
 async function validateJuntigoSession() {
@@ -63,6 +63,42 @@ async function protectJuntigoPage() {
  */
 const JUNTIGO_NATIVE_FETCH = window.fetch.bind(window);
 
+function isJuntigoGetRequest(input, init) {
+  const url = typeof input === "string"
+    ? input
+    : (input && input.url) || "";
+
+  const method = String(
+    (init && init.method) || (input && input.method) || "GET"
+  ).toUpperCase();
+
+  return method === "GET" && url.startsWith(JUNTIGO_AUTH_API);
+}
+
+async function fetchJuntigoGetWithRetry(input, init, attempts = 3) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const response = await JUNTIGO_NATIVE_FETCH(input, init);
+
+      if (response.ok || attempt === attempts) {
+        return response;
+      }
+    } catch (error) {
+      lastError = error;
+
+      if (attempt === attempts) {
+        throw error;
+      }
+    }
+
+    await new Promise(resolve => setTimeout(resolve, attempt * 700));
+  }
+
+  throw lastError || new Error("Nie udało się połączyć z Juntigo.");
+}
+
 window.fetch = function(input, init) {
   const url = typeof input === "string"
     ? input
@@ -83,6 +119,10 @@ window.fetch = function(input, init) {
         body
       });
     }
+  }
+
+  if (isJuntigoGetRequest(input, init)) {
+    return fetchJuntigoGetWithRetry(input, init);
   }
 
   return JUNTIGO_NATIVE_FETCH(input, init);
