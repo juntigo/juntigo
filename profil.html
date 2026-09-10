@@ -1043,7 +1043,6 @@ trips: Array.from(
   document.querySelectorAll(".profile-trip-option input:checked")
 ).map(input => input.value)
 };
-};
     
 
 const formData = new URLSearchParams();
@@ -1131,15 +1130,25 @@ function showProfile(profile) {
 
   const interests = document.getElementById("profile-view-interests");
 
-  interests.innerHTML = (profile.interests || [])
-    .map(item => `<span class="profile-view-tag">${item}</span>`)
-    .join("");
+const normalizedInterests = normalizeTagList(
+  profile.interests,
+  interestAliases
+);
 
-  const style = document.getElementById("profile-view-style");
+interests.innerHTML = normalizedInterests
+  .map(item => `<span class="profile-view-tag">${item}</span>`)
+  .join("");
 
-  style.innerHTML = (profile.travelStyle || [])
-    .map(item => `<span class="profile-view-tag">${item}</span>`)
-    .join("");
+const style = document.getElementById("profile-view-style");
+
+const normalizedTravelStyle = normalizeTagList(
+  profile.travelStyle,
+  styleAliases
+);
+
+style.innerHTML = normalizedTravelStyle
+  .map(item => `<span class="profile-view-tag">${item}</span>`)
+  .join("");
 
   const trips = document.getElementById("profile-view-trips");
 
