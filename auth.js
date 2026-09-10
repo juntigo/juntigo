@@ -217,6 +217,39 @@ function ensureJuntigoNavStyles() {
     .juntigo-auth-menu button {
       color: #a33a2b;
     }
+
+    @media (max-width: 700px) {
+      .profile-nav-button.is-authenticated {
+        width: 44px;
+        min-width: 44px;
+        padding: 4px;
+        gap: 0;
+        justify-content: center;
+      }
+
+      .profile-nav-button.is-authenticated .juntigo-nav-label {
+        display: none;
+      }
+
+      .profile-nav-button.is-authenticated .juntigo-nav-chevron {
+        display: none;
+      }
+
+      .profile-nav-button.is-authenticated .juntigo-nav-avatar {
+        width: 34px;
+        height: 34px;
+      }
+
+      .juntigo-auth-menu {
+        min-width: 170px;
+      }
+
+      .juntigo-auth-menu a,
+      .juntigo-auth-menu button {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+    }
   `;
 
   document.head.appendChild(style);
