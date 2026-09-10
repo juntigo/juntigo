@@ -820,21 +820,24 @@ juntigoGoogleId = response.credential;
   }
 
   window.addEventListener("load", function() {
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleCredential
-    });
-
-    google.accounts.id.renderButton(
-      document.getElementById("google-login-button"),
-      {
-        theme: "outline",
-        size: "large",
-        text: "signin_with",
-        shape: "rectangular"
-      }
-    );
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    auto_select: true
   });
+
+  google.accounts.id.renderButton(
+    document.getElementById("google-login-button"),
+    {
+      theme: "outline",
+      size: "large",
+      text: "signin_with",
+      shape: "rectangular"
+    }
+  );
+
+  google.accounts.id.prompt();
+});
 
   
 const profilePhotoInput = document.getElementById("profile-photo");
