@@ -727,7 +727,7 @@
   const GOOGLE_CLIENT_ID = "853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 
 const JUNTIGO_SESSION_KEY = "juntigoSessionToken";
-let juntigoSessionToken = sessionStorage.getItem(JUNTIGO_SESSION_KEY) || "";
+let juntigoSessionToken = localStorage.getItem(JUNTIGO_SESSION_KEY) || "";
 function loadProfileFromBackend(sessionToken) {
   fetch(
     "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&sessionToken=" +
@@ -824,10 +824,10 @@ async function handleGoogleCredential(response) {
 
     juntigoSessionToken = result.sessionToken;
 
-    sessionStorage.setItem(
-      JUNTIGO_SESSION_KEY,
-      juntigoSessionToken
-    );
+    localStorage.setItem(
+  JUNTIGO_SESSION_KEY,
+  juntigoSessionToken
+);
 
     document.getElementById("google-login-status").textContent =
       "Zalogowano jako: " +
