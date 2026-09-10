@@ -16,6 +16,24 @@
     .dashboard-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.dashboard-card{display:flex;align-items:center;gap:18px;min-height:120px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:20px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}.dashboard-card:hover{transform:translateY(-2px);border-color:rgba(255,116,23,.45);box-shadow:0 12px 28px rgba(7,27,51,.08)}.card-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,116,23,.1);color:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0}.card-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.dashboard-card h3{color:var(--navy);font-size:19px;margin-bottom:3px}.dashboard-card p{color:var(--muted);font-size:14px}.arrow{margin-left:auto;color:var(--muted);font-size:22px}
     .section{margin-top:34px;background:var(--white);border:1px solid var(--border);border-radius:24px;padding:28px}.section h2{color:var(--navy);font-size:24px;margin-bottom:8px}.section-intro{color:var(--muted);margin-bottom:20px}.trip-list{display:flex;flex-direction:column;gap:10px}.trip-item{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px 18px;background:#f7f8fa;border-radius:14px}.trip-item strong{color:var(--navy)}.trip-item span{color:var(--muted);font-size:14px}.empty{color:var(--muted);padding:8px 0}.profile-action{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;background:var(--orange);color:#fff;font-weight:800;margin-top:14px}
     @media(max-width:700px){nav{height:82px}.logo img{width:58px;height:58px}.back-link{padding:9px 15px;font-size:14px}main{padding:45px 0 70px}.account-header{padding:22px}.account-header h2{font-size:23px}.dashboard-grid{grid-template-columns:1fr}.dashboard-card{min-height:105px}}
+    .logout-button {
+  min-height: 48px;
+  padding: 0 22px;
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+  background: white;
+  color: var(--navy);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.logout-button:hover {
+  background: var(--navy);
+  color: white;
+}
   </style>
 </head>
 <body>
@@ -34,7 +52,14 @@
 <section class="section" id="moje-wyjazdy"><h2>Moje wyjazdy</h2><p class="section-intro">Wyjazdy zapisane na Twoim profilu.</p><div class="trip-list" id="trip-list"><div class="empty">Zaloguj się, aby wczytać wyjazdy.</div></div></section>
 <section class="section" id="zainteresowania"><h2>Wysłane zainteresowania</h2><p class="section-intro">Tutaj pojawi się historia osób, którym wysłałeś zainteresowanie.</p><div class="empty">Funkcja zostanie podłączona do systemu dopasowań.</div></section>
 <section class="section" id="dopasowania"><h2>Dopasowania</h2><p class="section-intro">Tutaj pojawią się wzajemne dopasowania.</p><div class="empty">Brak dopasowań.</div></section>
-<section class="section" id="ustawienia"><h2>Ustawienia</h2><p class="section-intro">Ustawienia konta zostaną podłączone do danych zapisanych w Juntigo.</p></section>
+<section class="section" id="ustawienia">
+  <h2>Ustawienia</h2>
+  <p class="section-intro">Ustawienia konta i prywatności.</p>
+
+  <button type="button" class="logout-button" onclick="logoutJuntigo()">
+    Wyloguj się
+  </button>
+</section>
 </main>
 <script>
 const JUNTIGO_API="https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
@@ -73,6 +98,11 @@ window.addEventListener("load",function(){
     initializeGoogleLogin();
   }
 });
+  function logoutJuntigo() {
+  localStorage.removeItem(JUNTIGO_SESSION_KEY);
+  juntigoSessionToken = "";
+  window.location.href = "index.html";
+}
 </script>
 </body>
 </html>
