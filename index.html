@@ -1283,9 +1283,15 @@
 }
 
 .person-profile-verified {
-  margin-top: 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #edf8f1;
   color: #176b3a;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -1294,9 +1300,25 @@
 }
 
 .person-profile-section h3 {
-  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 11px;
   color: var(--navy);
   font-size: 15px;
+  font-weight: 800;
+}
+
+.profile-section-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #f1f3f5;
+  font-size: 14px;
 }
 
 .person-profile-section p {
@@ -1321,13 +1343,41 @@
 }
 
 .person-profile-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f1f3f5;
   color: var(--navy);
   font-size: 14px;
   font-weight: 800;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .person-profile-instagram:hover {
-  color: var(--orange);
+  background: var(--navy);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.instagram-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: var(--navy);
+  color: white;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.person-profile-instagram:hover .instagram-icon {
+  background: white;
+  color: var(--navy);
 }
 .person-interests {
   display: inline-block;
@@ -2901,6 +2951,17 @@ ${person.trips ? `
       `;
     });
 }
+  function getTripIcon(trip) {
+  const value = String(trip).toLowerCase();
+
+  if (value.includes("mediolan")) return "📍";
+  if (value.includes("malaga") || value.includes("málaga") || value.includes("espanyol")) return "⚽";
+  if (value.includes("oktoberfest")) return "🍺";
+
+  return "🧳";
+}
+
+function showPersonProfile(person) {
 function showPersonProfile(person) {
   const existingModal = document.getElementById("person-profile-modal");
 
@@ -2969,14 +3030,14 @@ function showPersonProfile(person) {
 
       ${person.about ? `
         <div class="person-profile-section">
-          <h3>O mnie</h3>
+          <h3><span class="profile-section-icon">👤</span> O mnie</h3>
           <p>${escapeHtml(person.about)}</p>
         </div>
       ` : ""}
 
       ${interests.length ? `
         <div class="person-profile-section">
-          <h3>Zainteresowania</h3>
+          <h3><span class="profile-section-icon">❤️</span> Zainteresowania</h3>
           <div class="person-profile-tags">
             ${interests.map(item => `
               <span>${escapeHtml(item)}</span>
@@ -2987,7 +3048,7 @@ function showPersonProfile(person) {
 
       ${travelStyle.length ? `
         <div class="person-profile-section">
-          <h3>Styl podróżowania</h3>
+          <h3><span class="profile-section-icon">✈️</span> Styl podróżowania</h3>
           <div class="person-profile-tags">
             ${travelStyle.map(item => `
               <span>${escapeHtml(item)}</span>
@@ -2998,25 +3059,26 @@ function showPersonProfile(person) {
 
       ${trips.length ? `
         <div class="person-profile-section">
-          <h3>Interesujące mnie wyjazdy</h3>
+          <h3><span class="profile-section-icon">🧳</span> Interesujące mnie wyjazdy</h3>
           <div class="person-profile-tags">
             ${trips.map(item => `
-              <span>${escapeHtml(item)}</span>
-            `).join("")}
+  <span>${getTripIcon(item)} ${escapeHtml(item)}</span>
+`).join("")}
           </div>
         </div>
       ` : ""}
 
       ${person.instagram ? `
         <div class="person-profile-section">
-          <h3>Instagram</h3>
+          <h3><span class="profile-section-icon">📸</span> Instagram</h3>
           <a
-            class="person-profile-instagram"
-            href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
-            target="_blank"
-            rel="noopener noreferrer">
-            ${escapeHtml(person.instagram)}
-          </a>
+  class="person-profile-instagram"
+  href="..."
+  target="_blank"
+  rel="noopener noreferrer">
+  <span class="instagram-icon">◎</span>
+  <span>@${escapeHtml(String(person.instagram).replace("@", "").trim())}</span>
+</a>
         </div>
       ` : ""}
 
