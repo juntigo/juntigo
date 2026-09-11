@@ -2962,7 +2962,7 @@ ${person.trips ? `
 }
 
 function showPersonProfile(person) {
-function showPersonProfile(person) {
+
   const existingModal = document.getElementById("person-profile-modal");
 
   if (existingModal) {
@@ -3073,7 +3073,7 @@ function showPersonProfile(person) {
           <h3><span class="profile-section-icon">📸</span> Instagram</h3>
           <a
   class="person-profile-instagram"
-  href="..."
+  href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
   target="_blank"
   rel="noopener noreferrer">
   <span class="instagram-icon">◎</span>
