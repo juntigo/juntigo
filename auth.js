@@ -38,7 +38,7 @@ function normalizeTagList(values, aliases) {
         .filter(Boolean);
 
   return list
-    .map(item => aliases[item] || item)
+    .map(item => Object.prototype.hasOwnProperty.call(aliases, item) ? aliases[item] : item)
     .filter(Boolean);
 }
 
