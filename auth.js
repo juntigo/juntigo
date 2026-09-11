@@ -3,6 +3,8 @@ const JUNTIGO_AUTH_API = "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl
 const JUNTIGO_API = JUNTIGO_AUTH_API;
 
 const interestAliases = {
+  "Podróże": "",
+  "Imprezy": "",
   "Sport": "⚽ Sport",
   "Muzyka": "🎶 Muzyka i festiwale",
   "Jedzenie": "🍷 Lokalne smaki",
@@ -17,9 +19,14 @@ const interestAliases = {
 };
 
 const styleAliases = {
+  "Zwiedzanie": "🏛️ Historia i zabytki",
+  "Relaks": "😎 Na luzie",
+  "Imprezy": "🎉 Imprezowo",
+  "Jedzenie i lokalny klimat": "",
+  "Sport": "🥾 Aktywnie",
+  "Fotografia": "",
   "Aktywnie": "🥾 Aktywnie",
-  "Chill": "😎 Na luzie",
-  "Imprezy": "🎉 Imprezowo"
+  "Chill": "😎 Na luzie"
 };
 
 function normalizeTagList(values, aliases) {
