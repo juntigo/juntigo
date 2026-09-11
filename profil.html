@@ -754,7 +754,7 @@
 const JUNTIGO_SESSION_KEY = "juntigoSessionToken";
 let juntigoSessionToken = localStorage.getItem(JUNTIGO_SESSION_KEY) || "";
 
-const interestAliases = {
+const profileInterestAliases = {
   "Podróże": null,
   "Sport": "⚽ Sport",
   "Muzyka": "🎶 Muzyka i festiwale",
@@ -769,7 +769,7 @@ const interestAliases = {
   "Zwiedzanie": "🏛️ Historia i zabytki"
 };
 
-const styleAliases = {
+const profileStyleAliases = {
   "Zwiedzanie": null,
   "Aktywnie": "🥾 Aktywnie",
   "Chill": "😎 Na luzie",
@@ -810,7 +810,7 @@ function loadProfileFromBackend(sessionToken) {
       
 
 const normalizedInterests = interests
-  .map(item => interestAliases[item] || item)
+ .map(item => profileInterestAliases[item] || item)
   .filter(item =>
     Array.from(
       document.querySelectorAll("#profile-interests-options button")
@@ -837,7 +837,7 @@ document.querySelectorAll(
  
 
 const normalizedTravelStyle = travelStyle
-  .map(item => styleAliases[item] || item)
+  .map(item => profileStyleAliases[item] || item)
   .filter(item =>
     Array.from(
       document.querySelectorAll("#profile-style-options button")
@@ -1157,7 +1157,7 @@ function showProfile(profile) {
 
 const normalizedInterests = normalizeTagList(
   profile.interests,
-  interestAliases
+  profileInterestAliases
 );
 
 interests.innerHTML = normalizedInterests
@@ -1168,7 +1168,7 @@ const style = document.getElementById("profile-view-style");
 
 const normalizedTravelStyle = normalizeTagList(
   profile.travelStyle,
-  styleAliases
+  profileStyleAliases
 );
 
 style.innerHTML = normalizedTravelStyle
