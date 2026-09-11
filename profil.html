@@ -753,6 +753,29 @@
 
 const JUNTIGO_SESSION_KEY = "juntigoSessionToken";
 let juntigoSessionToken = localStorage.getItem(JUNTIGO_SESSION_KEY) || "";
+
+const interestAliases = {
+  "Podróże": null,
+  "Sport": "⚽ Sport",
+  "Muzyka": "🎶 Muzyka i festiwale",
+  "Jedzenie": "🍷 Lokalne smaki",
+  "Fotografia": "📸 Fotografia",
+  "Góry": "🏔️ Góry",
+  "Morze": "🌊 Morze",
+  "Plaża": "🌊 Morze",
+  "Piłka nożna": "⚽ Sport",
+  "Festiwale": "🎶 Muzyka i festiwale",
+  "Kultura": "🎨 Kultura i sztuka",
+  "Zwiedzanie": "🏛️ Historia i zabytki"
+};
+
+const styleAliases = {
+  "Zwiedzanie": null,
+  "Aktywnie": "🥾 Aktywnie",
+  "Chill": "😎 Na luzie",
+  "Imprezy": "🎉 Imprezowo"
+};
+
 function loadProfileFromBackend(sessionToken) {
   fetch(
     "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&sessionToken=" +
@@ -784,19 +807,7 @@ function loadProfileFromBackend(sessionToken) {
       .map(item => item.trim())
       .filter(Boolean);
 
-      const interestAliases = {
-  "Sport": "⚽ Sport",
-  "Muzyka": "🎶 Muzyka i festiwale",
-  "Jedzenie": "🍷 Lokalne smaki",
-  "Fotografia": "📸 Fotografia",
-  "Góry": "🏔️ Góry",
-  "Morze": "🌊 Morze",
-  "Plaża": "🌊 Morze",
-  "Piłka nożna": "⚽ Sport",
-  "Festiwale": "🎶 Muzyka i festiwale",
-  "Kultura": "🎨 Kultura i sztuka",
-  "Zwiedzanie": "🏛️ Historia i zabytki"
-};
+      
 
 const normalizedInterests = interests
   .map(item => interestAliases[item] || item)
@@ -823,11 +834,7 @@ document.querySelectorAll(
       .filter(Boolean);
 
       
- const styleAliases = {
-  "Aktywnie": "🥾 Aktywnie",
-  "Chill": "😎 Na luzie",
-  "Imprezy": "🎉 Imprezowo"
-};
+ 
 
 const normalizedTravelStyle = travelStyle
   .map(item => styleAliases[item] || item)
@@ -1111,7 +1118,13 @@ fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV
         .filter(Boolean);
 
   return list
-    .map(item => aliases[item] || item)
+    .map(item => {
+      if (Object.prototype.hasOwnProperty.call(aliases, item)) {
+        return aliases[item];
+      }
+
+      return item;
+    })
     .filter(Boolean);
 }
 function showProfile(profile) {
