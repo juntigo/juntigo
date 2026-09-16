@@ -15,6 +15,17 @@
     .account-header{display:flex;align-items:center;gap:22px;background:var(--white);border:1px solid var(--border);border-radius:24px;padding:28px;margin-bottom:28px;box-shadow:0 12px 35px rgba(7,27,51,.07)}.avatar{width:82px;height:82px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;overflow:hidden;flex-shrink:0}.avatar img{width:100%;height:100%;object-fit:cover}.account-header h2{color:var(--navy);font-size:28px;margin-bottom:3px}.account-header p{color:var(--muted)}.verified{color:var(--orange);font-weight:800;font-size:14px;margin-top:5px}
     .dashboard-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.dashboard-card{display:flex;align-items:center;gap:18px;min-height:120px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:20px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}.dashboard-card:hover{transform:translateY(-2px);border-color:rgba(255,116,23,.45);box-shadow:0 12px 28px rgba(7,27,51,.08)}.card-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,116,23,.1);color:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0}.card-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.dashboard-card h3{color:var(--navy);font-size:19px;margin-bottom:3px}.dashboard-card p{color:var(--muted);font-size:14px}.arrow{margin-left:auto;color:var(--muted);font-size:22px}
     .section{margin-top:34px;background:var(--white);border:1px solid var(--border);border-radius:24px;padding:28px}.section h2{color:var(--navy);font-size:24px;margin-bottom:8px}.section-intro{color:var(--muted);margin-bottom:20px}.trip-list{display:flex;flex-direction:column;gap:10px}.trip-item{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px 18px;background:#f7f8fa;border-radius:14px}.trip-item strong{color:var(--navy)}.trip-item span{color:var(--muted);font-size:14px}.empty{color:var(--muted);padding:8px 0}.profile-action{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;background:var(--orange);color:#fff;font-weight:800;margin-top:14px}
+    .match-list{display:flex;flex-direction:column;gap:12px}
+.match-item{display:flex;align-items:center;gap:16px;padding:16px 18px;background:#f7f8fa;border-radius:16px;border:1px solid transparent;cursor:pointer;transition:all .2s ease}
+.match-item:hover{border-color:rgba(255,116,23,.45);box-shadow:0 8px 20px rgba(7,27,51,.06)}
+.match-avatar{width:58px;height:58px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800;overflow:hidden;flex-shrink:0}
+.match-avatar img{width:100%;height:100%;object-fit:cover}
+.match-info{min-width:0;flex:1}
+.match-info strong{display:block;color:var(--navy);font-size:17px}
+.match-info span{display:block;color:var(--muted);font-size:14px}
+.match-trip{margin-top:3px}
+.match-arrow{color:var(--muted);font-size:24px;flex-shrink:0}
+.match-empty{color:var(--muted);padding:8px 0}
     @media(max-width:700px){nav{height:82px}.logo img{width:58px;height:58px}.nav-links{gap:6px}.back-link{padding:9px 15px;font-size:14px}main{padding:45px 0 70px}.account-header{padding:22px}.account-header h2{font-size:23px}.dashboard-grid{grid-template-columns:1fr}.dashboard-card{min-height:105px}}
     .logout-button{min-height:48px;padding:0 22px;border:2px solid var(--navy);border-radius:999px;background:white;color:var(--navy);font:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s ease}.logout-button:hover{background:var(--navy);color:white}
   </style>
@@ -34,7 +45,13 @@
 </section>
 <section class="section" id="moje-wyjazdy"><h2>Moje wyjazdy</h2><p class="section-intro">Wyjazdy zapisane na Twoim profilu.</p><div class="trip-list" id="trip-list"><div class="empty">Zaloguj się, aby wczytać wyjazdy.</div></div></section>
 <section class="section" id="zainteresowania"><h2>Wysłane zainteresowania</h2><p class="section-intro">Tutaj pojawi się historia osób, którym wysłałeś zainteresowanie.</p><div class="empty">Funkcja zostanie podłączona do systemu dopasowań.</div></section>
-<section class="section" id="dopasowania"><h2>Dopasowania</h2><p class="section-intro">Tutaj pojawią się wzajemne dopasowania.</p><div class="empty">Brak dopasowań.</div></section>
+<section class="section" id="dopasowania">
+  <h2>Dopasowania</h2>
+  <p class="section-intro">Osoby, z którymi wzajemnie się zainteresowaliście.</p>
+  <div class="match-list" id="match-list">
+    <div class="match-empty">Zaloguj się, aby wczytać dopasowania.</div>
+  </div>
+</section>
 <section class="section" id="ustawienia"><h2>Ustawienia</h2><p class="section-intro">Ustawienia konta i prywatności.</p><button type="button" class="logout-button" onclick="logoutJuntigo()">Wyloguj się</button></section>
 </main>
 <script>
@@ -43,8 +60,166 @@ const GOOGLE_CLIENT_ID="853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googl
 const JUNTIGO_SESSION_KEY="juntigoSessionToken";
 let juntigoSessionToken=localStorage.getItem(JUNTIGO_SESSION_KEY)||"";
 function setAccountError(message){const error=document.getElementById("account-error");if(!error)return;error.textContent=message||"";error.style.display=message?"block":"none";}
-async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const url=JUNTIGO_API+"?action=profile&sessionToken="+encodeURIComponent(sessionToken);const response=await fetch(url,{method:"GET"});const result=await response.json();if(!result.success)throw new Error(result.error||"Nie udało się wczytać konta.");const profile=result.profile;const identity=result.identity||{};document.getElementById("account-login-status").textContent="Zalogowano jako: "+(identity.name||identity.email||"użytkownik");if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Zweryfikowany profil Juntigo":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if(profile.photo){avatar.innerHTML="";const image=document.createElement("img");image.src=profile.photo;image.alt="Zdjęcie profilowe";avatar.appendChild(image);}else{avatar.textContent=name.charAt(0).toUpperCase();}const trips=Array.isArray(profile.trips)?profile.trips:[];const tripList=document.getElementById("trip-list");if(trips.length){tripList.innerHTML=trips.map(function(trip){return'<div class="trip-item"><strong>'+escapeHtml(trip)+'</strong><span>Wybrany w profilu</span></div>';}).join("");}else{tripList.innerHTML='<div class="empty">Brak wybranych wyjazdów.</div>';}}catch(error){console.error("Błąd Juntigo:",error);document.getElementById("account-login-status").textContent="";setAccountError(error.message||"Nie udało się wczytać konta.");}}
+async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const url=JUNTIGO_API+"?action=profile&sessionToken="+encodeURIComponent(sessionToken);const response=await fetch(url,{method:"GET"});const result=await response.json();if(!result.success)throw new Error(result.error||"Nie udało się wczytać konta.");const profile=result.profile;const identity=result.identity||{};document.getElementById("account-login-status").textContent="Zalogowano jako: "+(identity.name||identity.email||"użytkownik");if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Zweryfikowany profil Juntigo":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if(profile.photo){avatar.innerHTML="";const image=document.createElement("img");image.src=profile.photo;image.alt="Zdjęcie profilowe";avatar.appendChild(image);}else{avatar.textContent=name.charAt(0).toUpperCase();}const trips=Array.isArray(profile.trips)?profile.trips:[];const tripList=document.getElementById("trip-list");if(trips.length){tripList.innerHTML=trips.map(function(trip){return'<div class="trip-item"><strong>'+escapeHtml(trip)+'</strong><span>Wybrany w profilu</span></div>';}).join("");}else{tripList.innerHTML='<div class="empty">Brak wybranych wyjazdów.</div>';}await loadAccountMatches(sessionToken);}catch(error){console.error("Błąd Juntigo:",error);document.getElementById("account-login-status").textContent="";setAccountError(error.message||"Nie udało się wczytać konta.");}}
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  async function loadAccountMatches(sessionToken) {
+  const matchList = document.getElementById("match-list");
+
+  if (!matchList || !sessionToken) {
+    return;
+  }
+
+  matchList.innerHTML =
+    '<div class="match-empty">Wczytywanie dopasowań…</div>';
+
+  try {
+    const matchesUrl =
+      JUNTIGO_API +
+      "?action=profile&sessionToken=" +
+      encodeURIComponent(sessionToken);
+
+    const profileResponse = await fetch(matchesUrl, {
+      method: "GET"
+    });
+
+    const profileResult = await profileResponse.json();
+
+    if (!profileResult.success) {
+      throw new Error(
+        profileResult.error || "Nie udało się zweryfikować sesji."
+      );
+    }
+
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "myMatches",
+        sessionToken: sessionToken
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        result.error || "Nie udało się wczytać dopasowań."
+      );
+    }
+
+    const matches = Array.isArray(result.matches)
+      ? result.matches
+      : [];
+
+    if (!matches.length) {
+      matchList.innerHTML =
+        '<div class="match-empty">Brak dopasowań.</div>';
+      return;
+    }
+
+    const renderedMatches = [];
+
+    for (const match of matches) {
+      const trip = String(match.trip || "").trim();
+      const userId = String(match.userId || "").trim();
+
+      if (!trip || !userId) {
+        continue;
+      }
+
+      try {
+        const peopleResponse = await fetch(
+          JUNTIGO_API +
+          "?trip=" +
+          encodeURIComponent(trip)
+        );
+
+        const peopleResult = await peopleResponse.json();
+
+        const people = Array.isArray(peopleResult.people)
+          ? peopleResult.people
+          : [];
+
+        const person = people.find(function(item) {
+          return String(item.userId || "").trim() === userId;
+        });
+
+        if (!person) {
+          continue;
+        }
+
+        const name =
+          String(person.name || "").trim() ||
+          "Użytkownik Juntigo";
+
+        const city =
+          String(person.city || "").trim();
+
+        const photo =
+          String(person.photo || "").trim();
+
+        const avatarHtml = photo
+          ? '<div class="match-avatar">' +
+            '<img src="' +
+            escapeHtml(photo) +
+            '" alt="Zdjęcie profilowe">' +
+            '</div>'
+          : '<div class="match-avatar">' +
+            escapeHtml(name.charAt(0).toUpperCase()) +
+            '</div>';
+
+        renderedMatches.push(
+          '<div class="match-item" data-match-id="' +
+          escapeHtml(match.matchId) +
+          '">' +
+            avatarHtml +
+            '<div class="match-info">' +
+              '<strong>' +
+                escapeHtml(name) +
+              '</strong>' +
+              (city
+                ? '<span>' +
+                    escapeHtml(city) +
+                  '</span>'
+                : '') +
+              '<span class="match-trip">' +
+                '✈️ ' +
+                escapeHtml(trip) +
+              '</span>' +
+            '</div>' +
+            '<span class="match-arrow">›</span>' +
+          '</div>'
+        );
+      } catch (personError) {
+        console.error(
+          "Nie udało się wczytać profilu dopasowania:",
+          personError
+        );
+      }
+    }
+
+    if (!renderedMatches.length) {
+      matchList.innerHTML =
+        '<div class="match-empty">Brak dostępnych profili dopasowań.</div>';
+      return;
+    }
+
+    matchList.innerHTML = renderedMatches.join("");
+
+  } catch (error) {
+    console.error(
+      "Błąd wczytywania dopasowań:",
+      error
+    );
+
+    matchList.innerHTML =
+      '<div class="match-empty">' +
+      escapeHtml(
+        error.message ||
+        "Nie udało się wczytać dopasowań."
+      ) +
+      '</div>';
+  }
+}
 async function handleGoogleCredential(response){const idToken=response.credential||"";if(!idToken)return;try{const responseSession=await fetch(JUNTIGO_API+"?action=session&idToken="+encodeURIComponent(idToken),{method:"GET"});const result=await responseSession.json();if(!result.success||!result.sessionToken){throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");}juntigoSessionToken=result.sessionToken;localStorage.setItem(JUNTIGO_SESSION_KEY,juntigoSessionToken);await loadAccountProfile(juntigoSessionToken);}catch(error){console.error("Błąd logowania Juntigo:",error);setAccountError(error.message||"Nie udało się zalogować.");}}
 function initializeGoogleLogin(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initializeGoogleLogin,300);return;}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:true});google.accounts.id.renderButton(document.getElementById("google-login-button"),{theme:"outline",size:"large",text:"signin_with",shape:"rectangular"});}
 window.addEventListener("load",function(){if(juntigoSessionToken){loadAccountProfile(juntigoSessionToken);}else{initializeGoogleLogin();}});
