@@ -2829,11 +2829,38 @@ function showTeam(trip, button) {
   document.body.style.overflow = "hidden";
 
   const results = modal.querySelector(".team-results");
-  const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
+const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
 
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
+const sessionToken = getJuntigoSessionToken();
+
+const interestStatusPromise = sessionToken
+  ? fetch(
+      JUNTIGO_API +
+      "?action=interestStatus" +
+      "&sessionToken=" + encodeURIComponent(sessionToken) +
+      "&trip=" + encodeURIComponent(trip)
+    )
+      .then(response => response.json())
+      .catch(() => ({
+        success: false,
+        interestedUserIds: []
+      }))
+  : Promise.resolve({
+      success: false,
+      interestedUserIds: []
+    });
+
+Promise.all([
+  fetch(url).then(response => response.json()),
+  interestStatusPromise
+])
+  .then(([data, interestStatus]) => {
+
+    const interestedUserIds = new Set(
+      Array.isArray(interestStatus.interestedUserIds)
+        ? interestStatus.interestedUserIds.map(id => String(id).trim())
+        : []
+    );
 
       if (!data.success) {
         results.innerHTML = `
@@ -2905,16 +2932,11 @@ ${person.trips ? `
             ` : ""}
 
             ${person.userId ? `
-              ${(() => {
-                const interestKey =
-                    "juntigoInterest_" +
-                    String(trip).trim() + "_" +
-                    String(localStorage.getItem("juntigoUserInstagram") || "").trim().replace("@", "").toLowerCase() + "_" +
-                    String(person.instagram || "").trim().replace("@", "").toLowerCase();
+  ${(() => {
+    const interestSent =
+      interestedUserIds.has(String(person.userId).trim());
 
-                const interestSent = false;
-
-                return `
+    return `
                 <div class="person-card-actions">
 
  <button
