@@ -435,7 +435,36 @@ async function markMatchAsRead(matchId) {
     );
   }
 }
+async function markMessagesRead(matchId) {
+  if (!juntigoSessionToken || !matchId) {
+    return;
+  }
 
+  try {
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "markMessagesRead",
+        sessionToken: juntigoSessionToken,
+        matchId: String(matchId).trim()
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      console.warn(
+        "Nie udało się oznaczyć wiadomości jako przeczytanych:",
+        result.error
+      );
+    }
+  } catch (error) {
+    console.warn(
+      "Błąd oznaczania wiadomości jako przeczytanych:",
+      error
+    );
+  }
+}
 async function openMatchChat(matchId, personName, trip) {
   if (!juntigoSessionToken) {
     window.location.href = "konto.html";
@@ -472,9 +501,10 @@ async function openMatchChat(matchId, personName, trip) {
       activeChatTrip;
   }
 
-  modal.classList.add("active");
+ modal.classList.add("active");
 
 await markMatchAsRead(activeChatMatchId);
+await markMessagesRead(activeChatMatchId);
 await loadChatMessages();
 
   const input =
