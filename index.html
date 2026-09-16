@@ -2929,7 +2929,7 @@ ${person.trips ? `
     class="person-contact${interestSent ? " interest-sent" : ""}"
     data-trip="${escapeHtml(trip)}"
     data-instagram="${escapeHtml(person.instagram)}"
-    onclick="${interestSent ? "return false;" : `saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.instagram)}', '${escapeHtml(person.name)}')`}"
+    onclick="${interestSent ? "return false;" : `saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.userId)}', '${escapeHtml(person.name)}')`}"
   >
     ${interestSent ? "Zainteresowanie wysłane" : "Jestem zainteresowany"}
   </a>
@@ -3596,40 +3596,45 @@ saveInterest(
 }
 
 
-function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
+function saveInterest(event, trip, toUserId, toName) {
     if (event) {
         event.preventDefault();
     }
 
     const contactButton =
-        (event && event.currentTarget) ||
-        (juntigoPendingInterest && juntigoPendingInterest.contactButton);
+        event && event.currentTarget
+            ? event.currentTarget
+            : null;
 
-    const fromInstagram = String(
-    instagramOverride || ""
-)
-.trim()
-.replace("@", "")
-.toLowerCase();
+    const sessionToken = getJuntigoSessionToken();
 
-    if (!fromInstagram) {
-        juntigoPendingInterest = {
-            trip: trip,
-            toInstagram: toInstagram,
-            toName: toName,
-            contactButton: contactButton
-        };
-
-        openJuntigoInstagramModal();
+    if (!sessionToken) {
+        window.location.href = "konto.html";
         return;
+    }
+
+    const normalizedTrip = String(trip || "").trim();
+    const normalizedUserId = String(toUserId || "").trim();
+
+    if (!normalizedTrip || !normalizedUserId) {
+        console.error("Brak danych zainteresowania.", {
+            trip: normalizedTrip,
+            toUserId: normalizedUserId
+        });
+        return;
+    }
+
+    if (contactButton) {
+        contactButton.textContent = "Wysyłamy...";
+        contactButton.style.pointerEvents = "none";
     }
 
     const formData = new URLSearchParams();
 
-    formData.append("trip", String(trip || "").trim());
-    formData.append("fromInstagram", fromInstagram);
-    formData.append("toInstagram", String(toInstagram || "").trim());
-    formData.append("toName", String(toName || "").trim());
+    formData.append("type", "interest");
+    formData.append("sessionToken", sessionToken);
+    formData.append("trip", normalizedTrip);
+    formData.append("toUserId", normalizedUserId);
 
     fetch(JUNTIGO_API, {
         method: "POST",
@@ -3639,77 +3644,58 @@ function saveInterest(event, trip, toInstagram, toName, instagramOverride) {
     .then(data => {
 
         if (!data.success) {
-            console.error("JUNTIGO API:", data.error);
-            return;
+            throw new Error(
+                data.error || "Nie udało się wysłać zainteresowania."
+            );
         }
 
-        const interestKey =
-            "juntigoInterest_" +
-            String(trip || "").trim() + "_" +
-            fromInstagram + "_" +
-            String(toInstagram || "")
-                .trim()
-                .replace("@", "")
-                .toLowerCase();
+        if (contactButton) {
+            contactButton.textContent = "Zainteresowanie wysłane";
+            contactButton.classList.add("interest-sent");
+            contactButton.removeAttribute("onclick");
+            contactButton.style.pointerEvents = "none";
+        }
 
-        localStorage.setItem(interestKey, "sent");
+        if (data.match === true) {
 
-        if (data.alreadyMatched === true) {
+            const modal =
+                document.getElementById("juntigoMatchModal");
 
-            const modal = document.getElementById("juntigoMatchModal");
-            const message = document.getElementById("juntigoMatchMessage");
-
-            if (message) {
-                message.textContent =
-                    "Ty i " + toName + " jesteście już połączeni.";
-            }
-
-            if (modal) {
-                modal.classList.add("active");
-
-                modal.dataset.instagram =
-                    String(toInstagram || "")
-                        .replace("@", "")
-                        .trim();
-            }
-
-        } else if (data.match === true) {
-
-            const modal = document.getElementById("juntigoMatchModal");
-            const message = document.getElementById("juntigoMatchMessage");
+            const message =
+                document.getElementById("juntigoMatchMessage");
 
             if (message) {
                 message.textContent =
-                    "Ty i " + toName +
+                    "Ty i " +
+                    String(toName || "ta osoba") +
                     " jesteście zainteresowani sobą nawzajem.";
             }
-if (contactButton) {
-    contactButton.textContent = "Zainteresowanie wysłane";
-    contactButton.classList.add("interest-sent");
-    contactButton.removeAttribute("onclick");
-    contactButton.style.pointerEvents = "none";
-}
+
             if (modal) {
                 modal.classList.add("active");
 
-                modal.dataset.instagram =
-                    String(toInstagram || "")
-                        .replace("@", "")
-                        .trim();
-            }
+                if (data.matchId) {
+                    modal.dataset.matchId = data.matchId;
+                }
 
-        } else {
-if (contactButton) {
-        contactButton.textContent = "Zainteresowanie wysłane";
-        contactButton.classList.add("interest-sent");
-        contactButton.removeAttribute("onclick");
-        contactButton.style.pointerEvents = "none";
-}
-          }
-        juntigoPendingInterest = null;
+                modal.dataset.userId = normalizedUserId;
+            }
+        }
+
     })
     .catch(error => {
-        console.error("Błąd JUNTIGO:", error);
+
+        console.error(
+            "Błąd wysyłania zainteresowania:",
+            error
+        );
+
+        if (contactButton) {
+            contactButton.textContent =
+                "Jestem zainteresowany";
+
+            contactButton.style.pointerEvents = "";
+        }
     });
 }
    function closeJuntigoMatchModal() {
