@@ -2896,7 +2896,11 @@ window.juntigoTeamPeople = data.people;
               ${person.age ? person.age + " lat" : ""}
               ${person.city ? " · " + escapeHtml(person.city) : ""}
             </div>
-
+${person.verified ? `
+  <div class="person-profile-verified">
+    ✓ Profil zweryfikowany
+  </div>
+` : ""}
            ${person.instagram ? `
   <a
     class="person-instagram"
