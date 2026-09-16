@@ -156,6 +156,33 @@
     color: var(--orange);
     background: rgba(255, 107, 26, 0.08);
 }
+    .profile-notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #e53935;
+    color: white;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    border: 2px solid white;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.profile-nav-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 .nav-cta:hover {
   background: var(--navy);
   color: white;
@@ -2405,12 +2432,25 @@
 <button class="mobile-menu-toggle" type="button" onclick="toggleMobileMenu()" aria-label="Otwórz menu">
     ☰
   </button>
-<button
-    type="button"
-    class="profile-nav-button"
-    aria-label="Otwórz profil"
-  onclick="window.location.href='konto.html'"
->
+<div class="profile-nav-wrapper">
+  <button
+      type="button"
+      class="profile-nav-button"
+      aria-label="Otwórz profil"
+      onclick="window.location.href='konto.html'"
+  >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 20c0-4 3.2-6 8-6s8 2 8 6"></path>
+      </svg>
+
+      <span
+          id="profile-notification-badge"
+          class="profile-notification-badge"
+          aria-hidden="true"
+      ></span>
+  </button>
+</div>
     <svg viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="8" r="4"></circle>
         <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
@@ -2761,7 +2801,75 @@ function loadTripInterestCounts() {
 }
 
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
+async function loadJuntigoNotifications() {
+    const badge =
+        document.getElementById("profile-notification-badge");
 
+    if (!badge) {
+        return;
+    }
+
+    const sessionToken =
+        getJuntigoSessionToken();
+
+    if (!sessionToken) {
+        badge.style.display = "none";
+        return;
+    }
+
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: new URLSearchParams({
+                type: "notifications",
+                sessionToken: sessionToken
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            badge.style.display = "none";
+            return;
+        }
+
+        const unreadCount =
+            Number(data.unreadCount || 0);
+
+        if (unreadCount > 0) {
+            badge.textContent =
+                unreadCount > 99
+                    ? "99+"
+                    : String(unreadCount);
+
+            badge.style.display = "flex";
+        } else {
+            badge.textContent = "";
+            badge.style.display = "none";
+        }
+
+    } catch (error) {
+        console.warn(
+            "Nie udało się pobrać powiadomień Juntigo:",
+            error
+        );
+
+        badge.style.display = "none";
+    }
+}
+
+loadJuntigoNotifications();
+
+setInterval(
+    loadJuntigoNotifications,
+    20000
+);
+  loadJuntigoNotifications();
+
+setInterval(
+    loadJuntigoNotifications,
+    20000
+);
 function toggleMobileMenu() {
     const menu = document.querySelector(".nav-menu");
 
