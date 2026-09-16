@@ -26,6 +26,26 @@
 .match-trip{margin-top:3px}
 .match-arrow{color:var(--muted);font-size:24px;flex-shrink:0}
 .match-empty{color:var(--muted);padding:8px 0}
+    .chat-modal{position:fixed;inset:0;background:rgba(7,27,51,.58);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999}
+.chat-modal.active{display:flex}
+.chat-box{width:100%;max-width:620px;max-height:calc(100vh - 48px);background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(7,27,51,.25);display:flex;flex-direction:column}
+.chat-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;border-bottom:1px solid var(--border)}
+.chat-header-info{min-width:0}
+.chat-header-info strong{display:block;color:var(--navy);font-size:19px}
+.chat-header-info span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.chat-close{width:40px;height:40px;border:0;border-radius:50%;background:#f3f4f6;color:var(--navy);font-size:25px;line-height:1;cursor:pointer;flex-shrink:0}
+.chat-messages{flex:1;min-height:280px;max-height:480px;overflow-y:auto;padding:20px;background:#f7f8fa;display:flex;flex-direction:column;gap:10px}
+.chat-message{max-width:78%;padding:11px 14px;border-radius:16px;background:var(--white);color:var(--text);box-shadow:0 2px 8px rgba(7,27,51,.05);align-self:flex-start}
+.chat-message.mine{align-self:flex-end;background:var(--navy);color:#fff}
+.chat-message-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-message-time{font-size:11px;opacity:.65;margin-top:4px}
+.chat-empty{color:var(--muted);text-align:center;margin:auto}
+.chat-form{display:flex;gap:10px;padding:16px;border-top:1px solid var(--border);background:var(--white)}
+.chat-input{flex:1;min-width:0;min-height:46px;max-height:120px;resize:vertical;padding:11px 14px;border:1px solid var(--border);border-radius:14px;font:inherit;color:var(--text);outline:none}
+.chat-input:focus{border-color:rgba(255,116,23,.7)}
+.chat-send{min-height:46px;padding:0 20px;border:0;border-radius:999px;background:var(--orange);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.chat-send:disabled{opacity:.6;cursor:default}
+.chat-error{padding:8px 16px 0;color:#a33a2b;font-size:13px;background:var(--white)}
     @media(max-width:700px){nav{height:82px}.logo img{width:58px;height:58px}.nav-links{gap:6px}.back-link{padding:9px 15px;font-size:14px}main{padding:45px 0 70px}.account-header{padding:22px}.account-header h2{font-size:23px}.dashboard-grid{grid-template-columns:1fr}.dashboard-card{min-height:105px}}
     .logout-button{min-height:48px;padding:0 22px;border:2px solid var(--navy);border-radius:999px;background:white;color:var(--navy);font:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s ease}.logout-button:hover{background:var(--navy);color:white}
   </style>
@@ -52,6 +72,45 @@
     <div class="match-empty">Zaloguj się, aby wczytać dopasowania.</div>
   </div>
 </section>
+  <div class="chat-modal" id="chat-modal">
+  <div class="chat-box">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <strong id="chat-person-name">Czat Juntigo</strong>
+        <span id="chat-trip-name"></span>
+      </div>
+
+      <button
+        type="button"
+        class="chat-close"
+        id="chat-close"
+        aria-label="Zamknij czat"
+      >×</button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-empty">Wczytywanie rozmowy…</div>
+    </div>
+
+    <div class="chat-error" id="chat-error"></div>
+
+    <form class="chat-form" id="chat-form">
+      <textarea
+        class="chat-input"
+        id="chat-input"
+        placeholder="Napisz wiadomość…"
+        rows="1"
+        maxlength="2000"
+      ></textarea>
+
+      <button
+        type="submit"
+        class="chat-send"
+        id="chat-send"
+      >Wyślij</button>
+    </form>
+  </div>
+</div>
 <section class="section" id="ustawienia"><h2>Ustawienia</h2><p class="section-intro">Ustawienia konta i prywatności.</p><button type="button" class="logout-button" onclick="logoutJuntigo()">Wyloguj się</button></section>
 </main>
 <script>
@@ -169,8 +228,12 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
 
         renderedMatches.push(
           '<div class="match-item" data-match-id="' +
-          escapeHtml(match.matchId) +
-          '">' +
+escapeHtml(match.matchId) +
+'" data-person-name="' +
+escapeHtml(name) +
+'" data-trip="' +
+escapeHtml(trip) +
+'">' +
             avatarHtml +
             '<div class="match-info">' +
               '<strong>' +
@@ -204,7 +267,15 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
     }
 
     matchList.innerHTML = renderedMatches.join("");
-
+matchList.querySelectorAll(".match-item").forEach(function(item) {
+  item.addEventListener("click", function() {
+    openMatchChat(
+      item.dataset.matchId,
+      item.dataset.personName,
+      item.dataset.trip
+    );
+  });
+});
   } catch (error) {
     console.error(
       "Błąd wczytywania dopasowań:",
@@ -218,6 +289,268 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
         "Nie udało się wczytać dopasowań."
       ) +
       '</div>';
+  }
+}
+  let activeChatMatchId = "";
+let activeChatPersonName = "";
+let activeChatTrip = "";
+
+function setChatError(message) {
+  const error = document.getElementById("chat-error");
+
+  if (!error) {
+    return;
+  }
+
+  error.textContent = message || "";
+}
+
+function formatChatTime(timestamp) {
+  if (!timestamp) {
+    return "";
+  }
+
+  const date = new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleString("pl-PL", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+async function loadChatMessages() {
+  const messagesBox = document.getElementById("chat-messages");
+
+  if (!messagesBox || !juntigoSessionToken || !activeChatMatchId) {
+    return;
+  }
+
+  setChatError("");
+
+  messagesBox.innerHTML =
+    '<div class="chat-empty">Wczytywanie rozmowy…</div>';
+
+  try {
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "getMessages",
+        sessionToken: juntigoSessionToken,
+        matchId: activeChatMatchId
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        result.error || "Nie udało się wczytać rozmowy."
+      );
+    }
+
+    const messages = Array.isArray(result.messages)
+      ? result.messages
+      : [];
+
+    if (!messages.length) {
+      messagesBox.innerHTML =
+        '<div class="chat-empty">To początek Waszej rozmowy.</div>';
+      return;
+    }
+
+    messagesBox.innerHTML = messages.map(function(message) {
+      const fromUserId =
+        String(message.fromUserId || "").trim();
+
+      const mine =
+        fromUserId === getCurrentJuntigoUserId();
+
+      return (
+        '<div class="chat-message' +
+        (mine ? ' mine' : '') +
+        '">' +
+          '<div class="chat-message-text">' +
+            escapeHtml(message.message || "") +
+          '</div>' +
+          '<div class="chat-message-time">' +
+            escapeHtml(formatChatTime(message.timestamp)) +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  } catch (error) {
+    console.error(
+      "Błąd wczytywania rozmowy:",
+      error
+    );
+
+    messagesBox.innerHTML =
+      '<div class="chat-empty">Nie udało się wczytać rozmowy.</div>';
+
+    setChatError(
+      error.message || "Nie udało się wczytać rozmowy."
+    );
+  }
+}
+
+function getCurrentJuntigoUserId() {
+  try {
+    const payload = String(juntigoSessionToken || "").split(".")[0];
+
+    if (!payload) {
+      return "";
+    }
+
+    const normalized = payload
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+    const padded =
+      normalized +
+      "=".repeat((4 - normalized.length % 4) % 4);
+
+    const decoded =
+      JSON.parse(atob(padded));
+
+    return String(
+      decoded.userId || ""
+    ).trim();
+
+  } catch (error) {
+    return "";
+  }
+}
+
+async function openMatchChat(matchId, personName, trip) {
+  if (!juntigoSessionToken) {
+    window.location.href = "konto.html";
+    return;
+  }
+
+  activeChatMatchId = String(matchId || "").trim();
+  activeChatPersonName =
+    String(personName || "Użytkownik Juntigo").trim();
+  activeChatTrip =
+    String(trip || "").trim();
+
+  if (!activeChatMatchId) {
+    return;
+  }
+
+  const modal = document.getElementById("chat-modal");
+  const nameElement =
+    document.getElementById("chat-person-name");
+  const tripElement =
+    document.getElementById("chat-trip-name");
+
+  if (!modal) {
+    return;
+  }
+
+  if (nameElement) {
+    nameElement.textContent =
+      activeChatPersonName;
+  }
+
+  if (tripElement) {
+    tripElement.textContent =
+      activeChatTrip;
+  }
+
+  modal.classList.add("active");
+
+  await loadChatMessages();
+
+  const input =
+    document.getElementById("chat-input");
+
+  if (input) {
+    input.focus();
+  }
+}
+
+function closeMatchChat() {
+  const modal =
+    document.getElementById("chat-modal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  activeChatMatchId = "";
+  activeChatPersonName = "";
+  activeChatTrip = "";
+  setChatError("");
+}
+
+async function sendChatMessage() {
+  const input =
+    document.getElementById("chat-input");
+
+  const button =
+    document.getElementById("chat-send");
+
+  if (!input || !button || !juntigoSessionToken) {
+    return;
+  }
+
+  const message =
+    input.value.trim();
+
+  if (!message || !activeChatMatchId) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Wysyłamy…";
+  setChatError("");
+
+  try {
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "sendMessage",
+        sessionToken: juntigoSessionToken,
+        matchId: activeChatMatchId,
+        message: message
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        result.error || "Nie udało się wysłać wiadomości."
+      );
+    }
+
+    input.value = "";
+
+    await loadChatMessages();
+
+  } catch (error) {
+    console.error(
+      "Błąd wysyłania wiadomości:",
+      error
+    );
+
+    setChatError(
+      error.message ||
+      "Nie udało się wysłać wiadomości."
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Wyślij";
   }
 }
 async function handleGoogleCredential(response){const idToken=response.credential||"";if(!idToken)return;try{const responseSession=await fetch(JUNTIGO_API+"?action=session&idToken="+encodeURIComponent(idToken),{method:"GET"});const result=await responseSession.json();if(!result.success||!result.sessionToken){throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");}juntigoSessionToken=result.sessionToken;localStorage.setItem(JUNTIGO_SESSION_KEY,juntigoSessionToken);await loadAccountProfile(juntigoSessionToken);}catch(error){console.error("Błąd logowania Juntigo:",error);setAccountError(error.message||"Nie udało się zalogować.");}}
