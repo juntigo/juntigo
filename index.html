@@ -3522,31 +3522,7 @@ function saveInterest(event, trip, toUserId, toName) {
             contactButton.style.pointerEvents = "none";
         }
 
-        if (data.match === true) {
-
-            const modal =
-                document.getElementById("juntigoMatchModal");
-
-            const message =
-                document.getElementById("juntigoMatchMessage");
-
-            if (message) {
-                message.textContent =
-                    "Ty i " +
-                    String(toName || "ta osoba") +
-                    " jesteście zainteresowani sobą nawzajem.";
-            }
-
-            if (modal) {
-                modal.classList.add("active");
-
-                if (data.matchId) {
-                    modal.dataset.matchId = data.matchId;
-                }
-
-                modal.dataset.userId = normalizedUserId;
-            }
-        }
+        
 
     })
     .catch(error => {
@@ -3564,57 +3540,11 @@ function saveInterest(event, trip, toUserId, toName) {
         }
     });
 }
-   function closeJuntigoMatchModal() {
-    const modal = document.getElementById("juntigoMatchModal");
-
-    if (modal) {
-        modal.classList.remove("active");
-        delete modal.dataset.matchId;
-        delete modal.dataset.userId;
-    }
-}
+   
 
 
 </script>
-  <!-- ===== JUNTIGO MATCH MODAL ===== -->
-<div id="juntigoMatchModal" class="juntigo-match-modal">
-  <div class="juntigo-match-overlay"></div>
-
-  <div class="juntigo-match-box">
-    
-    <button type="button" class="juntigo-match-close" onclick="closeJuntigoMatchModal()" aria-label="Zamknij">
-    ×
-</button>
-
-    <div class="juntigo-match-icon">
-      ✈
-    </div>
-
-    <h2>Macie match!</h2>
-
-    <p id="juntigoMatchMessage">
-      Ty i ta osoba jesteście zainteresowani sobą nawzajem.
-    </p>
-
-<p class="juntigo-match-question">
-    Możecie teraz skontaktować się ze sobą bezpośrednio na Juntigo.
-</p>
-
-<div class="juntigo-match-actions">
-    <button
-        type="button"
-        class="juntigo-match-secondary"
-        onclick="closeJuntigoMatchModal()">
-        Później
-    </button>
-
-    <button
-        type="button"
-        class="juntigo-match-primary"
-        onclick="window.location.href='konto.html'">
-        Przejdź do rozmowy
-    </button>
-</div>
+  
 
     </div>
 </div>
