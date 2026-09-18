@@ -33,6 +33,8 @@
 .interest-info span{display:block;color:var(--muted);font-size:14px}
 .interest-status{font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap}
 .interest-empty{color:var(--muted);padding:8px 0}
+    .interest-chat-button{min-height:40px;padding:0 16px;border:0;border-radius:999px;background:var(--navy);color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
+.interest-chat-button:hover{background:var(--navy-light)}
     .chat-modal{position:fixed;inset:0;background:rgba(7,27,51,.58);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999}
 .chat-modal.active{display:flex}
 .chat-box{width:100%;max-width:620px;max-height:calc(100vh - 48px);background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(7,27,51,.25);display:flex;flex-direction:column}
@@ -214,10 +216,29 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
         );
       }
 
+            const matchId =
+        String(interest.matchId || "").trim();
+
+      const isMatch =
+        status === "Match" && !!matchId;
+
       const statusText =
-        status === "Match"
+        isMatch
           ? "Match"
           : "Wysłane";
+
+      const actionHtml =
+        isMatch
+          ? '<button type="button" class="interest-chat-button" data-match-id="' +
+              escapeHtml(matchId) +
+              '" data-person-name="' +
+              escapeHtml(personName) +
+              '" data-trip="' +
+              escapeHtml(trip) +
+              '">Otwórz czat</button>'
+          : '<span class="interest-status">' +
+              escapeHtml(statusText) +
+            '</span>';
 
       renderedInterests.push(
         '<div class="interest-item">' +
@@ -229,9 +250,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
               escapeHtml(trip) +
             '</span>' +
           '</div>' +
-          '<span class="interest-status">' +
-            escapeHtml(statusText) +
-          '</span>' +
+          actionHtml +
         '</div>'
       );
     }
@@ -243,7 +262,19 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
     }
 
     interestList.innerHTML = renderedInterests.join("");
+    interestList.innerHTML = renderedInterests.join("");
 
+    interestList.querySelectorAll(".interest-chat-button").forEach(function(button) {
+      button.addEventListener("click", function() {
+        openMatchChat(
+          button.dataset.matchId,
+          button.dataset.personName,
+          button.dataset.trip
+        );
+      });
+    });
+
+  } catch (error) {
   } catch (error) {
     console.error(
       "Błąd wczytywania zainteresowań:",
