@@ -3461,44 +3461,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
   }
   
-
-    const input = document.getElementById("juntigoInstagramInput");
-
-    if (!input) {
-        return;
-    }
-
-    const fromInstagram = input.value.trim();
-
-    if (!fromInstagram) {
-        input.focus();
-        return;
-    }
-
-    const pending = juntigoPendingInterest;
-
-    localStorage.setItem(
-        "juntigoUserInstagram",
-        fromInstagram.replace("@", "").trim().toLowerCase()
-    );
-
-   const modal = document.getElementById("juntigoInstagramModal");
-
-if (modal) {
-    modal.classList.remove("active");
-}
-
-saveInterest(
-    null,
-    pending.trip,
-    pending.toInstagram,
-    pending.toName,
-    fromInstagram
-);
-
-}
-
-
 function saveInterest(event, trip, toUserId, toName) {
     if (event) {
         event.preventDefault();
@@ -3657,43 +3619,9 @@ function saveInterest(event, trip, toUserId, toName) {
 </div>
   
 
-        <h2>Podaj Instagram</h2>
+        
 
-        <p class="juntigo-instagram-text">
-            Podaj swój Instagram, aby wysłać zainteresowanie.
-        </p>
-
-        <input
-            type="text"
-            id="juntigoInstagramInput"
-            class="juntigo-instagram-input"
-            placeholder="@twojinstagram"
-            autocomplete="off"
-        >
-
-        <p class="juntigo-instagram-hint">
-            Twój Instagram zostanie przekazany osobie, którą wybrałeś.
-        </p>
-
-        <div class="juntigo-instagram-actions">
-
-            <button
-                type="button"
-                class="juntigo-instagram-secondary"
-                onclick="closeJuntigoInstagramModal()"
-            >
-                Anuluj
-            </button>
-
-            <button
-                type="button"
-                class="juntigo-instagram-primary"
-                onclick="submitJuntigoInstagram()"
-            >
-                Wyślij zainteresowanie
-            </button>
-
-        </div>
+       
 
     </div>
 </div>
