@@ -74,9 +74,9 @@ async function validateJuntigoSession() {
       profile: result.profile || null,
       identity: result.identity || null
     };
-  } catch (error) {
+    } catch (error) {
     console.error("Błąd sprawdzania sesji Juntigo:", error);
-    return { authenticated: true, profile: null, identity: null };
+    return { authenticated: false, profile: null, identity: null };
   }
 }
 
