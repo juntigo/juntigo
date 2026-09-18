@@ -261,7 +261,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       return;
     }
 
-    interestList.innerHTML = renderedInterests.join("");
+    
     interestList.innerHTML = renderedInterests.join("");
 
     interestList.querySelectorAll(".interest-chat-button").forEach(function(button) {
@@ -274,7 +274,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       });
     });
 
-  } catch (error) {
+  
   } catch (error) {
     console.error(
       "Błąd wczytywania zainteresowań:",
