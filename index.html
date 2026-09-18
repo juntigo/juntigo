@@ -2216,202 +2216,7 @@
     font-size: 24px;
     cursor: pointer;
 }
-/* ===== JUNTIGO INSTAGRAM MODAL ===== */
 
-.juntigo-instagram-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 100000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
-.juntigo-instagram-modal.active {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-.juntigo-instagram-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 35, 60, 0.65);
-}
-
-.juntigo-instagram-box {
-    position: relative;
-    z-index: 1;
-
-    width: 100%;
-    max-width: 430px;
-
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 32px;
-
-    text-align: center;
-
-    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
-
-    transform: translateY(15px) scale(0.98);
-    transition: transform 0.2s ease;
-}
-
-.juntigo-instagram-modal.active .juntigo-instagram-box {
-    transform: translateY(0) scale(1);
-}
-
-.juntigo-instagram-close {
-    position: absolute;
-    top: 18px;
-    right: 20px;
-
-    border: none;
-    background: transparent;
-
-    color: #829ab1;
-    font-size: 24px;
-    line-height: 1;
-
-    cursor: pointer;
-}
-
-.juntigo-instagram-close:hover {
-    color: #102a43;
-}
-
-.juntigo-instagram-icon {
-    width: 64px;
-    height: 64px;
-
-    margin: 0 auto 18px;
-
-    border-radius: 50%;
-    background: #fff1e6;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: #102a43;
-    font-size: 30px;
-    font-weight: 600;
-}
-
-.juntigo-instagram-box h2 {
-    margin: 0 0 12px;
-
-    font-size: 26px;
-    color: #102a43;
-}
-
-.juntigo-instagram-text {
-    margin: 0 0 20px;
-
-    color: #58708a;
-    font-size: 16px;
-    line-height: 1.5;
-}
-
-.juntigo-instagram-input {
-    width: 100%;
-    box-sizing: border-box;
-
-    padding: 14px 16px;
-
-    border: 1px solid #d9e2ec;
-    border-radius: 12px;
-
-    background: #f8fafc;
-
-    color: #102a43;
-    font-size: 16px;
-
-    outline: none;
-
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.juntigo-instagram-input:focus {
-    border-color: #102a43;
-    box-shadow: 0 0 0 3px rgba(16, 42, 67, 0.1);
-    background: #ffffff;
-}
-
-.juntigo-instagram-hint {
-    margin: 10px 0 22px;
-
-    color: #829ab1;
-    font-size: 13px;
-    line-height: 1.4;
-}
-
-.juntigo-instagram-actions {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
-
-.juntigo-instagram-secondary,
-.juntigo-instagram-primary {
-    min-height: 44px;
-    padding: 0 20px;
-
-    border-radius: 22px;
-
-    font-size: 14px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition: all 0.2s ease;
-}
-
-.juntigo-instagram-secondary {
-    background: #ffffff;
-    color: #102a43;
-    border: 1px solid #d9e2ec;
-}
-
-.juntigo-instagram-secondary:hover {
-    background: #f5f8fa;
-    transform: translateY(-1px);
-}
-
-.juntigo-instagram-primary {
-    background: #102a43;
-    color: #ffffff;
-    border: 1px solid #102a43;
-}
-
-.juntigo-instagram-primary:hover {
-    background: #183b5c;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(16, 42, 67, 0.2);
-}
-
-@media (max-width: 480px) {
-    .juntigo-instagram-box {
-        padding: 28px 22px;
-    }
-
-    .juntigo-instagram-actions {
-        flex-direction: column-reverse;
-    }
-
-    .juntigo-instagram-secondary,
-    .juntigo-instagram-primary {
-        width: 100%;
-    }
-}
   </style>
 </head>
 
@@ -3655,34 +3460,7 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
   }
-  let juntigoPendingInterest = null;
-  function openJuntigoInstagramModal() {
-    const modal = document.getElementById("juntigoInstagramModal");
-    const input = document.getElementById("juntigoInstagramInput");
-
-    if (!modal) return;
-
-    modal.classList.add("active");
-
-    if (input) {
-        input.value = "";
-        setTimeout(() => input.focus(), 100);
-    }
-}
-
-function closeJuntigoInstagramModal() {
-    const modal = document.getElementById("juntigoInstagramModal");
-
-    if (!modal) return;
-
-    modal.classList.remove("active");
-    juntigoPendingInterest = null;
-}
-
-function submitJuntigoInstagram() {
-    if (!juntigoPendingInterest) {
-        return;
-    }
+  
 
     const input = document.getElementById("juntigoInstagramInput");
 
@@ -3828,29 +3606,12 @@ function saveInterest(event, trip, toUserId, toName) {
 
     if (modal) {
         modal.classList.remove("active");
-        delete modal.dataset.instagram;
+        delete modal.dataset.matchId;
+        delete modal.dataset.userId;
     }
 }
 
-function goToJuntigoInstagram() {
-    const modal = document.getElementById("juntigoMatchModal");
 
-    if (!modal) return;
-
-    const instagram = String(modal.dataset.instagram || "")
-        .trim()
-        .replace("@", "");
-
-    if (!instagram) {
-        closeJuntigoMatchModal();
-        return;
-    }
-
-    window.location.href =
-        "https://www.instagram.com/" +
-        encodeURIComponent(instagram) +
-        "/";
-}
 </script>
   <!-- ===== JUNTIGO MATCH MODAL ===== -->
 <div id="juntigoMatchModal" class="juntigo-match-modal">
@@ -3872,55 +3633,29 @@ function goToJuntigoInstagram() {
       Ty i ta osoba jesteście zainteresowani sobą nawzajem.
     </p>
 
-    <p class="juntigo-match-question">
-      Czy chcesz przejść na Instagram?
-    </p>
+<p class="juntigo-match-question">
+    Możecie teraz skontaktować się ze sobą bezpośrednio na Juntigo.
+</p>
 
-    <div class="juntigo-match-actions">
-      <button type="button" class="juntigo-match-secondary" onclick="closeJuntigoMatchModal()">
-    Później
-</button>
+<div class="juntigo-match-actions">
+    <button
+        type="button"
+        class="juntigo-match-secondary"
+        onclick="closeJuntigoMatchModal()">
+        Później
+    </button>
 
-      <button type="button" class="juntigo-match-primary" onclick="goToJuntigoInstagram()">
-        Przejdź na Instagram
-      </button>
-    </div>
+    <button
+        type="button"
+        class="juntigo-match-primary"
+        onclick="window.location.href='konto.html'">
+        Przejdź do rozmowy
+    </button>
+</div>
 
   </div>
 </div>
-  <!-- ===== JUNTIGO INSTAGRAM MODAL ===== -->
-<div id="juntigoInstagramModal" class="juntigo-instagram-modal">
-
-    <div class="juntigo-instagram-overlay"></div>
-
-    <div class="juntigo-instagram-box">
-
-        <button
-            type="button"
-            class="juntigo-instagram-close"
-            onclick="closeJuntigoInstagramModal()"
-            aria-label="Zamknij"
-        >
-            ×
-        </button>
-
-       <div class="juntigo-instagram-icon">
-    <svg
-        width="30"
-        height="30"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-    >
-        <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-        <circle cx="12" cy="12" r="4"></circle>
-        <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"></circle>
-    </svg>
-</div>
+  
 
         <h2>Podaj Instagram</h2>
 
