@@ -318,22 +318,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
     '<div class="match-empty">Wczytywanie dopasowań…</div>';
 
   try {
-    const matchesUrl =
-      JUNTIGO_API +
-      "?action=profile&sessionToken=" +
-      encodeURIComponent(sessionToken);
-
-    const profileResponse = await fetch(matchesUrl, {
-      method: "GET"
-    });
-
-    const profileResult = await profileResponse.json();
-
-    if (!profileResult.success) {
-      throw new Error(
-        profileResult.error || "Nie udało się zweryfikować sesji."
-      );
-    }
+    
 
     const response = await fetch(JUNTIGO_API, {
       method: "POST",
