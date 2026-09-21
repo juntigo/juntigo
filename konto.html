@@ -385,17 +385,20 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
           String(person.city || "").trim();
 
         const photo =
-          String(person.photo || "").trim();
+  String(person.photo || "").trim();
 
-        const avatarHtml = photo
-          ? '<div class="match-avatar">' +
-            '<img src="' +
-            escapeHtml(photo) +
-            '" alt="Zdjęcie profilowe">' +
-            '</div>'
-          : '<div class="match-avatar">' +
-            escapeHtml(name.charAt(0).toUpperCase()) +
-            '</div>';
+const hasValidPhoto =
+  /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(photo);
+
+const avatarHtml = hasValidPhoto
+  ? '<div class="match-avatar">' +
+    '<img src="' +
+    escapeHtml(photo) +
+    '" alt="Zdjęcie profilowe">' +
+    '</div>'
+  : '<div class="match-avatar">' +
+    escapeHtml(name.charAt(0).toUpperCase()) +
+    '</div>';
 
         renderedMatches.push(
           '<div class="match-item" data-match-id="' +
