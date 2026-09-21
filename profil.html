@@ -1194,9 +1194,14 @@ const normalizedInterests = normalizeTagList(
   profileInterestAliases
 );
 
-interests.innerHTML = normalizedInterests
-  .map(item => `<span class="profile-view-tag">${item}</span>`)
-  .join("");
+interests.replaceChildren(
+  ...normalizedInterests.map(item => {
+    const tag = document.createElement("span");
+    tag.className = "profile-view-tag";
+    tag.textContent = item;
+    return tag;
+  })
+);
 
 const style = document.getElementById("profile-view-style");
 
@@ -1205,15 +1210,25 @@ const normalizedTravelStyle = normalizeTagList(
   profileStyleAliases
 );
 
-style.innerHTML = normalizedTravelStyle
-  .map(item => `<span class="profile-view-tag">${item}</span>`)
-  .join("");
+style.replaceChildren(
+  ...normalizedTravelStyle.map(item => {
+    const tag = document.createElement("span");
+    tag.className = "profile-view-tag";
+    tag.textContent = item;
+    return tag;
+  })
+);
 
   const trips = document.getElementById("profile-view-trips");
 
-  trips.innerHTML = (profile.trips || [])
-    .map(item => `<span class="profile-view-tag">${item}</span>`)
-    .join("");
+trips.replaceChildren(
+  ...(Array.isArray(profile.trips) ? profile.trips : []).map(item => {
+    const tag = document.createElement("span");
+    tag.className = "profile-view-tag";
+    tag.textContent = item;
+    return tag;
+  })
+);
 }
 
 
