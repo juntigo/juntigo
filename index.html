@@ -2698,14 +2698,16 @@ ${person.trips ? `
   Zobacz profil
 </button>
 
-  <a
-    class="person-contact${interestSent ? " interest-sent" : ""}"
-    data-trip="${escapeHtml(trip)}"
-    data-instagram="${escapeHtml(person.instagram)}"
-    onclick="${interestSent ? "return false;" : `saveInterest(event, '${escapeHtml(trip)}', '${escapeHtml(person.userId)}', '${escapeHtml(person.name)}')`}"
-  >
-    ${interestSent ? "Zainteresowanie wysłane" : "Jestem zainteresowany"}
-  </a>
+  <button
+  type="button"
+  class="person-contact${interestSent ? " interest-sent" : ""}"
+  data-trip="${escapeHtml(trip)}"
+  data-user-id="${escapeHtml(person.userId)}"
+  data-user-name="${escapeHtml(person.name)}"
+  ${interestSent ? "disabled" : ""}
+>
+  ${interestSent ? "Zainteresowanie wysłane" : "Jestem zainteresowany"}
+</button>
 
 </div>
                 `;
@@ -2721,6 +2723,16 @@ ${person.trips ? `
           showPersonProfile(window.juntigoTeamPeople[index]);
         });
       });
+    results.querySelectorAll(".person-contact:not(.interest-sent)").forEach(button => {
+    button.addEventListener("click", event => {
+        saveInterest(
+            event,
+            button.dataset.trip,
+            button.dataset.userId,
+            button.dataset.userName
+        );
+    });
+});
     })
     .catch(error => {
       console.error(error);
