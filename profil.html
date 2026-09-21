@@ -795,10 +795,13 @@ function loadProfileFromBackend(sessionToken) {
       document.getElementById("profile-instagram").value = profile.instagram || "";
       document.getElementById("profile-about").value = profile.about || "";
 
-      if (profile.photo) {
-        profilePhotoPreview.innerHTML =
-          `<img src="${profile.photo}" alt="Zdjęcie profilowe">`;
-      }
+      if (profile.photo && /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))) {
+  const img = document.createElement("img");
+  img.src = String(profile.photo);
+  img.alt = "Zdjęcie profilowe";
+
+  profilePhotoPreview.replaceChildren(img);
+}
 
      const interests = Array.isArray(profile.interests)
   ? profile.interests
@@ -941,10 +944,17 @@ profilePhotoInput.addEventListener("change", () => {
 
   const reader = new FileReader();
 
-  reader.onload = event => {
-    profilePhotoPreview.innerHTML =
-      `<img src="${event.target.result}" alt="Zdjęcie profilowe">`;
-  };
+ reader.onload = event => {
+  if (!/^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(event.target.result))) {
+    return;
+  }
+
+  const img = document.createElement("img");
+  img.src = String(event.target.result);
+  img.alt = "Zdjęcie profilowe";
+
+  profilePhotoPreview.replaceChildren(img);
+};
 
   reader.readAsDataURL(file);
 });
@@ -1156,12 +1166,15 @@ function showProfile(profile) {
 
   const photo = document.getElementById("profile-view-photo");
 
-  if (profile.photo) {
-    photo.innerHTML =
-      `<img src="${profile.photo}" alt="Zdjęcie profilowe">`;
-  } else {
-    photo.textContent = (profile.name || "J").charAt(0).toUpperCase();
-  }
+ if (profile.photo && /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))) {
+  const img = document.createElement("img");
+  img.src = String(profile.photo);
+  img.alt = "Zdjęcie profilowe";
+
+  photo.replaceChildren(img);
+} else {
+  photo.textContent = (profile.name || "J").charAt(0).toUpperCase();
+}
 
   document.getElementById("profile-view-name").textContent =
     profile.name || "—";
