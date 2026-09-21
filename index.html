@@ -2786,12 +2786,12 @@ function showPersonProfile(person) {
       <div class="person-profile-header">
 
         <div class="person-profile-avatar">
-         ${person.photo
-    ? `<img src="${escapeHtml(person.photo)}" alt="Zdjęcie profilowe">`
-    : escapeHtml((person.name || "J").charAt(0).toUpperCase())
+  ${
+    /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(person.photo || ""))
+      ? `<img src="${escapeHtml(String(person.photo))}" alt="Zdjęcie profilowe">`
+      : escapeHtml((person.name || "J").charAt(0).toUpperCase())
   }
-        </div>
-
+</div>
         <div>
           <h2>${escapeHtml(person.name || "—")}</h2>
 
