@@ -401,7 +401,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
   String(person.photo || "").trim();
 
 const hasValidPhoto =
-  /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(photo);
+  /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/]+=*$/i.test(photo);
 
 const avatarHtml = hasValidPhoto
   ? '<div class="match-avatar">' +
