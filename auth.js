@@ -410,16 +410,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     const name = profile.name || identity.name || "Juntigo";
     const initial = String(name).charAt(0).toUpperCase() || "J";
 
-    profileButton.innerHTML = `
-      <span class="juntigo-nav-avatar">
-        ${profile.photo
-          ? `<img src="${String(profile.photo).replace(/"/g, "&quot;")}" alt="Zdjęcie profilowe">`
-          : initial
-        }
-      </span>
+        profileButton.innerHTML = `
+      <span class="juntigo-nav-avatar"></span>
       <span class="juntigo-nav-label">Zalogowany</span>
       <span class="juntigo-nav-chevron">⌄</span>
     `;
+
+    const avatar = profileButton.querySelector(".juntigo-nav-avatar");
+
+    if (profile.photo && /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))) {
+      const img = document.createElement("img");
+      img.src = String(profile.photo);
+      img.alt = "Zdjęcie profilowe";
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = initial;
+    }
 
     profileButton.onclick = function(event) {
       event.stopPropagation();
