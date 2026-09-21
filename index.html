@@ -2640,7 +2640,7 @@ window.juntigoTeamPeople = data.people;
             <h4>${escapeHtml(person.name)}</h4>
 
             <div class="person-meta">
-              ${person.age ? person.age + " lat" : ""}
+              ${person.age ? escapeHtml(person.age) + " lat" : ""}
               ${person.city ? " · " + escapeHtml(person.city) : ""}
             </div>
 ${person.verified ? `
