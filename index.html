@@ -2631,7 +2631,13 @@ window.juntigoTeamPeople = data.people;
       results.innerHTML = `
         <div class="team-heading">
           <strong>Ekipa na wyjazd</strong>
-          <span>${data.count} ${data.count === 1 ? "osoba" : "osoby"}</span>
+          <span>${
+  Number.isInteger(Number(data.count)) && Number(data.count) >= 0
+    ? escapeHtml(String(Number(data.count)))
+    : "0"
+} ${
+  Number(data.count) === 1 ? "osoba" : "osoby"
+}</span>
         </div>
 
         ${data.people.map((person, index) => `
