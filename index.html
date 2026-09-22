@@ -2621,7 +2621,7 @@ async function loadTripInterestCounts() {
 
             try {
                 const response = await fetch(
-                    JUNTIGO_API + "?trip=" + encodeURIComponent(trip)
+                    JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (getJuntigoSessionToken() ? "&sessionToken=" + encodeURIComponent(getJuntigoSessionToken()) : "")
                 );
 
                 const data = await response.json();
