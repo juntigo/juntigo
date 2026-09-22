@@ -3109,18 +3109,14 @@ function showPersonProfile(person, currentTrip) {
         <button
           type="button"
           class="person-profile-report-button"
-          onclick='openReportForm({
-            userId: String(person.userId || ""),
-            name: String(person.name || ""),
-            trip: String(currentTrip || "")
-          })'
+
         >
           Zgłoś ten profil
         </button>
         <button
           type="button"
           class="person-profile-block-button"
-          onclick='blockPersonProfile(String(person.userId || ""), String(person.name || ""))'
+
         >
           Zablokuj użytkownika
         </button>
@@ -3131,6 +3127,28 @@ function showPersonProfile(person, currentTrip) {
 
   document.body.appendChild(modal);
   document.body.style.overflow = "hidden";
+
+  const reportButton = modal.querySelector(".person-profile-report-button");
+  const blockButton = modal.querySelector(".person-profile-block-button");
+
+  if (reportButton) {
+    reportButton.addEventListener("click", function() {
+      openReportForm({
+        userId: String(person.userId || ""),
+        name: String(person.name || ""),
+        trip: String(currentTrip || "")
+      });
+    });
+  }
+
+  if (blockButton) {
+    blockButton.addEventListener("click", function() {
+      blockPersonProfile(
+        String(person.userId || ""),
+        String(person.name || "")
+      );
+    });
+  }
 }
   
 function openReportForm(person) {
