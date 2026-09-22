@@ -2433,33 +2433,44 @@ async function loadTripInterestCounts() {
         return;
     }
 
-    const response = await fetch(
-        JUNTIGO_API + "?action=tripCounts"
+    await Promise.all(
+        elements.map(async element => {
+            const trip = String(element.dataset.trip || "").trim();
+
+            if (!trip) {
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    JUNTIGO_API + "?trip=" + encodeURIComponent(trip)
+                );
+
+                const data = await response.json();
+
+                if (data.success !== true) {
+                    return;
+                }
+
+                const count = Number(data.count);
+
+                if (!Number.isInteger(count) || count < 0) {
+                    return;
+                }
+
+                element.textContent =
+                    "👥 " + formatTripInterestCount(count);
+
+                element.hidden = false;
+            } catch (error) {
+                console.warn(
+                    "Nie udało się pobrać liczby zainteresowanych dla wyjazdu:",
+                    trip,
+                    error
+                );
+            }
+        })
     );
-
-    const data = await response.json();
-
-    if (
-        data.success !== true ||
-        !data.counts ||
-        typeof data.counts !== "object"
-    ) {
-        return;
-    }
-
-    elements.forEach(element => {
-        const trip = String(element.dataset.trip || "").trim();
-        const count = Number(data.counts[trip] || 0);
-
-        if (!Number.isInteger(count) || count < 0) {
-            return;
-        }
-
-        element.textContent =
-            "👥 " + formatTripInterestCount(count);
-
-        element.hidden = false;
-    });
 }
 
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
