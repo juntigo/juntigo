@@ -2916,7 +2916,7 @@ ${person.trips ? `
             results.querySelectorAll(".person-profile-button").forEach(button => {
         button.addEventListener("click", () => {
           const index = Number(button.dataset.personIndex);
-          showPersonProfile(window.juntigoTeamPeople[index]);
+          showPersonProfile(window.juntigoTeamPeople[index], trip);
         });
       });
     results.querySelectorAll(".person-contact:not(.interest-sent)").forEach(button => {
@@ -2950,7 +2950,7 @@ ${person.trips ? `
   return "🧳";
 }
 
-function showPersonProfile(person) {
+function showPersonProfile(person, currentTrip) {
 
   const existingModal = document.getElementById("person-profile-modal");
 
@@ -3084,7 +3084,7 @@ function showPersonProfile(person) {
           onclick='openReportForm({
             userId: String(person.userId || ""),
             name: String(person.name || ""),
-            trip: String(trips[0] || "")
+            trip: String(currentTrip || "")
           })'
         >
           Zgłoś ten profil
