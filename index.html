@@ -3282,6 +3282,34 @@ function blockPersonProfile(userId, name) {
     });
 }
 
+document.addEventListener("keydown", function(event) {
+  if (event.key !== "Escape") return;
+
+  const reportModal = document.getElementById("report-modal");
+  if (reportModal) {
+    closeReportForm();
+    return;
+  }
+
+  const proposalModal = document.getElementById("proposal-modal");
+  if (proposalModal) {
+    closeProposalForm();
+    return;
+  }
+
+  const profileModal = document.getElementById("person-profile-modal");
+  if (profileModal) {
+    profileModal.remove();
+    document.body.style.overflow = "";
+    return;
+  }
+
+  const teamModal = document.getElementById("team-modal");
+  if (teamModal) {
+    closeTeamModal();
+  }
+});
+
 function closeReportForm() {
   const modal = document.getElementById("report-modal");
   if (modal) modal.remove();
