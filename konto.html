@@ -759,6 +759,11 @@ async function sendChatMessage() {
     return;
   }
 
+  if (message.length > 2000) {
+    setChatError("Wiadomość jest za długa. Maksymalnie 2000 znaków.");
+    return;
+  }
+
   button.disabled = true;
   button.textContent = "Wysyłamy…";
   setChatError("");
