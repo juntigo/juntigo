@@ -785,7 +785,7 @@ function loadProfileFromBackend(sessionToken, existingProfile = null) {
   : fetch(
       "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&sessionToken=" +
       encodeURIComponent(sessionToken)
-    );
+    ).then(response => response.json());
 
 profileRequest
     .then(data => {
