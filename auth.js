@@ -51,12 +51,9 @@ function clearJuntigoSession() {
 }
 
 let juntigoSessionValidationPromise = null;
+let juntigoSessionValidationToken = "";
 
 async function validateJuntigoSession() {
-  if (juntigoSessionValidationPromise) {
-    return juntigoSessionValidationPromise;
-  }
-
   const sessionToken = getJuntigoSessionToken();
 
   if (!sessionToken) {
@@ -66,6 +63,15 @@ async function validateJuntigoSession() {
       identity: null
     };
   }
+
+  if (
+    juntigoSessionValidationPromise &&
+    juntigoSessionValidationToken === sessionToken
+  ) {
+    return juntigoSessionValidationPromise;
+  }
+
+  juntigoSessionValidationToken = sessionToken;
 
   juntigoSessionValidationPromise = (async function() {
     try {
@@ -80,6 +86,9 @@ async function validateJuntigoSession() {
 
       if (!result.success) {
         clearJuntigoSession();
+
+        juntigoSessionValidationPromise = null;
+        juntigoSessionValidationToken = "";
 
         return {
           authenticated: false,
@@ -105,9 +114,6 @@ async function validateJuntigoSession() {
         profile: null,
         identity: null
       };
-
-    } finally {
-      juntigoSessionValidationPromise = null;
     }
   })();
 
