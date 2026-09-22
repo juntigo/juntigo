@@ -2785,8 +2785,6 @@ function showTeam(trip, button) {
 const sessionToken = getJuntigoSessionToken();
 const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (sessionToken ? "&sessionToken=" + encodeURIComponent(sessionToken) : "");
 
-const sessionToken = getJuntigoSessionToken();
-
 const interestStatusPromise = sessionToken
   ? fetch(
       JUNTIGO_API +
