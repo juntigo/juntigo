@@ -811,7 +811,13 @@ async function sendChatMessage() {
     }
   }
 }
-  document.getElementById("chat-close").addEventListener("click", function() {
+  document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeMatchChat();
+  }
+});
+
+document.getElementById("chat-close").addEventListener("click", function() {
   closeMatchChat();
 });
 
