@@ -50,34 +50,68 @@ function clearJuntigoSession() {
   localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
 }
 
+let juntigoSessionValidationPromise = null;
+
 async function validateJuntigoSession() {
+  if (juntigoSessionValidationPromise) {
+    return juntigoSessionValidationPromise;
+  }
+
   const sessionToken = getJuntigoSessionToken();
 
   if (!sessionToken) {
-    return { authenticated: false, profile: null, identity: null };
-  }
-
-  try {
-    const response = await fetch(
-      JUNTIGO_AUTH_API + "?action=profile&sessionToken=" + encodeURIComponent(sessionToken),
-      { method: "GET" }
-    );
-    const result = await response.json();
-
-    if (!result.success) {
-      clearJuntigoSession();
-      return { authenticated: false, profile: null, identity: null };
-    }
-
     return {
-      authenticated: true,
-      profile: result.profile || null,
-      identity: result.identity || null
+      authenticated: false,
+      profile: null,
+      identity: null
     };
-    } catch (error) {
-    console.error("Błąd sprawdzania sesji Juntigo:", error);
-    return { authenticated: false, profile: null, identity: null };
   }
+
+  juntigoSessionValidationPromise = (async function() {
+    try {
+      const response = await fetch(
+        JUNTIGO_AUTH_API +
+        "?action=profile&sessionToken=" +
+        encodeURIComponent(sessionToken),
+        { method: "GET" }
+      );
+
+      const result = await response.json();
+
+      if (!result.success) {
+        clearJuntigoSession();
+
+        return {
+          authenticated: false,
+          profile: null,
+          identity: null
+        };
+      }
+
+      return {
+        authenticated: true,
+        profile: result.profile || null,
+        identity: result.identity || null
+      };
+
+    } catch (error) {
+      console.error(
+        "Błąd sprawdzania sesji Juntigo:",
+        error
+      );
+
+      return {
+        authenticated: false,
+        profile: null,
+        identity: null
+      };
+
+    } finally {
+      juntigoSessionValidationPromise = null;
+    }
+  })();
+
+  return juntigoSessionValidationPromise;
 }
 
 function logoutJuntigo() {
