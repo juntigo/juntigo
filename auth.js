@@ -122,6 +122,16 @@ async function validateJuntigoSession() {
 
 function logoutJuntigo() {
   clearJuntigoSession();
+
+  if (
+    window.google &&
+    google.accounts &&
+    google.accounts.id &&
+    typeof google.accounts.id.disableAutoSelect === "function"
+  ) {
+    google.accounts.id.disableAutoSelect();
+  }
+
   window.location.href = "index.html";
 }
 
