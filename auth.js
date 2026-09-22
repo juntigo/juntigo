@@ -109,6 +109,9 @@ async function validateJuntigoSession() {
         error
       );
 
+      juntigoSessionValidationPromise = null;
+      juntigoSessionValidationToken = "";
+
       return {
         authenticated: false,
         profile: null,
