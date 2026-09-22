@@ -954,19 +954,71 @@ profilePhotoInput.addEventListener("change", () => {
     return;
   }
 
-  const reader = new FileReader();
-
- reader.onload = event => {
-  if (!/^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(event.target.result))) {
+  if (!file.type || !file.type.startsWith("image/")) {
+    profilePhotoInput.value = "";
+    alert("Wybierz plik graficzny.");
     return;
   }
 
-  const img = document.createElement("img");
-  img.src = String(event.target.result);
-  img.alt = "Zdjęcie profilowe";
+  const reader = new FileReader();
 
-  profilePhotoPreview.replaceChildren(img);
-};
+  reader.onload = event => {
+    const source = String(event.target.result || "");
+
+    if (!/^data:image\/[^;]+;base64,/i.test(source)) {
+      profilePhotoInput.value = "";
+      alert("Nie udało się wczytać zdjęcia.");
+      return;
+    }
+
+    const image = new Image();
+
+    image.onload = () => {
+      const maxSize = 320;
+      const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+      const width = Math.max(1, Math.round(image.width * scale));
+      const height = Math.max(1, Math.round(image.height * scale));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        profilePhotoInput.value = "";
+        alert("Nie udało się przygotować zdjęcia.");
+        return;
+      }
+
+      context.drawImage(image, 0, 0, width, height);
+
+      let compressed = canvas.toDataURL("image/jpeg", 0.72);
+
+      if (compressed.length > 45000) {
+        compressed = canvas.toDataURL("image/jpeg", 0.55);
+      }
+
+      if (compressed.length > 50000) {
+        profilePhotoInput.value = "";
+        alert("Zdjęcie jest zbyt duże. Wybierz mniejsze zdjęcie.");
+        return;
+      }
+
+      const img = document.createElement("img");
+      img.src = compressed;
+      img.alt = "Zdjęcie profilowe";
+
+      profilePhotoPreview.replaceChildren(img);
+    };
+
+    image.onerror = () => {
+      profilePhotoInput.value = "";
+      alert("Nie udało się wczytać zdjęcia.");
+    };
+
+    image.src = source;
+  };
 
   reader.readAsDataURL(file);
 });
