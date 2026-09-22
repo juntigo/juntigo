@@ -219,34 +219,11 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
         continue;
       }
 
-      let personName = "Użytkownik Juntigo";
+            const person = interest.person || {};
 
-      try {
-        const peopleResponse = await fetch(
-          JUNTIGO_API +
-          "?trip=" +
-          encodeURIComponent(trip)
-        );
-
-        const peopleResult = await peopleResponse.json();
-
-        const people = Array.isArray(peopleResult.people)
-          ? peopleResult.people
-          : [];
-
-        const person = people.find(function(item) {
-          return String(item.userId || "").trim() === toUserId;
-        });
-
-        if (person && person.name) {
-          personName = String(person.name).trim();
-        }
-      } catch (personError) {
-        console.error(
-          "Nie udało się wczytać osoby z zainteresowania:",
-          personError
-        );
-      }
+      const personName =
+        String(person.name || "").trim() ||
+        "Użytkownik Juntigo";
 
             const matchId =
         String(interest.matchId || "").trim();
@@ -370,82 +347,57 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       if (!trip || !userId) {
         continue;
       }
+      const person = match.person || {};
 
-      try {
-        const peopleResponse = await fetch(
-          JUNTIGO_API +
-          "?trip=" +
-          encodeURIComponent(trip)
-        );
+      const name =
+        String(person.name || "").trim() ||
+        "Użytkownik Juntigo";
 
-        const peopleResult = await peopleResponse.json();
+      const city =
+        String(person.city || "").trim();
 
-        const people = Array.isArray(peopleResult.people)
-          ? peopleResult.people
-          : [];
+      const photo =
+        String(person.photo || "").trim();
 
-        const person = people.find(function(item) {
-          return String(item.userId || "").trim() === userId;
-        });
+      const hasValidPhoto =
+        /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/]+=*$/i.test(photo);
 
-        if (!person) {
-          continue;
-        }
-
-        const name =
-          String(person.name || "").trim() ||
-          "Użytkownik Juntigo";
-
-        const city =
-          String(person.city || "").trim();
-
-        const photo =
-  String(person.photo || "").trim();
-
-const hasValidPhoto =
-  /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/]+=*$/i.test(photo);
-
-const avatarHtml = hasValidPhoto
-  ? '<div class="match-avatar">' +
-    '<img src="' +
-    escapeHtml(photo) +
-    '" alt="Zdjęcie profilowe">' +
-    '</div>'
-  : '<div class="match-avatar">' +
-    escapeHtml(name.charAt(0).toUpperCase()) +
-    '</div>';
-
-        renderedMatches.push(
-          '<div class="match-item" data-match-id="' +
-escapeHtml(match.matchId) +
-'" data-person-name="' +
-escapeHtml(name) +
-'" data-trip="' +
-escapeHtml(trip) +
-'">' +
-            avatarHtml +
-            '<div class="match-info">' +
-              '<strong>' +
-                escapeHtml(name) +
-              '</strong>' +
-              (city
-                ? '<span>' +
-                    escapeHtml(city) +
-                  '</span>'
-                : '') +
-              '<span class="match-trip">' +
-                '✈️ ' +
-                escapeHtml(trip) +
-              '</span>' +
-            '</div>' +
-            '<span class="match-arrow">›</span>' +
+      const avatarHtml = hasValidPhoto
+        ? '<div class="match-avatar">' +
+          '<img src="' +
+          escapeHtml(photo) +
+          '" alt="Zdjęcie profilowe">' +
           '</div>'
-        );
-      } catch (personError) {
-        console.error(
-          "Nie udało się wczytać profilu dopasowania:",
-          personError
-        );
+        : '<div class="match-avatar">' +
+          escapeHtml(name.charAt(0).toUpperCase()) +
+          '</div>';
+
+      renderedMatches.push(
+        '<div class="match-item" data-match-id="' +
+          escapeHtml(match.matchId) +
+          '" data-person-name="' +
+          escapeHtml(name) +
+          '" data-trip="' +
+          escapeHtml(trip) +
+          '">' +
+          avatarHtml +
+          '<div class="match-info">' +
+            '<strong>' +
+              escapeHtml(name) +
+            '</strong>' +
+            (city
+              ? '<span>' +
+                  escapeHtml(city) +
+                '</span>'
+              : '') +
+            '<span class="match-trip">' +
+              '✈️ ' +
+              escapeHtml(trip) +
+            '</span>' +
+          '</div>' +
+          '<span class="match-arrow">›</span>' +
+        '</div>'
+      );
       }
     }
 
