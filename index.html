@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#071b33">
   <link rel="icon" type="image/png" href="juntigo-logo.png">
 
   <title>Juntigo — Łączymy podróżników</title>
@@ -14,11 +16,23 @@
 <meta property="og:url" content="https://juntigo.pl/">
 <meta property="og:image" content="https://juntigo.pl/juntigo-hero.jpg">
 <meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Juntigo">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Juntigo — Łączymy podróżników">
 <meta name="twitter:description" content="Znajdź ludzi na wspólny wyjazd.">
 <meta name="twitter:image" content="https://juntigo.pl/juntigo-hero.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Juntigo",
+  "url": "https://juntigo.pl/",
+  "description": "Juntigo łączy podróżników zainteresowanych wspólnymi wyjazdami, city breakami, wydarzeniami i sportem.",
+  "inLanguage": "pl-PL"
+}
+</script>
   <style>
     :root {
       --navy: #071b33;
@@ -2253,7 +2267,7 @@
         <div class="nav-menu">
             <a href="#jak-dziala" class="nav-link">Jak to działa?</a>
             <button type="button" class="nav-link proposal-nav-trigger" onclick="openProposalForm()">Dodaj wyjazd</button>
-            <a href="https://www.instagram.com/juntigo.pl/" class="nav-link" target="_blank">Instagram</a>
+            <a href="https://www.instagram.com/juntigo.pl/" class="nav-link" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
 <button class="mobile-menu-toggle" type="button" onclick="toggleMobileMenu()" aria-label="Otwórz menu">
     ☰
@@ -2310,7 +2324,7 @@
         Jak to działa?
     </a>
 
-    <a href="https://www.instagram.com/juntigo.pl/" class="button button-outline" target="_blank">
+    <a href="https://www.instagram.com/juntigo.pl/" class="button button-outline" target="_blank" rel="noopener noreferrer">
         Instagram Juntigo
     </a>
 
