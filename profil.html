@@ -1046,6 +1046,23 @@ profilePhotoInput.addEventListener("change", () => {
 
       return;
     }
+    const ageValue = Number(document.getElementById("profile-age").value.trim());
+
+    if (!Number.isInteger(ageValue) || ageValue < 16 || ageValue > 99) {
+      const ageField = document.getElementById("profile-age");
+      const saveMessage = document.getElementById("profile-save-message");
+
+      ageField.focus();
+      saveMessage.textContent = "Wiek musi wynosić od 16 do 99 lat.";
+      saveMessage.classList.add("show");
+
+      setTimeout(() => {
+        saveMessage.classList.remove("show");
+      }, 3000);
+
+      return;
+    }
+
     const profile = {
       name: document.getElementById("profile-name").value.trim(),
       age: document.getElementById("profile-age").value.trim(),
