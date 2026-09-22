@@ -3909,15 +3909,11 @@ function getInstagramUrl(value) {
   return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
 }
   
-function saveInterest(event, trip, toUserId, toName) {
-    if (event) {
-        event.preventDefault();
-    }
+async function saveInterest(event, trip, toUserId, toName) {
+    if (event) event.preventDefault();
 
     const contactButton =
-        event && event.currentTarget
-            ? event.currentTarget
-            : null;
+        event && event.currentTarget ? event.currentTarget : null;
 
     const sessionToken = getJuntigoSessionToken();
 
@@ -3938,30 +3934,29 @@ function saveInterest(event, trip, toUserId, toName) {
     }
 
     if (contactButton) {
+        contactButton.disabled = true;
         contactButton.textContent = "Wysyłamy...";
-        contactButton.style.pointerEvents = "none";
     }
 
-    const formData = new URLSearchParams();
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: new URLSearchParams({
+                type: "interest",
+                sessionToken: sessionToken,
+                trip: normalizedTrip,
+                toUserId: normalizedUserId
+            })
+        });
 
-    formData.append("type", "interest");
-    formData.append("sessionToken", sessionToken);
-    formData.append("trip", normalizedTrip);
-    formData.append("toUserId", normalizedUserId);
-
-    fetch(JUNTIGO_API, {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
+        const data = await response.json();
 
         if (!data.success) {
             const errorMessage =
                 data.error || "Nie udało się wysłać zainteresowania.";
 
             if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
-                localStorage.removeItem("juntigoSessionToken");
+                clearJuntigoSession();
                 window.location.href = "konto.html";
                 return;
             }
@@ -3972,33 +3967,21 @@ function saveInterest(event, trip, toUserId, toName) {
         if (contactButton) {
             contactButton.textContent = "Zainteresowanie wysłane";
             contactButton.classList.add("interest-sent");
-            contactButton.removeAttribute("onclick");
-            contactButton.style.pointerEvents = "none";
         }
-
-    })
-    .catch(error => {
-
-        console.error(
-            "Błąd wysyłania zainteresowania:",
-            error
-        );
+    } catch (error) {
+        console.error("Błąd wysyłania zainteresowania:", error);
 
         if (contactButton) {
-            contactButton.textContent =
-                "Jestem zainteresowany";
-
-            contactButton.style.pointerEvents = "";
+            contactButton.textContent = "Jestem zainteresowany";
+            contactButton.disabled = false;
         }
 
         if (/sesj|zalog|token|uwierzyteln/i.test(error.message || "")) {
-            localStorage.removeItem("juntigoSessionToken");
+            clearJuntigoSession();
             window.location.href = "konto.html";
         }
-    });
+    }
 }
-   
-
 
 </script>
   
