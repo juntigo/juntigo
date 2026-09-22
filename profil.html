@@ -776,11 +776,18 @@ const profileStyleAliases = {
   "Imprezy": "🎉 Imprezowo"
 };
 
-function loadProfileFromBackend(sessionToken) {
-  fetch(
-    "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&sessionToken=" +
-    encodeURIComponent(sessionToken)
-  )
+function loadProfileFromBackend(sessionToken, existingProfile = null) {
+  const profileRequest = existingProfile
+  ? Promise.resolve({
+      success: true,
+      profile: existingProfile
+    })
+  : fetch(
+      "https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?action=profile&sessionToken=" +
+      encodeURIComponent(sessionToken)
+    );
+
+profileRequest
     .then(response => response.json())
     .then(data => {
       if (!data.success || !data.profile) {
@@ -929,8 +936,8 @@ window.addEventListener("load", async function() {
   }
 
   if (session.profile) {
-    loadProfileFromData(session.profile);
-  }
+  loadProfileFromBackend(getJuntigoSessionToken(), session.profile);
+}
 });
 
   
