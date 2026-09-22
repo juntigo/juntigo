@@ -928,7 +928,9 @@ window.addEventListener("load", async function() {
     loginSection.style.display = "none";
   }
 
-  loadProfileFromBackend(getJuntigoSessionToken());
+  if (session.profile) {
+    loadProfileFromData(session.profile);
+  }
 });
 
   
