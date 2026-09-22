@@ -667,7 +667,7 @@ async function markMessagesRead(matchId) {
     );
   }
 }
-async async function openMatchChat(matchId, personName, trip) {
+async function openMatchChat(matchId, personName, trip) {
   if (!juntigoSessionToken) {
     window.location.href = "konto.html";
     return;
