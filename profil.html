@@ -1060,8 +1060,28 @@ profilePhotoInput.addEventListener("change", () => {
   }
 });
 
-  document.querySelector(".profile-submit").addEventListener("click", () => {
-        const requiredFields = [
+  document.querySelector(".profile-submit").addEventListener("click", async () => {
+    const submitButton = document.querySelector(".profile-submit");
+
+    if (submitButton.disabled) {
+      return;
+    }
+
+    const session = await validateJuntigoSession();
+
+    if (!session.authenticated) {
+      window.location.href = "konto.html";
+      return;
+    }
+
+    juntigoSessionToken = getJuntigoSessionToken();
+
+    if (!juntigoSessionToken) {
+      window.location.href = "konto.html";
+      return;
+    }
+
+    const requiredFields = [
       {
         id: "profile-name",
         message: "Wpisz imię lub pseudonim."
@@ -1137,6 +1157,21 @@ profilePhotoInput.addEventListener("change", () => {
       return;
     }
 
+    const selectedInterests = Array.from(
+      document.querySelectorAll("#profile-interests-options button.selected")
+    ).map(button => button.textContent.trim());
+
+    const selectedTravelStyle = Array.from(
+      document.querySelectorAll("#profile-style-options button.selected")
+    ).map(button => button.textContent.trim());
+
+    if (selectedInterests.length > 7 || selectedTravelStyle.length > 6) {
+      const saveMessage = document.getElementById("profile-save-message");
+      saveMessage.textContent = "Możesz wybrać maksymalnie 7 zainteresowań i 6 stylów podróżowania.";
+      saveMessage.classList.add("show");
+      return;
+    }
+
     const profile = {
       name: profileName,
       age: document.getElementById("profile-age").value.trim(),
@@ -1146,17 +1181,9 @@ profilePhotoInput.addEventListener("change", () => {
 photo: profilePhotoPreview.querySelector("img")
   ? profilePhotoPreview.querySelector("img").src
   : "",
-      interests: Array.from(
-  document.querySelectorAll(
-    "#profile-interests-options button.selected"
-  )
-).map(button => button.textContent.trim()),
+      interests: selectedInterests,
 
-travelStyle: Array.from(
-  document.querySelectorAll(
-    "#profile-style-options button.selected"
-  )
-).map(button => button.textContent.trim()),
+travelStyle: selectedTravelStyle,
 
 trips: Array.from(
   document.querySelectorAll(".profile-trip-option input:checked")
@@ -1177,6 +1204,9 @@ formData.append("travelStyle", profile.travelStyle.join(", "));
 formData.append("trips", profile.trips.join(", "));
 formData.append("photo", profile.photo || "");
 formData.append("sessionToken", juntigoSessionToken);
+submitButton.disabled = true;
+submitButton.textContent = "Zapisywanie...";
+
 fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec", {
   method: "POST",
   body: formData
@@ -1207,6 +1237,15 @@ fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV
     const saveMessage = document.getElementById("profile-save-message");
 
     if (!data.success) {
+      if (
+        String(data.error || "").toLowerCase().includes("ses") ||
+        String(data.error || "").toLowerCase().includes("token")
+      ) {
+        clearJuntigoSession();
+        window.location.href = "konto.html";
+        return;
+      }
+
       saveMessage.textContent =
         data.error || "Nie udało się zapisać profilu.";
       saveMessage.classList.add("show");
@@ -1240,6 +1279,10 @@ fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV
     setTimeout(() => {
       saveMessage.classList.remove("show");
     }, 5000);
+  })
+  .finally(() => {
+    submitButton.disabled = false;
+    submitButton.textContent = "Zapisz profil";
   });
   });
   function normalizeTagList(values, aliases) {
@@ -1323,8 +1366,15 @@ style.replaceChildren(
 
   const trips = document.getElementById("profile-view-trips");
 
+  const normalizedTrips = Array.isArray(profile.trips)
+    ? profile.trips
+    : String(profile.trips || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
 trips.replaceChildren(
-  ...(Array.isArray(profile.trips) ? profile.trips : []).map(item => {
+  ...normalizedTrips.map(item => {
     const tag = document.createElement("span");
     tag.className = "profile-view-tag";
     tag.textContent = item;
