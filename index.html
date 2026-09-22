@@ -3354,7 +3354,7 @@ function openProposalForm() {
 
                         <label>
                             Miejsce / nazwa wyjazdu
-                            <input type="text" id="proposal-place" placeholder="Np. Lizbona lub koncert w Berlinie" required>
+                            <input type="text" id="proposal-place" placeholder="Np. Lizbona lub koncert w Berlinie" maxlength="150" required>
                         </label>
 
                         <div class="proposal-form-row">
@@ -3369,13 +3369,13 @@ function openProposalForm() {
 
                             <label>
                                 Termin
-                                <input type="text" id="proposal-date" placeholder="Np. maj 2027" required>
+                                <input type="text" id="proposal-date" placeholder="Np. maj 2027" maxlength="50" required>
                             </label>
                         </div>
 
                         <label>
                             Opis pomysłu
-                            <textarea id="proposal-description" rows="5" placeholder="Napisz, co chcesz zobaczyć lub zrobić podczas wyjazdu..." required></textarea>
+                            <textarea id="proposal-description" rows="5" maxlength="2000" placeholder="Napisz, co chcesz zobaczyć lub zrobić podczas wyjazdu..." required></textarea>
                         </label>
                     </div>
 
@@ -3384,17 +3384,17 @@ function openProposalForm() {
 
                         <label>
                             Imię lub pseudonim
-                            <input type="text" id="proposal-name" placeholder="Np. Jan" required>
+                            <input type="text" id="proposal-name" placeholder="Np. Jan" maxlength="100" required>
                         </label>
 
                         <label>
                             Instagram
-                            <input type="text" id="proposal-instagram" placeholder="@twojinstagram" required>
+                            <input type="text" id="proposal-instagram" placeholder="@twojinstagram" maxlength="100" required>
                         </label>
 
                         <label>
                             E-mail
-                            <input type="email" id="proposal-email" placeholder="twoj@email.com" required>
+                            <input type="email" id="proposal-email" placeholder="twoj@email.com" maxlength="254" required>
                         </label>
                     </div>
 
@@ -3414,14 +3414,58 @@ function openProposalForm() {
         const status = document.getElementById("proposal-status");
         const formData = new URLSearchParams();
 
+        const place = document.getElementById("proposal-place").value.trim();
+        const category = document.getElementById("proposal-category").value.trim();
+        const date = document.getElementById("proposal-date").value.trim();
+        const description = document.getElementById("proposal-description").value.trim();
+        const name = document.getElementById("proposal-name").value.trim();
+        const instagram = document.getElementById("proposal-instagram").value.trim();
+        const email = document.getElementById("proposal-email").value.trim();
+
+        const requiredFields = [
+            [place, "Miejsce / nazwa wyjazdu"],
+            [category, "Kategoria"],
+            [date, "Termin"],
+            [description, "Opis pomysłu"],
+            [name, "Imię lub pseudonim"],
+            [instagram, "Instagram"],
+            [email, "E-mail"]
+        ];
+
+        const missingField = requiredFields.find(([value]) => !value);
+
+        if (missingField) {
+            status.textContent = "Uzupełnij pole: " + missingField[1] + ".";
+            status.className = "proposal-status proposal-status--error is-visible";
+            return;
+        }
+
+        const fieldLimits = [
+            [place, 150, "Miejsce / nazwa wyjazdu"],
+            [category, 100, "Kategoria"],
+            [date, 50, "Termin"],
+            [description, 2000, "Opis pomysłu"],
+            [name, 100, "Imię lub pseudonim"],
+            [instagram, 100, "Instagram"],
+            [email, 254, "E-mail"]
+        ];
+
+        const tooLong = fieldLimits.find(([value, limit]) => value.length > limit);
+
+        if (tooLong) {
+            status.textContent = tooLong[2] + " jest za długie.";
+            status.className = "proposal-status proposal-status--error is-visible";
+            return;
+        }
+
         formData.append("type", "proposal");
-        formData.append("place", document.getElementById("proposal-place").value.trim());
-        formData.append("category", document.getElementById("proposal-category").value);
-        formData.append("date", document.getElementById("proposal-date").value.trim());
-        formData.append("description", document.getElementById("proposal-description").value.trim());
-        formData.append("name", document.getElementById("proposal-name").value.trim());
-        formData.append("instagram", document.getElementById("proposal-instagram").value.trim());
-        formData.append("email", document.getElementById("proposal-email").value.trim());
+        formData.append("place", place);
+        formData.append("category", category);
+        formData.append("date", date);
+        formData.append("description", description);
+        formData.append("name", name);
+        formData.append("instagram", instagram);
+        formData.append("email", email);
 
         status.textContent = "";
         status.className = "proposal-status";
