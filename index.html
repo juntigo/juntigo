@@ -2847,7 +2847,7 @@ window.juntigoTeamPeople = data.people;
 }</span>
         </div>
 
-        ${data.people.map((person, index) => `
+        ${people.map((person, index) => `
           <div class="person-card">
 
             <h4>${escapeHtml(person.name)}</h4>
@@ -2861,17 +2861,20 @@ ${person.verified ? `
     ✓ Profil uzupełniony
   </div>
 ` : ""}
-           ${person.instagram ? `
+           ${(() => {
+              const instagramUrl = getInstagramUrl(person.instagram);
+              return instagramUrl ? `
   <a
     class="person-instagram"
-    href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
+    href="${instagramUrl}"
     target="_blank"
     rel="noopener noreferrer"
   >
     ${escapeHtml(person.instagram)}
   </a>
 
-` : ""}
+` : "";
+            })()}
 
             ${person.interests ? `
               <div class="person-interests">
@@ -3074,12 +3077,14 @@ function showPersonProfile(person, currentTrip) {
         </div>
       ` : ""}
 
-      ${person.instagram ? `
+      ${(() => {
+        const instagramUrl = getInstagramUrl(person.instagram);
+        return instagramUrl ? `
         <div class="person-profile-section">
           <h3><span class="profile-section-icon">📸</span> Instagram</h3>
           <a
   class="person-profile-instagram"
-  href="https://www.instagram.com/${encodeURIComponent(String(person.instagram).replace("@", "").trim())}/"
+  href="${instagramUrl}"
   target="_blank"
   rel="noopener noreferrer">
   <span class="instagram-icon">
@@ -3092,7 +3097,8 @@ function showPersonProfile(person, currentTrip) {
   <span>@${escapeHtml(String(person.instagram).replace("@", "").trim())}</span>
 </a>
         </div>
-      ` : ""}
+      ` : "";
+      })()}
 
       <div class="person-profile-report">
         <button
@@ -3179,8 +3185,16 @@ function openReportForm(person) {
       return;
     }
 
-    if (!reason) {
-      status.textContent = "Wybierz powód zgłoszenia.";
+    const allowedReportReasons = new Set([
+      "Niewłaściwe zachowanie",
+      "Fałszywy profil",
+      "Nieodpowiednie treści",
+      "Spam lub reklama",
+      "Inne"
+    ]);
+
+    if (!allowedReportReasons.has(reason)) {
+      status.textContent = "Wybierz prawidłowy powód zgłoszenia.";
       status.className = "report-status is-visible report-status--error";
       return;
     }
@@ -3461,6 +3475,18 @@ function openProposalForm() {
             return;
         }
 
+        const allowedProposalCategories = new Set([
+            "City breaki",
+            "Wydarzenia",
+            "Sportowe"
+        ]);
+
+        if (!allowedProposalCategories.has(category)) {
+            status.textContent = "Wybierz prawidłową kategorię.";
+            status.className = "proposal-status proposal-status--error is-visible";
+            return;
+        }
+
         const fieldLimits = [
             [place, 150, "Miejsce / nazwa wyjazdu"],
             [category, 100, "Kategoria"],
@@ -3711,6 +3737,7 @@ function openJoinForm(trip) {
     const about = document.getElementById("join-about").value.trim();
 
     const fieldLimits = [
+        [trip, 150, "Wyjazd"],
         [name, 100, "Imię lub pseudonim"],
         [instagram, 100, "Instagram"],
         [email, 254, "E-mail"],
@@ -3847,7 +3874,17 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function getInstagramUrl(value) {
+  const handle = String(value || "").trim().replace(/^@+/, "");
+
+  if (!/^[A-Za-z0-9._]{1,100}$/.test(handle)) {
+    return "";
   }
+
+  return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
+}
   
 function saveInterest(event, trip, toUserId, toName) {
     if (event) {
