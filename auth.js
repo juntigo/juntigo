@@ -48,6 +48,8 @@ function getJuntigoSessionToken() {
 
 function clearJuntigoSession() {
   localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+  juntigoSessionValidationPromise = null;
+  juntigoSessionValidationToken = "";
 }
 
 let juntigoSessionValidationPromise = null;
