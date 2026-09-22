@@ -773,14 +773,24 @@ async function sendChatMessage() {
       error
     );
 
-    setChatError(
+    const errorMessage =
       error.message ||
-      "Nie udało się wysłać wiadomości."
-    );
+      "Nie udało się wysłać wiadomości.";
+
+    setChatError(errorMessage);
+
+    if (/zablok|blokad|niedostęp/i.test(errorMessage)) {
+      input.disabled = true;
+      input.value = "";
+      button.disabled = true;
+      button.textContent = "Niedostępny";
+    }
 
   } finally {
-    button.disabled = false;
-    button.textContent = "Wyślij";
+    if (!input.disabled) {
+      button.disabled = false;
+      button.textContent = "Wyślij";
+    }
   }
 }
   document.getElementById("chat-close").addEventListener("click", function() {
