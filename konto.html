@@ -574,6 +574,14 @@ async function loadChatMessages() {
 
     setChatError(errorMessage);
 
+    if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
+      localStorage.removeItem(JUNTIGO_SESSION_KEY);
+      juntigoSessionToken = "";
+      juntigoUserId = "";
+      window.location.href = "konto.html";
+      return;
+    }
+
     if (
       /zablok|blokad|niedostęp/i.test(errorMessage)
     ) {
