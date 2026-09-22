@@ -663,6 +663,18 @@ async function openMatchChat(matchId, personName, trip) {
   }
 
   const modal = document.getElementById("chat-modal");
+  const input = document.getElementById("chat-input");
+  const sendButton = document.getElementById("chat-send");
+  if (input) {
+    input.disabled = false;
+    input.value = "";
+  }
+  if (sendButton) {
+    sendButton.disabled = false;
+    sendButton.textContent = "Wyślij";
+  }
+  setChatError("");
+
   const nameElement =
     document.getElementById("chat-person-name");
   const tripElement =
