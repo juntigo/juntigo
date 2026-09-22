@@ -3776,9 +3776,16 @@ function saveInterest(event, trip, toUserId, toName) {
     .then(data => {
 
         if (!data.success) {
-            throw new Error(
-                data.error || "Nie udało się wysłać zainteresowania."
-            );
+            const errorMessage =
+                data.error || "Nie udało się wysłać zainteresowania.";
+
+            if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
+                localStorage.removeItem("juntigoSessionToken");
+                window.location.href = "konto.html";
+                return;
+            }
+
+            throw new Error(errorMessage);
         }
 
         if (contactButton) {
@@ -3787,8 +3794,6 @@ function saveInterest(event, trip, toUserId, toName) {
             contactButton.removeAttribute("onclick");
             contactButton.style.pointerEvents = "none";
         }
-
-        
 
     })
     .catch(error => {
@@ -3803,6 +3808,11 @@ function saveInterest(event, trip, toUserId, toName) {
                 "Jestem zainteresowany";
 
             contactButton.style.pointerEvents = "";
+        }
+
+        if (/sesj|zalog|token|uwierzyteln/i.test(error.message || "")) {
+            localStorage.removeItem("juntigoSessionToken");
+            window.location.href = "konto.html";
         }
     });
 }
