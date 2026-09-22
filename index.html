@@ -3219,7 +3219,12 @@ function openReportForm(person) {
 function blockPersonProfile(userId, name) {
   const sessionToken = getJuntigoSessionToken();
 
-  if (!sessionToken || !userId) {
+  if (!sessionToken) {
+    window.location.href = "konto.html";
+    return;
+  }
+
+  if (!userId) {
     return;
   }
 
