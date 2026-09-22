@@ -3179,6 +3179,27 @@ function openReportForm(person) {
       return;
     }
 
+    if (!reason) {
+      status.textContent = "Wybierz powód zgłoszenia.";
+      status.className = "report-status is-visible report-status--error";
+      return;
+    }
+
+    const reportedUserId = String(person.userId || "").trim();
+    const trip = String(person.trip || "").trim();
+
+    if (!reportedUserId || !trip) {
+      status.textContent = "Nie udało się ustalić zgłaszanego profilu.";
+      status.className = "report-status is-visible report-status--error";
+      return;
+    }
+
+    if (description.length > 500) {
+      status.textContent = "Opis zgłoszenia jest za długi.";
+      status.className = "report-status is-visible report-status--error";
+      return;
+    }
+
     submitButton.disabled = true;
     submitButton.textContent = "Wysyłanie…";
     status.className = "report-status";
@@ -3189,8 +3210,8 @@ function openReportForm(person) {
         body: new URLSearchParams({
           type: "report",
           sessionToken: sessionToken,
-          reportedUserId: String(person.userId || ""),
-          trip: String(person.trip || ""),
+          reportedUserId: reportedUserId,
+          trip: trip,
           reason: reason,
           description: description
         })
