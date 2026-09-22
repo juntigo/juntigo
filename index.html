@@ -2782,7 +2782,8 @@ function showTeam(trip, button) {
   document.body.style.overflow = "hidden";
 
   const results = modal.querySelector(".team-results");
-const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
+const sessionToken = getJuntigoSessionToken();
+const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (sessionToken ? "&sessionToken=" + encodeURIComponent(sessionToken) : "");
 
 const sessionToken = getJuntigoSessionToken();
 
