@@ -748,6 +748,7 @@
 </div>
     </div>
   </main>
+<script src="auth.js"></script>
 <script>
   const GOOGLE_CLIENT_ID = "853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 
@@ -934,9 +935,10 @@ window.addEventListener("load", async function() {
     loginSection.style.display = "none";
   }
 
-  if (session.profile) {
-  loadProfileFromBackend(getJuntigoSessionToken(), session.profile);
-}
+  loadProfileFromBackend(
+    getJuntigoSessionToken(),
+    session.profile || null
+  );
 });
 
   
