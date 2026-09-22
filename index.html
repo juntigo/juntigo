@@ -2423,24 +2423,42 @@ function formatTripInterestCount(count) {
     return count + " osób zainteresowanych";
 }
 
-function loadTripInterestCounts() {
-    document.querySelectorAll("[data-trip-interest-count]").forEach(element => {
-        const trip = element.dataset.trip;
-        const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip);
+async function loadTripInterestCounts() {
+    const elements =
+        Array.from(
+            document.querySelectorAll("[data-trip-interest-count]")
+        );
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const count = Number(data.count);
+    if (!elements.length) {
+        return;
+    }
 
-                if (data.success !== true || !Number.isInteger(count) || count < 0) {
-                    return;
-                }
+    const response = await fetch(
+        JUNTIGO_API + "?action=tripCounts"
+    );
 
-                element.textContent = "👥 " + formatTripInterestCount(count);
-                element.hidden = false;
-            })
-            .catch(() => {});
+    const data = await response.json();
+
+    if (
+        data.success !== true ||
+        !data.counts ||
+        typeof data.counts !== "object"
+    ) {
+        return;
+    }
+
+    elements.forEach(element => {
+        const trip = String(element.dataset.trip || "").trim();
+        const count = Number(data.counts[trip] || 0);
+
+        if (!Number.isInteger(count) || count < 0) {
+            return;
+        }
+
+        element.textContent =
+            "👥 " + formatTripInterestCount(count);
+
+        element.hidden = false;
     });
 }
 
