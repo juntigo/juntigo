@@ -1416,6 +1416,22 @@
   color: #9f1d1d;
   text-decoration: underline;
 }
+.person-profile-block-button {
+  width: 100%;
+  margin-top: 4px;
+  border: 0;
+  background: transparent;
+  color: #7b8798;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px;
+}
+.person-profile-block-button:hover {
+  color: #9f1d1d;
+  text-decoration: underline;
+}
 @media (max-width: 600px) {
   .report-overlay {
     padding: 12px;
@@ -3089,6 +3105,13 @@ function showPersonProfile(person, currentTrip) {
         >
           Zgłoś ten profil
         </button>
+        <button
+          type="button"
+          class="person-profile-block-button"
+          onclick='blockPersonProfile(String(person.userId || ""), String(person.name || ""))'
+        >
+          Zablokuj użytkownika
+        </button>
       </div>
 
     </div>
@@ -3190,6 +3213,67 @@ function openReportForm(person) {
       submitButton.textContent = "Wyślij zgłoszenie";
     }
   });
+}
+
+function blockPersonProfile(userId, name) {
+  const sessionToken = getJuntigoSessionToken();
+
+  if (!sessionToken || !userId) {
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Czy na pewno chcesz zablokować użytkownika" +
+    (name ? " „" + name + "”" : "") +
+    "? Po zablokowaniu nie będziecie mogli nawiązać ze sobą kontaktu w Juntigo."
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const button = document.querySelector(".person-profile-block-button");
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Blokowanie...";
+  }
+
+  fetch(JUNTIGO_API, {
+    method: "POST",
+    body: new URLSearchParams({
+      type: "block",
+      sessionToken: sessionToken,
+      blockedUserId: userId
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.success) {
+        throw new Error(data.error || "Nie udało się zablokować użytkownika.");
+      }
+
+      const reportModal = document.getElementById("report-modal");
+      if (reportModal) reportModal.remove();
+
+      const profileModal = document.getElementById("person-profile-modal");
+      if (profileModal) profileModal.remove();
+
+      document.body.style.overflow = "";
+
+      const teamModal = document.getElementById("team-modal");
+      if (teamModal) teamModal.remove();
+
+      alert("Użytkownik został zablokowany.");
+    })
+    .catch(error => {
+      console.error("Błąd blokowania użytkownika:", error);
+      alert(error.message || "Nie udało się zablokować użytkownika.");
+
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Zablokuj użytkownika";
+      }
+    });
 }
 
 function closeReportForm() {
