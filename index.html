@@ -3589,6 +3589,16 @@ function openJoinForm(trip) {
     const form = event.currentTarget;
     const submitButton = form.querySelector(".join-submit");
     const status = form.querySelector("#join-status");
+
+    const ageValue = Number(document.getElementById("join-age").value.trim());
+
+    if (!Number.isInteger(ageValue) || ageValue < 16 || ageValue > 99) {
+        status.textContent = "Wiek musi wynosić od 16 do 99 lat.";
+        status.className = "join-status join-status--error is-visible";
+        document.getElementById("join-age").focus();
+        return;
+    }
+
     const formData = new URLSearchParams();
 
     formData.append("type", "join");
