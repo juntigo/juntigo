@@ -892,6 +892,7 @@ async function handleGoogleCredential(response) {
   try {
     const responseSession = await fetch(
       JUNTIGO_API +
+      "?action=session&idToken=" +
       encodeURIComponent(idToken)
     );
 
