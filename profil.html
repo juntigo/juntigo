@@ -595,7 +595,7 @@
 
     <div class="profile-form-group">
       <label for="profile-name">Imię lub pseudonim</label>
-      <input type="text" id="profile-name" placeholder="np. Maks">
+      <input type="text" id="profile-name" placeholder="np. Maks" maxlength="100">
     </div>
 
     <div class="profile-form-row">
@@ -607,24 +607,24 @@
 
       <div class="profile-form-group">
         <label for="profile-city">Miasto</label>
-        <input type="text" id="profile-city" placeholder="np. Warszawa">
+        <input type="text" id="profile-city" placeholder="np. Warszawa" maxlength="100">
       </div>
 
     </div>
 
     <div class="profile-form-group">
       <label for="profile-instagram">Instagram</label>
-      <input type="text" id="profile-instagram" placeholder="@twojprofil">
+      <input type="text" id="profile-instagram" placeholder="@twojprofil" maxlength="100">
     </div>
 
     <div class="profile-form-group">
       <label for="profile-about">O mnie</label>
       <textarea
         id="profile-about"
-        maxlength="300"
+        maxlength="2000"
         placeholder="Napisz kilka zdań o sobie..."
       ></textarea>
-      <small>Do 300 znaków</small>
+      <small>Do 2000 znaków</small>
     </div>
 
     <div class="profile-form-group">
@@ -1116,12 +1116,33 @@ profilePhotoInput.addEventListener("change", () => {
       return;
     }
 
+    const profileName = document.getElementById("profile-name").value.trim();
+    const profileCity = document.getElementById("profile-city").value.trim();
+    const profileInstagram = document.getElementById("profile-instagram").value.trim();
+    const profileAbout = document.getElementById("profile-about").value.trim();
+
+    const fieldLimits = [
+      [profileName, 100, "Imię lub pseudonim"],
+      [profileCity, 100, "Miasto"],
+      [profileInstagram, 100, "Instagram"],
+      [profileAbout, 2000, "Opis"]
+    ];
+
+    const tooLong = fieldLimits.find(([value, limit]) => value.length > limit);
+
+    if (tooLong) {
+      const saveMessage = document.getElementById("profile-save-message");
+      saveMessage.textContent = tooLong[2] + " jest za długie.";
+      saveMessage.classList.add("show");
+      return;
+    }
+
     const profile = {
-      name: document.getElementById("profile-name").value.trim(),
+      name: profileName,
       age: document.getElementById("profile-age").value.trim(),
-      city: document.getElementById("profile-city").value.trim(),
-      instagram: document.getElementById("profile-instagram").value.trim(),
-      about: document.getElementById("profile-about").value.trim(),
+      city: profileCity,
+      instagram: profileInstagram,
+      about: profileAbout,
 photo: profilePhotoPreview.querySelector("img")
   ? profilePhotoPreview.querySelector("img").src
   : "",
