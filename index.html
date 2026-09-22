@@ -3285,6 +3285,12 @@ function blockPersonProfile(userId, name) {
 document.addEventListener("keydown", function(event) {
   if (event.key !== "Escape") return;
 
+  const joinModal = document.getElementById("join-modal");
+  if (joinModal) {
+    closeJoinForm();
+    return;
+  }
+
   const reportModal = document.getElementById("report-modal");
   if (reportModal) {
     closeReportForm();
@@ -3475,7 +3481,7 @@ function openJoinForm(trip) {
         <div class="join-overlay">
             <div class="join-modal-box">
 
-                <button type="button" class="join-close" onclick="closeJoinForm()">
+                <button type="button" class="join-close" onclick="closeJoinForm()" aria-label="Zamknij">
                     ×
                 </button>
 
