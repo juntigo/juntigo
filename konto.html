@@ -547,9 +547,33 @@ async function loadChatMessages() {
     messagesBox.innerHTML =
       '<div class="chat-empty">Nie udało się wczytać rozmowy.</div>';
 
-    setChatError(
-      error.message || "Nie udało się wczytać rozmowy."
-    );
+    const errorMessage =
+      error.message || "Nie udało się wczytać rozmowy.";
+
+    setChatError(errorMessage);
+
+    if (
+      /zablok|blokad|niedostęp/i.test(errorMessage)
+    ) {
+      const messagesBox = document.getElementById("chat-messages");
+
+      if (messagesBox) {
+        messagesBox.innerHTML =
+          '<div class="chat-empty">Ta rozmowa nie jest już dostępna.</div>';
+      }
+
+      const input = document.getElementById("chat-input");
+      const sendButton = document.getElementById("chat-send");
+
+      if (input) {
+        input.disabled = true;
+        input.value = "";
+      }
+
+      if (sendButton) {
+        sendButton.disabled = true;
+      }
+    }
   }
 }
 
