@@ -460,7 +460,9 @@
     grid-template-columns: 1fr;
     gap: 24px;
   }
-    @media (max-width: 600px) {
+}
+
+@media (max-width: 600px) {
       nav {
         height: 76px;
       }
@@ -749,12 +751,10 @@
 </div>
     </div>
   </main>
-<script src="auth.js"></script>
 <script>
   const GOOGLE_CLIENT_ID = "853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 
-const JUNTIGO_SESSION_KEY = "juntigoSessionToken";
-let juntigoSessionToken = localStorage.getItem(JUNTIGO_SESSION_KEY) || "";
+let juntigoSessionToken = getJuntigoSessionToken();
 
 const profileInterestAliases = {
   "Podróże": null,
