@@ -3938,20 +3938,12 @@ async function saveInterest(event, trip, toUserId, toName) {
 
     const normalizedTrip = String(trip || "").trim();
     const normalizedUserId = String(toUserId || "").trim();
-    const currentUserId = String(
-        getJuntigoSessionIdentity()?.userId || ""
-    ).trim();
 
     if (!normalizedTrip || !normalizedUserId) {
         console.error("Brak danych zainteresowania.", {
             trip: normalizedTrip,
             toUserId: normalizedUserId
         });
-        return;
-    }
-
-    if (currentUserId && currentUserId === normalizedUserId) {
-        console.error("Nie można wysłać zainteresowania samemu sobie.");
         return;
     }
 
