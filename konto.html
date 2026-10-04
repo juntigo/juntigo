@@ -189,7 +189,7 @@ async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccou
 ]);if(getJuntigoSessionToken()!==sessionToken){return;} }catch(error){console.error("Błąd Juntigo:",error);document.getElementById("account-login-status").textContent="";setAccountError(error.message||"Nie udało się wczytać konta.");}}
   
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-  async function loadAccountInterests(sessionToken) {
+  async async function loadAccountInterests(sessionToken) {
   const interestList = document.getElementById("interest-list");
   const tokenAtStart = sessionToken;
 
@@ -329,7 +329,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       '</div>';
   }
 }
-  async function loadAccountMatches(sessionToken) {
+  async async function loadAccountMatches(sessionToken) {
   const matchList = document.getElementById("match-list");
   const tokenAtStart = sessionToken;
 
@@ -506,7 +506,7 @@ function formatChatTime(timestamp) {
   });
 }
 
-async function loadChatMessages() {
+async async function loadChatMessages() {
   const messagesBox = document.getElementById("chat-messages");
   const tokenAtStart = juntigoSessionToken;
   const matchIdAtStart = activeChatMatchId;
@@ -682,7 +682,7 @@ async function markMessagesRead(matchId) {
     console.warn("Błąd oznaczania wiadomości jako przeczytanych:", error);
   }
 }
-async function openMatchChat(matchId, personName, trip) {
+async async function openMatchChat(matchId, personName, trip) {
   if (!juntigoSessionToken) {
     window.location.href = "konto.html";
     return;
