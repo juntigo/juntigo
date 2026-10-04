@@ -2667,7 +2667,7 @@ async function loadTripInterestCounts() {
 }
 
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
-async async async function loadJuntigoNotifications() {
+async function loadJuntigoNotifications() {
     const badge =
         document.getElementById("profile-notification-badge");
 
@@ -3187,7 +3187,7 @@ function showPersonProfile(person, currentTrip) {
   }
 }
   
-function openReportForm(person) {
+async function openReportForm(person) {
   const existingModal = document.getElementById("report-modal");
   if (existingModal) existingModal.remove();
 
@@ -3418,7 +3418,7 @@ function closeReportForm() {
   document.body.style.overflow = profileModal ? "hidden" : "";
 }
 
-function openProposalForm() {
+async function openProposalForm() {
     const existingModal = document.getElementById("proposal-modal");
 
     if (existingModal) {
@@ -3628,7 +3628,7 @@ function closeProposalForm() {
     }
 }
 
-function openJoinForm(trip) {
+async function openJoinForm(trip) {
     const existingModal = document.getElementById("join-modal");
 
     if (existingModal) {
@@ -3956,7 +3956,7 @@ function getInstagramUrl(value) {
   return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
 }
   
-async async async function saveInterest(event, trip, toUserId, toName) {
+async function saveInterest(event, trip, toUserId, toName) {
     if (event) event.preventDefault();
 
     const contactButton =
