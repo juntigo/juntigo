@@ -2695,7 +2695,16 @@ async async function loadJuntigoNotifications() {
         const data = await response.json();
 
         if (!data.success) {
+            const errorMessage = String(data.error || "");
             badge.style.display = "none";
+
+            if (
+                /sesj|zalog|token|uwierzyteln/i.test(errorMessage) &&
+                getJuntigoSessionToken() === sessionToken
+            ) {
+                clearJuntigoSession();
+            }
+
             return;
         }
 
