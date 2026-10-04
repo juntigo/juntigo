@@ -2667,7 +2667,7 @@ async function loadTripInterestCounts() {
 }
 
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
-async function loadJuntigoNotifications() {
+async async function loadJuntigoNotifications() {
     const badge =
         document.getElementById("profile-notification-badge");
 
@@ -3141,6 +3141,8 @@ function showPersonProfile(person, currentTrip) {
 
   document.body.appendChild(modal);
   document.body.style.overflow = "hidden";
+
+  person.trip = String(currentTrip || "").trim();
 
   const reportButton = modal.querySelector(".person-profile-report-button");
   const blockButton = modal.querySelector(".person-profile-block-button");
@@ -3934,7 +3936,7 @@ function getInstagramUrl(value) {
   return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
 }
   
-async function saveInterest(event, trip, toUserId, toName) {
+async async function saveInterest(event, trip, toUserId, toName) {
     if (event) event.preventDefault();
 
     const contactButton =
