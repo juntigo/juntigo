@@ -2840,6 +2840,17 @@ Promise.all([
     );
 
       if (!data.success) {
+        if (
+          data.sessionInvalid &&
+          sessionToken &&
+          getJuntigoSessionToken() === sessionToken
+        ) {
+          clearJuntigoSession();
+          closeTeamModal();
+          showTeam(trip, button);
+          return;
+        }
+
         results.innerHTML = `
           <div class="team-empty">
             Nie udało się pobrać danych.
