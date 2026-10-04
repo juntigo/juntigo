@@ -498,8 +498,10 @@ function formatChatTime(timestamp) {
 
 async function loadChatMessages() {
   const messagesBox = document.getElementById("chat-messages");
+  const tokenAtStart = juntigoSessionToken;
+  const matchIdAtStart = activeChatMatchId;
 
-  if (!messagesBox || !juntigoSessionToken || !activeChatMatchId) {
+  if (!messagesBox || !tokenAtStart || !matchIdAtStart) {
     return;
   }
 
@@ -513,8 +515,8 @@ async function loadChatMessages() {
       method: "POST",
       body: new URLSearchParams({
         type: "getMessages",
-        sessionToken: juntigoSessionToken,
-        matchId: activeChatMatchId
+        sessionToken: tokenAtStart,
+        matchId: matchIdAtStart
       })
     });
 
@@ -524,6 +526,13 @@ async function loadChatMessages() {
       throw new Error(
         result.error || "Nie udało się wczytać rozmowy."
       );
+    }
+
+    if (
+      getJuntigoSessionToken() !== tokenAtStart ||
+      activeChatMatchId !== matchIdAtStart
+    ) {
+      return;
     }
 
     const messages = Array.isArray(result.messages)
