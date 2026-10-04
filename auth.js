@@ -75,7 +75,7 @@ async function validateJuntigoSession() {
 
   juntigoSessionValidationToken = sessionToken;
 
-  juntigoSessionValidationPromise = (async function() {
+  const validationPromise = (async function() {
     try {
       const response = await fetch(
         JUNTIGO_AUTH_API +
@@ -87,11 +87,19 @@ async function validateJuntigoSession() {
       const result = await response.json();
 
       if (!result.success) {
-        clearJuntigoSession();
+        if (getJuntigoSessionToken() === sessionToken) {
+          clearJuntigoSession();
+        }
 
-        juntigoSessionValidationPromise = null;
-        juntigoSessionValidationToken = "";
+        return {
+          authenticated: false,
+          profile: null,
+          identity: null
+        };
+      }
 
+      // Nie pozwalaj starej odpowiedzi nadpisać nowszej sesji.
+      if (getJuntigoSessionToken() !== sessionToken) {
         return {
           authenticated: false,
           profile: null,
@@ -111,8 +119,10 @@ async function validateJuntigoSession() {
         error
       );
 
-      juntigoSessionValidationPromise = null;
-      juntigoSessionValidationToken = "";
+      if (getJuntigoSessionToken() === sessionToken) {
+        juntigoSessionValidationPromise = null;
+        juntigoSessionValidationToken = "";
+      }
 
       return {
         authenticated: false,
@@ -122,7 +132,9 @@ async function validateJuntigoSession() {
     }
   })();
 
-  return juntigoSessionValidationPromise;
+  juntigoSessionValidationPromise = validationPromise;
+
+  return validationPromise;
 }
 
 function logoutJuntigo() {
