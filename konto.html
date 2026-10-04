@@ -191,8 +191,9 @@ async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccou
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
   async function loadAccountInterests(sessionToken) {
   const interestList = document.getElementById("interest-list");
+  const tokenAtStart = sessionToken;
 
-  if (!interestList || !sessionToken) {
+  if (!interestList || !tokenAtStart) {
     return;
   }
 
@@ -204,11 +205,15 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       method: "POST",
       body: new URLSearchParams({
         type: "myInterests",
-        sessionToken: sessionToken
+        sessionToken: tokenAtStart
       })
     });
 
     const result = await response.json();
+
+    if (getJuntigoSessionToken() !== tokenAtStart) {
+      return;
+    }
 
     if (!result.success) {
       throw new Error(
@@ -326,8 +331,9 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
 }
   async function loadAccountMatches(sessionToken) {
   const matchList = document.getElementById("match-list");
+  const tokenAtStart = sessionToken;
 
-  if (!matchList || !sessionToken) {
+  if (!matchList || !tokenAtStart) {
     return;
   }
 
@@ -341,11 +347,15 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       method: "POST",
       body: new URLSearchParams({
         type: "myMatches",
-        sessionToken: sessionToken
+        sessionToken: tokenAtStart
       })
     });
 
     const result = await response.json();
+
+    if (getJuntigoSessionToken() !== tokenAtStart) {
+      return;
+    }
 
     if (!result.success) {
       throw new Error(
