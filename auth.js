@@ -57,12 +57,6 @@ window.addEventListener("storage", function(event) {
     return;
   }
 
-  const currentToken = getJuntigoSessionToken();
-
-  if (event.newValue === currentToken) {
-    return;
-  }
-
   clearJuntigoSession();
 
   const path = window.location.pathname.toLowerCase();
