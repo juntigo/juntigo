@@ -982,6 +982,13 @@ document.querySelectorAll(
   input.checked = trips.includes(input.value);
 });
 
+const requestedTrip = new URLSearchParams(window.location.search).get("trip");
+if (requestedTrip) {
+  const requestedInput = Array.from(document.querySelectorAll(".profile-trip-option input"))
+    .find(input => input.value === requestedTrip);
+  if (requestedInput) requestedInput.checked = true;
+}
+
       showProfile(profile);
     })
     .catch(error => {
