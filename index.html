@@ -2807,8 +2807,10 @@ function showTeam(trip, button) {
   document.body.style.overflow = "hidden";
 
   const results = modal.querySelector(".team-results");
-const sessionToken = getJuntigoSessionToken();
-const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (sessionToken ? "&sessionToken=" + encodeURIComponent(sessionToken) : "");
+  const sessionToken = getJuntigoSessionToken();
+  const teamRequestId = String(Date.now()) + "-" + Math.random().toString(36).slice(2);
+  modal.dataset.teamRequestId = teamRequestId;
+  const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (sessionToken ? "&sessionToken=" + encodeURIComponent(sessionToken) : "");
 
 const interestStatusPromise = sessionToken
   ? fetch(
@@ -2832,6 +2834,13 @@ Promise.all([
   interestStatusPromise
 ])
   .then(([data, interestStatus]) => {
+
+    if (
+      document.getElementById("team-modal") !== modal ||
+      modal.dataset.teamRequestId !== teamRequestId
+    ) {
+      return;
+    }
 
     const interestedUserIds = new Set(
       Array.isArray(interestStatus.interestedUserIds)
@@ -2990,6 +2999,13 @@ ${person.trips ? `
 });
     })
     .catch(error => {
+      if (
+        document.getElementById("team-modal") !== modal ||
+        modal.dataset.teamRequestId !== teamRequestId
+      ) {
+        return;
+      }
+
       console.error(error);
 
       results.innerHTML = `
