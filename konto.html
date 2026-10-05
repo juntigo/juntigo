@@ -212,7 +212,7 @@ async function loadAccountProfile(sessionToken) {
 }
 
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-  async async function loadAccountInterests(sessionToken) {
+  async function loadAccountInterests(sessionToken) {
   const interestList = document.getElementById("interest-list");
   const tokenAtStart = sessionToken;
 
