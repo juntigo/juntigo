@@ -2453,7 +2453,7 @@
 
         <div class="category">
           <div class="category-icon">⚽</div>
-          <h3>Sportowe</h3>
+          <h3>Sport</h3>
           <p>Mecze, F1, tenis, koszykówka i największe wydarzenia sportowe.</p>
         </div>
 
@@ -3510,8 +3510,10 @@ async function openProposalForm() {
                                 Kategoria
                                 <select id="proposal-category" required>
                                     <option value="City breaki">City breaki</option>
+                                    <option value="Sport">Sport</option>
                                     <option value="Wydarzenia">Wydarzenia</option>
-                                    <option value="Sportowe">Sportowe</option>
+                                    <option value="Jarmarki i święta">Jarmarki i święta</option>
+                                    <option value="Sylwester">Sylwester</option>
                                 </select>
                             </label>
 
@@ -3591,8 +3593,10 @@ async function openProposalForm() {
 
         const allowedProposalCategories = new Set([
             "City breaki",
+            "Sport",
             "Wydarzenia",
-            "Sportowe"
+            "Jarmarki i święta",
+            "Sylwester"
         ]);
 
         if (!allowedProposalCategories.has(category)) {
