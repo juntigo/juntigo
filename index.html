@@ -2704,7 +2704,7 @@ async function loadTripInterestCounts() {
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
 let juntigoNotificationsInFlight = false;
 
-async function loadJuntigoNotifications() {
+async async function loadJuntigoNotifications() {
     if (document.hidden || juntigoNotificationsInFlight) {
         return;
     }
@@ -2790,7 +2790,7 @@ async function loadJuntigoNotifications() {
 
 setInterval(
     loadJuntigoNotifications,
-    20000
+    30000
 );
 function toggleMobileMenu() {
     const menu = document.querySelector(".nav-menu");
