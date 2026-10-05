@@ -2451,6 +2451,12 @@
   <p>Koncerty, festiwale, imprezy i wyjątkowe wydarzenia.</p>
 </div>
 
+        <div class="category">
+          <div class="category-icon">⚽</div>
+          <h3>Sport</h3>
+          <p>Mecze i najważniejsze wydarzenia sportowe.</p>
+        </div>
+
       </div>
     </div>
   </section>
@@ -2726,7 +2732,8 @@ function showFeaturedTripTeam(trip, label, button) {
 
 const HOME_TYPE_LABELS={
   city:"Wycieczki",
-  event:"Wydarzenia"
+  event:"Wydarzenia",
+  sport:"Sport"
 };
 
 const HOME_TRIPS=[
@@ -3625,6 +3632,7 @@ async function openProposalForm() {
                                 <select id="proposal-category" required>
                                     <option value="Wycieczki">Wycieczki</option>
                                     <option value="Wydarzenia">Wydarzenia</option>
+                                    <option value="Sport">Sport</option>
                                 </select>
                             </label>
 
@@ -3704,7 +3712,8 @@ async function openProposalForm() {
 
         const allowedProposalCategories = new Set([
             "Wycieczki",
-            "Wydarzenia"
+            "Wydarzenia",
+            "Sport"
         ]);
 
         if (!allowedProposalCategories.has(category)) {
