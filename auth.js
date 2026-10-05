@@ -57,7 +57,12 @@ window.addEventListener("storage", function(event) {
     return;
   }
 
-  clearJuntigoSession();
+  if (event.newValue) {
+    juntigoSessionValidationPromise = null;
+    juntigoSessionValidationToken = "";
+  } else {
+    clearJuntigoSession();
+  }
 
   const path = window.location.pathname.toLowerCase();
 
