@@ -203,7 +203,8 @@ async function fetchJuntigoGetWithRetry(input, init, attempts = 3) {
     try {
       const response = await JUNTIGO_NATIVE_FETCH(input, init);
 
-      if (response.ok || attempt === attempts) {
+      // Nie ponawiaj błędnych żądań 4xx. Retry ma sens dla błędów sieciowych i 5xx.
+      if (response.ok || response.status < 500 || attempt === attempts) {
         return response;
       }
     } catch (error) {
