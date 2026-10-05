@@ -451,6 +451,7 @@
 }
 @media (max-width: 600px) {
   .profile-photo-section {
+    flex-direction: column;
     align-items: flex-start;
   }
 
@@ -582,7 +583,7 @@
     <input
       type="file"
       id="profile-photo"
-      accept="image/*"
+      accept="image/jpeg,image/png,image/webp"
       hidden
     >
   </div>
@@ -630,6 +631,7 @@
 
     <div class="profile-form-group">
       <label>💗 Zainteresowania</label>
+      <small>Wybierz maksymalnie 7</small>
 
      <div class="profile-options" id="profile-interests-options">
   <button type="button" aria-pressed="false">🏔️ Góry</button>
@@ -652,6 +654,7 @@
 
     <div class="profile-form-group">
       <label>🧳 Styl podróżowania</label>
+      <small>Wybierz maksymalnie 6</small>
 
       <div class="profile-options" id="profile-style-options">
   <button type="button">🎒 Backpacking</button>
@@ -837,6 +840,10 @@ document.querySelectorAll(
     "selected",
     normalizedInterests.includes(button.textContent.trim())
   );
+  button.setAttribute(
+    "aria-pressed",
+    button.classList.contains("selected") ? "true" : "false"
+  );
 });
 
      const travelStyle = Array.isArray(profile.travelStyle)
@@ -864,6 +871,10 @@ document.querySelectorAll(
     "selected",
     normalizedTravelStyle.includes(button.textContent.trim())
   );
+  button.setAttribute(
+    "aria-pressed",
+    button.classList.contains("selected") ? "true" : "false"
+  );
 });
 
      const trips = Array.isArray(profile.trips)
@@ -881,6 +892,10 @@ document.querySelectorAll(
     })
     .catch(error => {
       console.error("Błąd ładowania profilu:", error);
+      const saveMessage = document.getElementById("profile-save-message");
+      saveMessage.textContent =
+        "Nie udało się wczytać profilu. Odśwież stronę i spróbuj ponownie.";
+      saveMessage.classList.add("show");
     });
 }
 async function handleGoogleCredential(response) {
@@ -1024,6 +1039,13 @@ profilePhotoInput.addEventListener("change", () => {
 
   reader.readAsDataURL(file);
 });
+  document.querySelectorAll(".profile-options button").forEach(button => {
+    button.setAttribute(
+      "aria-pressed",
+      button.classList.contains("selected") ? "true" : "false"
+    );
+  });
+
   document.addEventListener("click", function(event) {
   const button = event.target.closest(".profile-options button");
 
@@ -1045,6 +1067,10 @@ profilePhotoInput.addEventListener("change", () => {
     }
 
     button.classList.toggle("selected");
+    button.setAttribute(
+      "aria-pressed",
+      button.classList.contains("selected") ? "true" : "false"
+    );
     return;
   }
 
@@ -1059,6 +1085,10 @@ profilePhotoInput.addEventListener("change", () => {
     }
 
     button.classList.toggle("selected");
+    button.setAttribute(
+      "aria-pressed",
+      button.classList.contains("selected") ? "true" : "false"
+    );
   }
 });
 
