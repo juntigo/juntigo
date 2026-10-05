@@ -2410,6 +2410,7 @@ details.appendChild(summary);
 const grid=document.createElement("div");grid.className="city-grid";group.trips.forEach(t=>grid.appendChild(cityCard(t)));
 details.appendChild(grid);cityBreakView.appendChild(details);
 });
+loadVisibleCityPhotos();
 }
 
 function renderSportGroups(trips){
