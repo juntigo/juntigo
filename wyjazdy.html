@@ -36,6 +36,13 @@ nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;
 .controls-wrap{padding:28px 0 8px}
 .controls{background:#fff;border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(7,27,51,.06)}
 .filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.filter-input{width:100%;min-height:48px;padding:11px 14px;border:1px solid #d8dee6;border-radius:12px;background:#fff;color:var(--navy);font:inherit;font-weight:700;outline:none}
+.filter-input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,116,23,.12)}
+.country-flag-img{width:28px;height:20px;object-fit:cover;border-radius:3px;box-shadow:0 1px 3px rgba(7,27,51,.18);vertical-align:middle}
+.city-card .country-line{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:800;margin-bottom:8px}
+.city-card .country-line img{flex:none}
+.city-card .trip-description{min-height:44px}
+
 .filter label{display:block;color:var(--navy);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
 .filter select{width:100%;min-height:48px;padding:11px 14px;border:1px solid #d8dee6;border-radius:12px;background:#fff;color:var(--navy);font:inherit;font-weight:700;outline:none}
 .filter select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,116,23,.12)}
@@ -1775,6 +1782,591 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 <p>Na tym etapie pokazujemy wyłącznie kierunki City Break. Konkretne wyjazdy sportowe, wydarzenia, jarmarki i Sylwester dodamy osobno.</p>
 </div>
 <div id="countryList"></div>
+</div>
+</main>
+
+<footer>Juntigo — łączymy podróżników</footer>
+<script src="auth.js"></script>
+<script>
+function openJoinForm(trip) {
+    const existingModal = document.getElementById("join-modal");
+
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement("div");
+    modal.id = "join-modal";
+
+    modal.innerHTML = `
+        <div class="join-overlay">
+            <div class="join-modal-box">
+
+                <button type="button" class="join-close" onclick="closeJoinForm()" aria-label="Zamknij">
+                    ×
+                </button>
+
+                <div class="join-modal-tag">
+                    JUNTIGO
+                </div>
+
+                <h2>Dołącz do wyjazdu</h2>
+
+                <p class="join-trip-name">${escapeHtml(trip)}</p>
+
+                <p class="join-description">
+                    Zostaw swoje dane, a znajdziemy osoby zainteresowane tym samym wyjazdem.
+                </p>
+
+               <form id="join-form">
+
+    <div class="join-form-intro">
+        <p class="join-form-note">
+            Podaj kilka informacji o sobie. Dzięki nim łatwiej znajdziemy osoby,
+            z którymi możesz dobrze spędzić wyjazd.
+        </p>
+    </div>
+
+    <div class="join-form-section">
+        <div class="join-form-section-title">Twoje dane</div>
+
+        <label>
+            Imię lub pseudonim
+            <input
+                type="text"
+                id="join-name"
+                placeholder="Np. Jan"
+                required
+            >
+        </label>
+
+        <label>
+            Instagram
+            <input
+                type="text"
+                id="join-instagram"
+                placeholder="@twojinstagram"
+                required
+            >
+            <span class="join-field-hint">
+                Dzięki Instagramowi łatwiej będzie się poznać przed wyjazdem.
+            </span>
+        </label>
+
+        <label>
+            E-mail
+            <input
+                type="email"
+                id="join-email"
+                placeholder="twoj@email.com"
+                required
+            >
+        </label>
+    </div>
+
+    <div class="join-form-section">
+        <div class="join-form-section-title">Kilka informacji o Tobie</div>
+
+        <div class="join-form-row">
+
+            <label>
+                Wiek
+                <input
+                    type="number"
+                    id="join-age"
+                    placeholder="Np. 25"
+                    min="16"
+                    max="99"
+                    required
+                >
+            </label>
+
+            <label>
+                Miasto
+                <input
+                    type="text"
+                    id="join-city"
+                    placeholder="Np. Toruń"
+                    required
+                >
+            </label>
+
+        </div>
+
+        <label>
+            Kilka słów o Tobie
+            <textarea
+                id="join-about"
+                placeholder="Np. Lubię zwiedzać, poznawać nowych ludzi i próbować lokalnej kuchni..."
+                rows="4"
+            ></textarea>
+            <span class="join-field-hint">
+                Napisz coś, co może pomóc innym osobom Cię poznać.
+            </span>
+        </label>
+    </div>
+<div class="join-consent">
+    <label class="join-consent-label">
+        <input
+            type="checkbox"
+            id="join-show-profile"
+        >
+        <span>
+            Chcę, aby mój profil był widoczny dla innych osób zainteresowanych tym samym wyjazdem.
+        </span>
+    </label>
+
+    <p>
+        Osoby zainteresowane tym wyjazdem będą mogły zobaczyć mój pseudonim,
+        Instagram, wiek, miasto i krótki opis.
+    </p>
+</div>
+    <div class="join-form-info">
+        <strong>Jak to działa?</strong>
+        <p>
+            Zapiszemy Twoje zgłoszenie i będziemy szukać osób zainteresowanych
+            tym samym wyjazdem. Jeśli znajdziemy odpowiednią ekipę,
+            skontaktujemy się z Tobą.
+        </p>
+    </div>
+
+    <div id="join-status" class="join-status" role="alert" aria-live="polite"></div>
+
+    <button type="submit" class="join-submit">
+        Zgłoś zainteresowanie
+    </button>
+
+</form>
+
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.style.overflow = "hidden";
+
+   document.getElementById("join-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const submitButton = form.querySelector(".join-submit");
+    const status = form.querySelector("#join-status");
+
+    const ageValue = Number(document.getElementById("join-age").value.trim());
+
+    if (!Number.isInteger(ageValue) || ageValue < 16 || ageValue > 99) {
+        status.textContent = "Wiek musi wynosić od 16 do 99 lat.";
+        status.className = "join-status join-status--error is-visible";
+        document.getElementById("join-age").focus();
+        return;
+    }
+
+    const name = document.getElementById("join-name").value.trim();
+    const instagram = document.getElementById("join-instagram").value.trim();
+    const email = document.getElementById("join-email").value.trim();
+    const city = document.getElementById("join-city").value.trim();
+    const about = document.getElementById("join-about").value.trim();
+
+    const fieldLimits = [
+        [trip, 150, "Wyjazd"],
+        [name, 100, "Imię lub pseudonim"],
+        [instagram, 100, "Instagram"],
+        [email, 254, "E-mail"],
+        [city, 100, "Miasto"],
+        [about, 2000, "Opis"]
+    ];
+
+    const tooLong = fieldLimits.find(([value, limit]) => value.length > limit);
+
+    if (tooLong) {
+        status.textContent = tooLong[2] + " jest za długie.";
+        status.className = "join-status join-status--error is-visible";
+        return;
+    }
+
+    const formData = new URLSearchParams();
+
+    formData.append("type", "join");
+    formData.append("trip", trip);
+    formData.append("name", name);
+    formData.append("instagram", instagram);
+    formData.append("email", email);
+    formData.append("age", ageValue);
+    formData.append("city", city);
+    formData.append("about", about);
+formData.append(
+    "showProfile",
+    document.getElementById("join-show-profile").checked ? "Tak" : "Nie"
+);
+    status.textContent = "";
+    status.className = "join-status";
+    submitButton.disabled = true;
+    submitButton.textContent = "Wysyłamy...";
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+       if (data.success) {
+    showJoinSuccess(trip);
+} else {
+    console.error(data.error);
+    status.textContent = "Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.";
+    status.className = "join-status join-status--error is-visible";
+    submitButton.disabled = false;
+    submitButton.textContent = "Zgłoś zainteresowanie";
+}
+
+    } catch (error) {
+        console.error(error);
+        status.textContent = "Wystąpił błąd podczas wysyłania zgłoszenia. Spróbuj ponownie za chwilę.";
+        status.className = "join-status join-status--error is-visible";
+        submitButton.disabled = false;
+        submitButton.textContent = "Zgłoś zainteresowanie";
+    }
+});
+}
+
+document.addEventListener("click", function(event) {
+  const button = event.target.closest("[data-join-trip]");
+  if (!button) return;
+  event.preventDefault();
+  openJoinForm(button.getAttribute("data-join-trip") || "");
+});
+function closeJoinForm() {
+    const modal = document.getElementById("join-modal");
+
+    if (modal) {
+        modal.remove();
+    }
+
+    document.body.style.overflow = "";
+}
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getInstagramUrl(value) {
+  const handle = String(value || "").trim().replace(/^@+/, "");
+
+  if (!/^[A-Za-z0-9._]{1,100}$/.test(handle)) {
+    return "";
+  }
+
+  return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
+}
+  
+async function saveInterest(event, trip, toUserId, toName) {
+    if (event) event.preventDefault();
+
+    const contactButton =
+        event && event.currentTarget ? event.currentTarget : null;
+
+    const sessionToken = getJuntigoSessionToken();
+
+    if (!sessionToken) {
+        window.location.href = "konto.html";
+        return;
+    }
+
+    const normalizedTrip = String(trip || "").trim();
+    const normalizedUserId = String(toUserId || "").trim();
+
+    if (!normalizedTrip || !normalizedUserId) {
+        console.error("Brak danych zainteresowania.", {
+            trip: normalizedTrip,
+            toUserId: normalizedUserId
+        });
+        return;
+    }
+
+    if (contactButton) {
+        contactButton.disabled = true;
+        contactButton.textContent = "Wysyłamy...";
+    }
+
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: new URLSearchParams({
+                type: "interest",
+                sessionToken: sessionToken,
+                trip: normalizedTrip,
+                toUserId: normalizedUserId
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            const errorMessage =
+                data.error || "Nie udało się wysłać zainteresowania.";
+
+            if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
+                clearJuntigoSession();
+                window.location.href = "konto.html";
+                return;
+            }
+
+            throw new Error(errorMessage);
+        }
+
+        if (contactButton) {
+            contactButton.textContent = "Zainteresowanie wysłane";
+            contactButton.classList.add("interest-sent");
+        }
+    } catch (error) {
+        console.error("Błąd wysyłania zainteresowania:", error);
+
+        if (contactButton) {
+            contactButton.textContent = "Jestem zainteresowany";
+            contactButton.disabled = false;
+        }
+
+        if (/sesj|zalog|token|uwierzyteln/i.test(error.message || "")) {
+            clearJuntigoSession();
+            window.location.href = "konto.html";
+        }
+    }
+}
+
+
+function showJoinSuccess(trip) {
+    const modal = document.getElementById("join-modal");
+
+    if (!modal) {
+        return;
+    }
+
+    const box = modal.querySelector(".join-modal-box");
+
+    if (!box) {
+        return;
+    }
+
+    box.innerHTML = `
+        <button type="button" class="join-close" onclick="closeJoinForm()">
+            ×
+        </button>
+
+        <div class="join-modal-tag">
+            JUNTIGO
+        </div>
+
+      <div class="join-success">
+    <h2>Zgłoszenie wysłane</h2>
+
+    <p class="join-trip-name">
+        ${escapeHtml(trip)}
+    </p>
+
+    <p>
+        Twoje zgłoszenie zostało zapisane.
+        Jeśli znajdziemy osoby zainteresowane tym samym wyjazdem,
+        będziesz mógł zobaczyć ich profile i wysłać zainteresowanie wybranym osobom.
+        Jeśli zainteresowanie będzie wzajemne, połączymy Was.
+    </p>
+
+    <div class="join-profile-prompt">
+        <strong>Chcesz pokazać innym więcej o sobie?</strong>
+        <span>
+            Utwórz profil Juntigo, dodaj zdjęcie, zainteresowania i kilka informacji o sobie.
+        </span>
+    </div>
+
+    <button
+        type="button"
+        class="join-submit"
+        onclick="window.location.href='profil.html'"
+    >
+        Utwórz profil
+    </button>
+
+            <button
+                type="button"
+                class="join-submit"
+                onclick="closeJoinForm()"
+            >
+                Gotowe
+            </button>
+        </div>
+    `;
+}
+</script>
+<script>
+const TYPE_LABELS={city:"✈️ City breaki"};
+
+const COUNTRIES=[
+{name:"Albania",code:"al",flag:"🇦🇱",items:[["TIRANA","Tirana","🏙️"]]},
+{name:"Austria",code:"at",flag:"🇦🇹",items:[["WIEDEN","Wiedeń","🏙️"]]},
+{name:"Belgia",code:"be",flag:"🇧🇪",items:[["BRUKSELA","Bruksela","🏙️"]]},
+{name:"Bułgaria",code:"bg",flag:"🇧🇬",items:[["SOFIA","Sofia","🏙️"],["BURGAS","Burgas","🏙️"],["WARNA","Warna","🏙️"]]},
+{name:"Chorwacja",code:"hr",flag:"🇭🇷",items:[["ZAGRZEB","Zagrzeb","🏙️"],["DUBROWNIK","Dubrownik","🏙️"],["ZADAR","Zadar","🏙️"],["SPLIT","Split","🏙️"],["RIJEKA","Rijeka","🏙️"]]},
+{name:"Czarnogóra",code:"me",flag:"🇲🇪",items:[["PODGORICA","Podgorica","🏙️"]]},
+{name:"Czechy",code:"cz",flag:"🇨🇿",items:[["PRAGA","Praga","🏙️"]]},
+{name:"Cypr",code:"cy",flag:"🇨🇾",items:[["LARNAKA","Larnaka","🏙️"],["PAFOS","Pafos","🏙️"]]},
+{name:"Dania",code:"dk",flag:"🇩🇰",items:[["KOPENHAGA","Kopenhaga","🏙️"]]},
+{name:"Estonia",code:"ee",flag:"🇪🇪",items:[["TALLINN","Tallinn","🏙️"]]},
+{name:"Finlandia",code:"fi",flag:"🇫🇮",items:[["TURKU","Turku","🏙️"],["HELSINKI","Helsinki","🏙️"]]},
+{name:"Francja",code:"fr",flag:"🇫🇷",items:[["PARYZ","Paryż","🏙️"],["NICEA","Nicea","🏙️"],["MARSYLIA","Marsylia","🏙️"]]},
+{name:"Grecja",code:"gr",flag:"🇬🇷",items:[["ATENY","Ateny","🏙️"],["KRETA","Kreta","🏝️","Heraklion / Chania"],["SALONIKI","Saloniki","🏙️"],["KORFU","Korfu","🏝️"],["RODOS","Rodos","🏝️"],["ZAKINTOS","Zakintos","🏝️"],["KOS","Kos","🏝️"]]},
+{name:"Gruzja",code:"ge",flag:"🇬🇪",items:[["KUTAISI","Kutaisi","🏙️"],["TBILISI","Tbilisi","🏙️"]]},
+{name:"Holandia",code:"nl",flag:"🇳🇱",items:[["EINDHOVEN","Eindhoven","🏙️"],["AMSTERDAM","Amsterdam","🏙️"]]},
+{name:"Hiszpania",code:"es",flag:"🇪🇸",items:[["MADRYT","Madryt","🏙️"],["BARCELONA","Barcelona","🏙️"],["SEVILLA","Sewilla","🏙️"],["MALAGA","Malaga","🏙️"],["ALICANTE","Alicante","🏙️"],["PALMA_DE_MALLORCA","Palma de Mallorca","🏝️"],["GIRONA","Girona","🏙️"],["WALENCJA","Walencja","🏙️"],["BILBAO","Bilbao","🏙️"],["MINORKA","Minorka","🏝️"],["TENERYFA","Teneryfa","🏝️"],["LAS_PALMAS_DE_GRAN_CANARIA","Las Palmas de Gran Canaria","🏝️"],["FUERTEVENTURA","Fuerteventura","🏝️"],["LANZAROTE","Lanzarote","🏝️"]]},
+{name:"Irlandia",code:"ie",flag:"🇮🇪",items:[["SHANNON","Shannon","🏙️"],["DUBLIN","Dublin","🏙️"]]},
+{name:"Irlandia Północna",code:"gb-nir",flag:"🇬🇧",items:[["BELFAST","Belfast","🏙️"]]},
+{name:"Islandia",code:"is",flag:"🇮🇸",items:[["REYKJAVIK","Reykjavik","🏙️"]]},
+{name:"Litwa",code:"lt",flag:"🇱🇹",items:[["WILNO","Wilno","🏙️"]]},
+{name:"Łotwa",code:"lv",flag:"🇱🇻",items:[["RYGA","Ryga","🏙️"]]},
+{name:"Malta",code:"mt",flag:"🇲🇹",items:[["VALLETTA","Valletta","🏙️"]]},
+{name:"Maroko",code:"ma",flag:"🇲🇦",items:[["RABAT","Rabat","🏙️"],["MARRAKESZ","Marrakesz","🏙️"],["AGADIR","Agadir","🏙️"]]},
+{name:"Mołdawia",code:"md",flag:"🇲🇩",items:[["KISZYNIÓW","Kiszyniów","🏙️"]]},
+{name:"Niemcy",code:"de",flag:"🇩🇪",items:[["DUSSELDORF","Düsseldorf","🏙️"],["HAMBURG","Hamburg","🏙️"],["MEMMINGEN","Memmingen","🏙️"],["DORTMUND","Dortmund","🏙️"],["STUTTGART","Stuttgart","🏙️"],["MONACHIUM","Monachium","🏙️"],["BERLIN","Berlin","🏙️"]]},
+{name:"Norwegia",code:"no",flag:"🇳🇴",items:[["OSLO","Oslo","🏙️"]]},
+{name:"Portugalia",code:"pt",flag:"🇵🇹",items:[["LIZBONA","Lizbona","🏙️"],["PORTO","Porto","🏙️"],["FARO","Faro","🏙️"]]},
+{name:"Rumunia",code:"ro",flag:"🇷🇴",items:[["BUKARESZT","Bukareszt","🏙️"]]},
+{name:"Słowacja",code:"sk",flag:"🇸🇰",items:[["BRATYSLAWA","Bratysława","🏙️"]]},
+{name:"Szwajcaria",code:"ch",flag:"🇨🇭",items:[["BAZYLEA","Bazylea","🏙️"]]},
+{name:"Szwecja",code:"se",flag:"🇸🇪",items:[["SZTOKHOLM","Sztokholm","🏙️"]]},
+{name:"Turcja",code:"tr",flag:"🇹🇷",items:[["ANTALYA","Antalya","🏙️"],["IZMIR","Izmir","🏙️"]]},
+{name:"Węgry",code:"hu",flag:"🇭🇺",items:[["BUDAPESZT","Budapeszt","🏙️"]]},
+{name:"Wielka Brytania",code:"gb",flag:"🇬🇧",items:[
+["LONDYN","Londyn","🏙️","Anglia","gb-eng"],
+["LIVERPOOL","Liverpool","🏙️","Anglia","gb-eng"],
+["NEWCASTLE_UPON_TYNE","Newcastle upon Tyne","🏙️","Anglia","gb-eng"],
+["BIRMINGHAM","Birmingham","🏙️","Anglia","gb-eng"],
+["MANCHESTER","Manchester","🏙️","Anglia","gb-eng"],
+["BRISTOL","Bristol","🏙️","Anglia","gb-eng"],
+["LEEDS","Leeds","🏙️","Anglia","gb-eng"],
+["NOTTINGHAM","Nottingham","🏙️","Anglia","gb-eng"],
+["BOURNEMOUTH","Bournemouth","🏙️","Anglia","gb-eng"],
+["EDYNBURG","Edynburg","🏙️","Szkocja","gb-sct"],
+["GLASGOW","Glasgow","🏙️","Szkocja","gb-sct"],
+["ABERDEEN","Aberdeen","🏙️","Szkocja","gb-sct"],
+["BELFAST","Belfast","🏙️","Irlandia Północna","gb-nir"]
+]},
+{name:"Włochy",code:"it",flag:"🇮🇹",items:[["RZYM","Rzym","🏙️"],["BARI","Bari","🏙️"],["PESCARA","Pescara","🏙️"],["REGGIO_DI_CALABRIA","Reggio di Calabria","🏙️"],["OLBIA_SARDYNIA","Olbia – Sardynia","🏝️"],["PERUGIA","Perugia","🏙️"],["LAMEZIA_TERME","Lamezia Terme","🏙️"],["ANKONA","Ankona","🏙️"],["GENUA","Genua","🏙️"],["ALGHERO_SARDYNIA","Alghero – Sardynia","🏝️"],["RIMINI","Rimini","🏙️"],["NEAPOL","Neapol","🏙️"],["CAGLIARI_SARDYNIA","Cagliari – Sardynia","🏝️"],["PIZA","Piza","🏙️"],["FLORENCJA","Florencja","🏙️"],["BOLONIA","Bolonia","🏙️"],["PALERMO_SYCYLIA","Palermo – Sycylia","🏝️"],["KATANIA_SYCYLIA","Katania – Sycylia","🏝️"],["TRAPANI_SYCYLIA","Trapani – Sycylia","🏝️"],["MEDIOLAN","Mediolan","🏙️"],["WENECJA","Wenecja","🏙️"],["BRINDISI","Brindisi","🏙️"],["TURYN","Turyn","🏙️"],["TRIEST","Triest","🏙️"]]}
+];
+
+const CITY_TRIPS=COUNTRIES.flatMap(country=>country.items.map(item=>({
+id:item[0],tripId:"CITY_"+item[0],destination:item[1],icon:item[2],variant:item[3]||"",subcode:item[4]||"",country:country.name,countryCode:country.code,countryFlag:country.flag,type:"city",direction:"abroad"
+})));
+
+const countryFilter=document.getElementById("countryFilter");
+const directionFilter=document.getElementById("directionFilter");
+const searchFilter=document.getElementById("searchFilter");
+const resultCount=document.getElementById("resultCount");
+const activeFilters=document.getElementById("activeFilters");
+const allView=document.getElementById("allView");
+const countryView=document.getElementById("countryView");
+
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));}
+function flagUrl(code){return "https://flagcdn.com/w80/"+code+".png";}
+function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(code)+'" alt="'+escapeHtml(alt||"Flaga")+'" loading="lazy">';}
+
+[...COUNTRIES].sort((a,b)=>a.name.localeCompare(b.name,"pl")).forEach(country=>{
+const o=document.createElement("option");o.value=country.name;o.textContent=country.name;countryFilter.appendChild(o);
+});
+
+function filteredTrips(){
+const country=countryFilter.value,direction=directionFilter.value,search=searchFilter.value.trim().toLocaleLowerCase("pl-PL");
+return CITY_TRIPS.filter(t=>
+(country==="all"||t.country===country)&&
+(direction==="all"||direction===t.direction)&&
+(!search||t.destination.toLocaleLowerCase("pl-PL").includes(search)||t.country.toLocaleLowerCase("pl-PL").includes(search))
+);
+}
+
+function card(t){
+const c=document.createElement("article");c.className="trip-card";
+const tripId=t.tripId;
+const flagCode=t.subcode||t.countryCode;
+c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">✈️ City break</span><span class="badge">🌍 Cały świat</span></div><h3>'+escapeHtml(t.destination)+'</h3><div class="country-line">'+flagImg(flagCode,t.country)+'<span>'+escapeHtml(t.variant||t.country)+'</span></div><p class="trip-description">Wyjazd nastawiony na zwiedzanie, poznawanie miasta i wspólne odkrywanie kierunku.</p><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(tripId)+'">Jestem zainteresowany</button></div></div>';
+return c;
+}
+
+function render(){
+const trips=filteredTrips();activeFilters.replaceChildren();
+const labels=[];
+if(countryFilter.value!=="all")labels.push({label:countryFilter.options[countryFilter.selectedIndex].textContent,select:countryFilter});
+if(directionFilter.value!=="all")labels.push({label:directionFilter.options[directionFilter.selectedIndex].textContent,select:directionFilter});
+if(searchFilter.value.trim())labels.push({label:"Szukaj: "+searchFilter.value.trim(),select:searchFilter});
+labels.forEach(item=>{
+const chip=document.createElement("span");chip.className="filter-chip";chip.innerHTML=escapeHtml(item.label)+' <button type="button" aria-label="Usuń filtr">×</button>';
+chip.querySelector("button").addEventListener("click",()=>{if(item.select===searchFilter)searchFilter.value="";else item.select.value="all";render();});
+activeFilters.appendChild(chip);
+});
+if(labels.length){const clear=document.createElement("button");clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";clear.onclick=()=>{countryFilter.value="all";directionFilter.value="all";searchFilter.value="";render()};activeFilters.appendChild(clear);}
+resultCount.textContent=trips.length+" "+(trips.length===1?"wyjazd":trips.length<5?"wyjazdy":"wyjazdów");
+allView.replaceChildren();countryView.replaceChildren();
+
+if(!trips.length){allView.innerHTML='<div class="empty"><strong>Nie znaleźliśmy kierunku.</strong>Spróbuj zmienić filtry lub wyszukiwaną nazwę.</div>';}
+else{const grid=document.createElement("div");grid.className="trip-grid";trips.forEach(t=>grid.appendChild(card(t)));allView.appendChild(grid);}
+
+const groups=new Map();
+trips.forEach(t=>{if(!groups.has(t.country))groups.set(t.country,{country:t.country,code:t.countryCode,flag:t.countryFlag,trips:[]});groups.get(t.country).trips.push(t);});
+for(const group of groups.values()){
+const section=document.createElement("section");section.className="month-section";
+section.innerHTML='<div class="month-heading"><h2>'+flagImg(group.code,group.country)+' '+escapeHtml(group.country)+'</h2><span>'+group.trips.length+' '+(group.trips.length===1?"kierunek":group.trips.length<5?"kierunki":"kierunków")+'</span></div>';
+const grid=document.createElement("div");grid.className="trip-grid";group.trips.forEach(t=>grid.appendChild(card(t)));section.appendChild(grid);countryView.appendChild(section);
+}
+if(!countryView.children.length)countryView.innerHTML='<div class="empty"><strong>Brak wyników.</strong></div>';
+}
+
+document.querySelectorAll(".view-switch button").forEach(btn=>btn.addEventListener("click",()=>{
+document.querySelectorAll(".view-switch button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+const country=btn.dataset.view==="country";allView.classList.toggle("hidden",country);countryView.classList.toggle("hidden",!country);
+}));
+[countryFilter,directionFilter].forEach(el=>el.addEventListener("change",render));
+searchFilter.addEventListener("input",render);
+render();
+
+async function loadTripTeam(button){
+const trip=button.dataset.trip,card=button.closest(".trip-card");let box=card.querySelector(".team-results");
+if(box){box.remove();button.textContent="Zobacz ekipę";return;}
+box=document.createElement("div");box.className="team-results";box.innerHTML='<div class="team-empty">Szukamy ekipy...</div>';card.querySelector(".trip-content").appendChild(box);button.textContent="Ukryj ekipę";
+try{
+const session=await validateJuntigoSession();const token=session.authenticated?getJuntigoSessionToken():"";
+const response=await fetch(JUNTIGO_API+"?trip="+encodeURIComponent(trip)+(token?"&sessionToken="+encodeURIComponent(token):""));const data=await response.json();
+if(!data.success){box.innerHTML='<div class="team-empty">Nie udało się pobrać ekipy.</div>';return;}
+if(!Array.isArray(data.people)||!data.people.length){box.innerHTML='<div class="team-empty"><strong>Na razie nikogo tu nie ma.</strong><br>Bądź pierwszą osobą zainteresowaną tym kierunkiem.</div>';return;}
+box.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+data.count+'</span></div>'+data.people.slice(0,6).map(p=>'<div class="person-mini"><div><strong>'+escapeHtml(p.name||"Użytkownik")+'</strong><span>'+(p.age?escapeHtml(p.age+" lat"):"")+(p.city?" · "+escapeHtml(p.city):"")+'</span></div></div>').join("");
+}catch(error){console.error(error);box.innerHTML='<div class="team-empty">Wystąpił błąd podczas pobierania ekipy.</div>';}
+}
+
+document.addEventListener("click",event=>{const teamButton=event.target.closest(".trip-team-action");if(teamButton)loadTripTeam(teamButton);});
+</script></body>
+</html<section class="controls-wrap">
+<div class="container">
+<div class="controls">
+<div class="filters">
+<div class="filter"><label for="countryFilter">Kraj</label><select id="countryFilter"><option value="all">Wszystkie kraje</option></select></div>
+<div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter"><option value="all">Wszystkie</option><option value="poland">🇵🇱 Polska</option><option value="abroad">🌍 Cały świat</option></select></div>
+<div class="filter"><label for="searchFilter">Wyszukaj kierunek</label><input id="searchFilter" class="filter-input" type="search" placeholder="np. Madryt, Rzym, Barcelona"></div>
+</div>
+<div class="results-bar">
+<div class="result-count" id="resultCount">0 wyjazdów</div>
+<div class="view-switch" role="tablist" aria-label="Widok wyjazdów">
+<button type="button" class="active" data-view="all">Wszystkie wyjazdy</button>
+<button type="button" data-view="country">Według kraju</button>
+</div>
+</div>
+<div class="active-filters" id="activeFilters" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<main>
+<div class="container">
+<div id="allView"></div>
+<div id="countryView" class="hidden"></div>
 </div>
 </main>
 
