@@ -2037,6 +2037,287 @@ document.addEventListener("click", function(event) {
   event.preventDefault();
   openJoinForm(button.getAttribute("data-join-trip") || "");
 });
+function closeJoinForm() {
+    const modal = document.getElementById("join-modal");
+
+    if (modal) {
+        modal.remove();
+    }
+
+    document.body.style.overflow = "";
+}
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getInstagramUrl(value) {
+  const handle = String(value || "").trim().replace(/^@+/, "");
+
+  if (!/^[A-Za-z0-9._]{1,100}$/.test(handle)) {
+    return "";
+  }
+
+  return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
+}
+  
+async function saveInterest(event, trip, toUserId, toName) {
+    if (event) event.preventDefault();
+
+    const contactButton =
+        event && event.currentTarget ? event.currentTarget : null;
+
+    const sessionToken = getJuntigoSessionToken();
+
+    if (!sessionToken) {
+        window.location.href = "konto.html";
+        return;
+    }
+
+    const normalizedTrip = String(trip || "").trim();
+    const normalizedUserId = String(toUserId || "").trim();
+
+    if (!normalizedTrip || !normalizedUserId) {
+        console.error("Brak danych zainteresowania.", {
+            trip: normalizedTrip,
+            toUserId: normalizedUserId
+        });
+        return;
+    }
+
+    if (contactButton) {
+        contactButton.disabled = true;
+        contactButton.textContent = "Wysyłamy...";
+    }
+
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: new URLSearchParams({
+                type: "interest",
+                sessionToken: sessionToken,
+                trip: normalizedTrip,
+                toUserId: normalizedUserId
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            const errorMessage =
+                data.error || "Nie udało się wysłać zainteresowania.";
+
+            if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
+                clearJuntigoSession();
+                window.location.href = "konto.html";
+                return;
+            }
+
+            throw new Error(errorMessage);
+        }
+
+        if (contactButton) {
+            contactButton.textContent = "Zainteresowanie wysłane";
+            contactButton.classList.add("interest-sent");
+        }
+    } catch (error) {
+        console.error("Błąd wysyłania zainteresowania:", error);
+
+        if (contactButton) {
+            contactButton.textContent = "Jestem zainteresowany";
+            contactButton.disabled = false;
+        }
+
+        if (/sesj|zalog|token|uwierzyteln/i.test(error.message || "")) {
+            clearJuntigoSession();
+            window.location.href = "konto.html";
+        }
+    }
+}
+
+</script>
+  
+
+    </div>
+</div>
+</body>
+</html>
+
+function showJoinSuccess(trip) {
+    const modal = document.getElementById("join-modal");
+
+    if (!modal) {
+        return;
+    }
+
+    const box = modal.querySelector(".join-modal-box");
+
+    if (!box) {
+        return;
+    }
+
+    box.innerHTML = `
+        <button type="button" class="join-close" onclick="closeJoinForm()">
+            ×
+        </button>
+
+        <div class="join-modal-tag">
+            JUNTIGO
+        </div>
+
+      <div class="join-success">
+    <h2>Zgłoszenie wysłane</h2>
+
+    <p class="join-trip-name">
+        ${escapeHtml(trip)}
+    </p>
+
+    <p>
+        Twoje zgłoszenie zostało zapisane.
+        Jeśli znajdziemy osoby zainteresowane tym samym wyjazdem,
+        będziesz mógł zobaczyć ich profile i wysłać zainteresowanie wybranym osobom.
+        Jeśli zainteresowanie będzie wzajemne, połączymy Was.
+    </p>
+
+    <div class="join-profile-prompt">
+        <strong>Chcesz pokazać innym więcej o sobie?</strong>
+        <span>
+            Utwórz profil Juntigo, dodaj zdjęcie, zainteresowania i kilka informacji o sobie.
+        </span>
+    </div>
+
+    <button
+        type="button"
+        class="join-submit"
+        onclick="window.location.href='profil.html'"
+    >
+        Utwórz profil
+    </button>
+
+            <button
+                type="button"
+                class="join-submit"
+                onclick="closeJoinForm()"
+            >
+                Gotowe
+            </button>
+        </div>
+    `;
+}
+function closeJoinForm() {
+    const modal = document.getElementById("join-modal");
+
+    if (modal) {
+        modal.remove();
+    }
+
+    document.body.style.overflow = "";
+}
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getInstagramUrl(value) {
+  const handle = String(value || "").trim().replace(/^@+/, "");
+
+  if (!/^[A-Za-z0-9._]{1,100}$/.test(handle)) {
+    return "";
+  }
+
+  return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
+}
+  
+async function saveInterest(event, trip, toUserId, toName) {
+    if (event) event.preventDefault();
+
+    const contactButton =
+        event && event.currentTarget ? event.currentTarget : null;
+
+    const sessionToken = getJuntigoSessionToken();
+
+    if (!sessionToken) {
+        window.location.href = "konto.html";
+        return;
+    }
+
+    const normalizedTrip = String(trip || "").trim();
+    const normalizedUserId = String(toUserId || "").trim();
+
+    if (!normalizedTrip || !normalizedUserId) {
+        console.error("Brak danych zainteresowania.", {
+            trip: normalizedTrip,
+            toUserId: normalizedUserId
+        });
+        return;
+    }
+
+    if (contactButton) {
+        contactButton.disabled = true;
+        contactButton.textContent = "Wysyłamy...";
+    }
+
+    try {
+        const response = await fetch(JUNTIGO_API, {
+            method: "POST",
+            body: new URLSearchParams({
+                type: "interest",
+                sessionToken: sessionToken,
+                trip: normalizedTrip,
+                toUserId: normalizedUserId
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            const errorMessage =
+                data.error || "Nie udało się wysłać zainteresowania.";
+
+            if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
+                clearJuntigoSession();
+                window.location.href = "konto.html";
+                return;
+            }
+
+            throw new Error(errorMessage);
+        }
+
+        if (contactButton) {
+            contactButton.textContent = "Zainteresowanie wysłane";
+            contactButton.classList.add("interest-sent");
+        }
+    } catch (error) {
+        console.error("Błąd wysyłania zainteresowania:", error);
+
+        if (contactButton) {
+            contactButton.textContent = "Jestem zainteresowany";
+            contactButton.disabled = false;
+        }
+
+        if (/sesj|zalog|token|uwierzyteln/i.test(error.message || "")) {
+            clearJuntigoSession();
+            window.location.href = "konto.html";
+        }
+    }
+}
+
+</script>
+  
+
+    </div>
+</div>
+</body>
+</html>
+
 </script>
 <script>
 const TYPE_LABELS={
