@@ -62,7 +62,7 @@ main{padding:32px 0 90px}
 .trip-card h3{color:var(--navy);font-size:21px;line-height:1.2;margin-bottom:8px}
 .trip-location{color:var(--muted);font-size:14px;font-weight:700;margin-bottom:12px}
 .trip-description{color:#64748b;font-size:14px;line-height:1.55}
-.trip-date{padding-top:16px;color:var(--navy);font-size:14px;font-weight:900}.trip-action{margin-top:14px;display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:var(--orange);color:#fff;font-size:13px;font-weight:900}.trip-action:hover{background:var(--navy)}
+.trip-date{padding-top:16px;color:var(--navy);font-size:14px;font-weight:900}.trip-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.trip-action{margin-top:0}.trip-team-action{border:1px solid #d8dee6;background:#fff;color:var(--navy);padding:10px 14px;border-radius:999px;font:inherit;font-size:13px;font-weight:900;cursor:pointer}.trip-team-action:hover{border-color:var(--orange);color:var(--orange)}.team-results{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}.team-heading{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;color:var(--navy);font-size:13px}.person-mini{padding:10px 0;border-bottom:1px solid #edf0f3}.person-mini:last-child{border-bottom:0}.person-mini strong{display:block;color:var(--navy);font-size:14px}.person-mini span{display:block;color:var(--muted);font-size:12px}.team-empty{color:var(--muted);font-size:13px;line-height:1.45}.trip-action{margin-top:14px;display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:var(--orange);color:#fff;font-size:13px;font-weight:900}.trip-action:hover{background:var(--navy)}
 .empty{padding:48px 24px;background:#fff;border:1px dashed #cfd6df;border-radius:20px;text-align:center;color:var(--muted)}
 .empty strong{display:block;color:var(--navy);font-size:19px;margin-bottom:6px}
 .hidden{display:none!important}
@@ -216,6 +216,32 @@ document.querySelectorAll(".view-switch button").forEach(btn=>btn.addEventListen
 }));
 [monthFilter,typeFilter,directionFilter].forEach(el=>el.addEventListener("change",render));
 render();
+
+function loadTripTeam(button){
+  const trip=button.dataset.trip;
+  const card=button.closest(".trip-card");
+  let box=card.querySelector(".team-results");
+  if(box){box.remove();button.textContent="Zobacz ekipę";return;}
+  box=document.createElement("div");
+  box.className="team-results";
+  box.innerHTML="<div class=\"team-empty\">Szukamy ekipy...</div>";
+  card.querySelector(".trip-content").appendChild(box);
+  button.textContent="Ukryj ekipę";
+  fetch("https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec?trip="+encodeURIComponent(trip))
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data.success){box.innerHTML="<div class=\"team-empty\">Nie udało się pobrać ekipy.</div>";return;}
+      if(!Array.isArray(data.people)||!data.people.length){
+        box.innerHTML="<div class=\"team-empty\"><strong>Na razie nikogo tu nie ma.</strong><br>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</div>";
+        return;
+      }
+      const people=data.people.slice(0,6);
+      box.innerHTML="<div class=\"team-heading\"><strong>Osoby zainteresowane</strong><span>"+data.count+"</span></div>"+
+        people.map(p=>"<div class=\"person-mini\"><strong>"+escapeHtml(p.name||"Użytkownik")+"</strong><span>"+(p.age?escapeHtml(p.age+" lat"):"")+(p.city?" · "+escapeHtml(p.city):"")+"</span></div>").join("");
+    })
+    .catch(()=>{box.innerHTML="<div class=\"team-empty\">Wystąpił błąd podczas pobierania ekipy.</div>";});
+}
+document.addEventListener("click",e=>{const b=e.target.closest(".trip-team-action");if(b)loadTripTeam(b);});
 </script>
 </body>
 </html>
