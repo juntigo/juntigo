@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#071b33">
 <link rel="icon" type="image/png" href="juntigo-logo.png">
 <title>Wyjazdy — Juntigo</title>
-<meta name="description" content="Wyjazdy Juntigo — znajdź city break, jarmark, mecz lub wydarzenie i osoby, które też chcą tam pojechać.">
+<meta name="description" content="Wyjazdy Juntigo — znajdź wycieczka, jarmark, mecz lub wydarzenie i osoby, które też chcą tam pojechać.">
 <link rel="canonical" href="https://juntigo.pl/wyjazdy.html">
 <meta property="og:title" content="Wyjazdy — Juntigo">
 <meta property="og:description" content="Znajdź wyjazd, wydarzenie albo mecz i poznaj osoby, które też chcą tam pojechać.">
@@ -1786,7 +1786,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 </select></div>
 <div class="filter"><label for="typeFilter">Typ wyjazdu</label><select id="typeFilter">
 <option value="all">Wszystkie</option>
-<option value="city">✈️ City breaki</option>
+<option value="city">✈️ Wycieczki</option>
 </select></div>
 <div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter">
 <option value="all">Wszystkie</option>
@@ -2228,7 +2228,7 @@ function showJoinSuccess(trip) {
 }
 </script>
 <script>
-const TYPE_LABELS={city:"✈️ City breaki"};
+const TYPE_LABELS={city:"✈️ Wycieczki"};
 
 const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Warszawa","🏙️"],["KRAKOW","Kraków","🏙️"],["WROCLAW","Wrocław","🏙️"],["LODZ","Łódź","🏙️"],["POZNAN","Poznań","🏙️"],["GDANSK","Gdańsk","🏙️"],["KATOWICE","Katowice","🏙️"],["SZCZECIN","Szczecin","🏙️"],["TORUN","Toruń","🏙️"],["CZESTOCHOWA","Częstochowa","🏙️"],["BYDGOSZCZ","Bydgoszcz","🏙️"],["LUBLIN","Lublin","🏙️"],["BIALYSTOK","Białystok","🏙️"],["GDYNIA","Gdynia","🏙️"],["RZESZOW","Rzeszów","🏙️"]]},
 
@@ -2294,7 +2294,7 @@ return CITY_TRIPS.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t
 function cityCard(t){
 const card=document.createElement("article");card.className="city-card";
 const variantText=t.variant?'<div class="city-variant">'+escapeHtml(t.variant)+'</div>':"";
-card.innerHTML='<div class="city-icon" aria-hidden="true">'+t.icon+'</div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ City break</span></div><h3>'+escapeHtml(t.destination)+'</h3>'+variantText+'<p>Wyjazd nastawiony na poznawanie kierunku, zwiedzanie i wspólne odkrywanie miasta lub regionu.</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
+card.innerHTML='<div class="city-icon" aria-hidden="true">'+t.icon+'</div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ Wycieczka</span></div><h3>'+escapeHtml(t.destination)+'</h3>'+variantText+'<p>Wyjazd nastawiony na poznawanie kierunku, zwiedzanie i wspólne odkrywanie miasta lub regionu.</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
 return card;
 }
 
