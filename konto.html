@@ -172,7 +172,7 @@ let juntigoSessionToken=localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY)||"";
   let juntigoUserId="";
   let chatRefreshTimer = null;
 function setAccountError(message){const error=document.getElementById("account-error");if(!error)return;error.textContent=message||"";error.style.display=message?"block":"none";}
-async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const session=await validateJuntigoSession();if(getJuntigoSessionToken()!==sessionToken){return;}const result={success:!!session.authenticated,profile:session.profile||null,identity:session.identity||null};if(!result.success){clearJuntigoSession();juntigoSessionToken="";juntigoUserId="";activeChatMatchId="";activeChatPersonName="";activeChatTrip="";setChatError("");document.getElementById("account-login-status").textContent="Sesja wygasła. Zaloguj się ponownie.";document.getElementById("account-name").textContent="Twój profil";document.getElementById("account-city").textContent="Zaloguj się przez Google, aby wczytać profil.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("account-avatar").textContent="J";document.getElementById("trip-list").innerHTML='<div class="empty">Zaloguj się, aby wczytać wyjazdy.</div>';document.getElementById("interest-list").innerHTML='<div class="interest-empty">Zaloguj się, aby wczytać zainteresowania.</div>';document.getElementById("match-list").innerHTML='<div class="match-empty">Zaloguj się, aby wczytać dopasowania.</div>';initializeGoogleLogin();return;}const profile=result.profile;const identity=result.identity||{};if(getJuntigoSessionToken()!==sessionToken){return;}juntigoUserId=String(identity.userId||"").trim();document.getElementById("account-login-status").textContent="Zalogowano jako: "+(identity.name||identity.email||"użytkownik");if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';document.getElementById("interest-list").innerHTML='<div class="interest-empty">Utwórz profil, aby korzystać z zainteresowań.</div>';document.getElementById("match-list").innerHTML='<div class="match-empty">Utwórz profil, aby zobaczyć dopasowania.</div>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Profil uzupełniony":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if (
+async function loadAccountProfileInternal(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const session=await validateJuntigoSession();if(getJuntigoSessionToken()!==sessionToken){return;}const result={success:!!session.authenticated,profile:session.profile||null,identity:session.identity||null};if(!result.success){clearJuntigoSession();juntigoSessionToken="";juntigoUserId="";activeChatMatchId="";activeChatPersonName="";activeChatTrip="";setChatError("");document.getElementById("account-login-status").textContent="Sesja wygasła. Zaloguj się ponownie.";document.getElementById("account-name").textContent="Twój profil";document.getElementById("account-city").textContent="Zaloguj się przez Google, aby wczytać profil.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("account-avatar").textContent="J";document.getElementById("trip-list").innerHTML='<div class="empty">Zaloguj się, aby wczytać wyjazdy.</div>';document.getElementById("interest-list").innerHTML='<div class="interest-empty">Zaloguj się, aby wczytać zainteresowania.</div>';document.getElementById("match-list").innerHTML='<div class="match-empty">Zaloguj się, aby wczytać dopasowania.</div>';initializeGoogleLogin();return;}const profile=result.profile;const identity=result.identity||{};if(getJuntigoSessionToken()!==sessionToken){return;}juntigoUserId=String(identity.userId||"").trim();document.getElementById("account-login-status").textContent="Zalogowano jako: "+(identity.name||identity.email||"użytkownik");if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';document.getElementById("interest-list").innerHTML='<div class="interest-empty">Utwórz profil, aby korzystać z zainteresowań.</div>';document.getElementById("match-list").innerHTML='<div class="match-empty">Utwórz profil, aby zobaczyć dopasowania.</div>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Profil uzupełniony":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if (
   profile.photo &&
   /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))
 ) {
@@ -190,6 +190,27 @@ async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccou
   loadAccountMatches(sessionToken)
 ]);if(getJuntigoSessionToken()!==sessionToken){return;} }catch(error){console.error("Błąd Juntigo:",error);document.getElementById("account-login-status").textContent="";setAccountError(error.message||"Nie udało się wczytać konta.");}}
   
+let accountProfileInFlight = null;
+let accountProfileInFlightToken = "";
+
+async function loadAccountProfile(sessionToken) {
+  if (!sessionToken) return;
+
+  if (accountProfileInFlight && accountProfileInFlightToken === sessionToken) {
+    return accountProfileInFlight;
+  }
+
+  accountProfileInFlightToken = sessionToken;
+  accountProfileInFlight = loadAccountProfileInternal(sessionToken).finally(function() {
+    if (accountProfileInFlightToken === sessionToken) {
+      accountProfileInFlight = null;
+      accountProfileInFlightToken = "";
+    }
+  });
+
+  return accountProfileInFlight;
+}
+
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
   async function loadAccountInterests(sessionToken) {
   const interestList = document.getElementById("interest-list");
