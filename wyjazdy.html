@@ -2368,7 +2368,7 @@ function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(
 function filteredTrips(){
 const type=typeFilter.value,direction=directionFilter.value,month=monthFilter.value;
 const source=type==="event"?EVENTS:(type==="sport"?SPORTS:(type==="city"?CITY_TRIPS:(month!=="all"?[...EVENTS,...SPORTS]:[...CITY_TRIPS,...EVENTS,...SPORTS])));
-return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||t.type!=="event"||t.dateStart.slice(0,7)===month));
+return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||!["event","sport"].includes(t.type)||t.dateStart.slice(0,7)===month));
 }
 
 function cityCard(t){
