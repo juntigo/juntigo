@@ -494,6 +494,22 @@
     max-width: 720px;
 }
 
+    .trip-carousel{position:relative;width:100%}
+    .trip-carousel-track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 64px)/3);gap:32px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:4px 4px 18px;outline:none}
+    .trip-carousel-track::-webkit-scrollbar{display:none}
+    .trip-carousel-track:focus-visible{box-shadow:0 0 0 3px rgba(255,116,23,.35);border-radius:24px}
+    .trip-slide{min-width:0;scroll-snap-align:start;display:flex}
+    .featured-trip{width:100%;min-width:0}
+    .trip-featured-visual{height:250px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,#0d2948 0%,#173e67 100%)}
+    .trip-featured-visual--poland{background:linear-gradient(135deg,#f1f3f6 0%,#dfe5ec 100%)}
+    .trip-featured-visual--sport{background:linear-gradient(135deg,#071b33 0%,#155b55 100%)}
+    .trip-featured-visual span{filter:drop-shadow(0 8px 12px rgba(7,27,51,.18))}
+    .trip-carousel-arrow{position:absolute;top:50%;z-index:5;width:54px;height:54px;border:0;border-radius:50%;background:white;color:var(--navy);box-shadow:0 8px 24px rgba(7,27,51,.20);display:flex;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);font-size:26px;font-weight:700;transition:transform .2s ease,opacity .2s ease,box-shadow .2s ease}
+    .trip-carousel-arrow:hover:not(:disabled){transform:translateY(-50%) scale(1.05);box-shadow:0 12px 28px rgba(7,27,51,.26)}
+    .trip-carousel-arrow:disabled{opacity:.35;cursor:default}
+    .trip-carousel-arrow--prev{left:-27px}
+    .trip-carousel-arrow--next{right:-27px}
+    .trip-carousel-arrow:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
     .trip-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -2287,7 +2303,9 @@
     box-shadow: none !important;
 }
 
-  </style>
+  @media (max-width:1100px){.trip-carousel-track{grid-auto-columns:calc((100% - 32px)/2);gap:32px}}
+@media (max-width:700px){.trip-carousel-track{grid-auto-columns:86%;gap:16px;padding-left:2px;padding-right:2px}.trip-carousel-arrow{width:46px;height:46px;font-size:22px}.trip-carousel-arrow--prev{left:8px}.trip-carousel-arrow--next{right:8px}.trip-featured-visual{height:210px}.featured-trip .trip-content{padding-bottom:175px}}
+</style>
 </head>
 
 <body>
@@ -2456,7 +2474,7 @@
     <div class="container">
 
       <div class="section-heading">
-        <h2>Pierwsze wyjazdy Juntigo</h2>
+        <h2>Wyjazdy Juntigo</h2>
         <p>
           Wybierz wyjazd, który Cię interesuje. Jeśli chcesz pojechać na coś,
   czego jeszcze nie ma na stronie, zgłoś swój pomysł w formularzu.
@@ -2465,136 +2483,138 @@
 
     
 
-  <div class="trip-grid">
-
-  <!-- MEDIOLAN -->
-  <div class="trip">
-
-    <div class="trip-image">
-      <img src="mediolan.jpg" alt="Mediolan" loading="lazy" decoding="async">
-    </div>
-
-    <div class="trip-content">
-
-      <div class="trip-tag">City break</div>
-
-      <h3>Mediolan</h3>
-
-      <p>
-        Jesień 2026. Termin dopasujemy do osób zainteresowanych.
-        Moda, włoska kuchnia, aperitivo i klimat Mediolanu.
-      </p>
-
-      <div class="trip-interest-count" data-trip-interest-count data-trip="City break - Mediolan" hidden aria-live="polite"></div>
-
-      <div class="trip-actions">
-
-        <button
-          class="trip-team"
-          type="button"
-          onclick="showTeam('City break - Mediolan', this)">
-          Zobacz ekipę
-        </button>
-
-       <button
-    type="button"
-    class="trip-button"
-    onclick="openJoinForm('City break - Mediolan')">
-    Dołącz do wyjazdu
-</button>
-
+  <div class="trip-carousel" data-trip-carousel>
+    <button type="button" class="trip-carousel-arrow trip-carousel-arrow--prev" data-carousel-prev aria-label="Poprzednie wyjazdy" disabled><span aria-hidden="true">←</span></button>
+    <div class="trip-carousel-track" data-carousel-track tabindex="0" role="region" aria-label="Wyjazdy Juntigo">
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--abroad" aria-hidden="true"><span>🎄</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Jarmark i święta</div>
+            <h3>Wiedeń — Christkindlmarkt</h3>
+            <p>Świąteczny city break w Wiedniu, jarmarki, iluminacje i centrum miasta.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('VIENNA_MARKET_2026', 'Wiedeń — Christkindlmarkt', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=VIENNA_MARKET_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
       </div>
-
-    </div>
-  </div>
-
-
-  <!-- OKTOBERFEST -->
-  <div class="trip">
-
-    <div class="trip-image">
-      <img src="oktoberfest.jpg" alt="Oktoberfest w Monachium" loading="lazy" decoding="async">
-    </div>
-
-    <div class="trip-content">
-
-      <div class="trip-tag">Wydarzenie</div>
-
-      <h3>Oktoberfest 2026</h3>
-
-      <p>
-        Monachium · 19 września – 4 października 2026.
-        Wybierz termin i znajdź ekipę na wspólny wyjazd.
-      </p>
-
-      <div class="trip-interest-count" data-trip-interest-count data-trip="Wydarzenie - Oktoberfest" hidden aria-live="polite"></div>
-
-      <div class="trip-actions">
-
-        <button
-          class="trip-team"
-          type="button"
-          onclick="showTeam('Wydarzenie - Oktoberfest', this)">
-          Zobacz ekipę
-        </button>
-
-        <button
-          type="button"
-          class="trip-button"
-          onclick="openJoinForm('Wydarzenie - Oktoberfest')">
-          Dołącz do wyjazdu
-        </button>
-
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>🎄</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Jarmark i święta</div>
+            <h3>Kraków — Jarmark Bożonarodzeniowy</h3>
+            <p>Klasyczny świąteczny weekend na Rynku Głównym i wspólne zwiedzanie Krakowa.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('KRAKOW_MARKET_2026', 'Kraków — Jarmark Bożonarodzeniowy', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=KRAKOW_MARKET_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
       </div>
-
-    </div>
-  </div>
-
-
-  <!-- MÁLAGA -->
-  <div class="trip">
-
-    <div class="trip-image">
-      <img src="malaga.jpg" alt="Málaga CF – Espanyol" loading="lazy" decoding="async">
-    </div>
-
-    <div class="trip-content">
-
-      <div class="trip-tag">Sport</div>
-
-      <h3>Málaga CF – Espanyol</h3>
-
-      <p>
-        Málaga · 11 października 2026.
-        La Rosaleda i wspólne przeżywanie meczu na żywo.
-      </p>
-
-      <div class="trip-interest-count" data-trip-interest-count data-trip="Sport - Mecz Malaga CF - Espanyol" hidden aria-live="polite"></div>
-
-      <div class="trip-actions">
-
-        <button
-          class="trip-team"
-          type="button"
-          onclick="showTeam('Sport - Mecz Malaga CF - Espanyol', this)">
-          Zobacz ekipę
-        </button>
-
-        <button
-          type="button"
-          class="trip-button"
-          onclick="openJoinForm('Sport - Mecz Malaga CF - Espanyol')">
-          Dołącz do wyjazdu
-        </button>
-
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>🎄</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Jarmark i święta</div>
+            <h3>Wrocław — Jarmark Bożonarodzeniowy</h3>
+            <p>Świąteczny Wrocław, Rynek i wspólny city break w grudniowym klimacie.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('WROCLAW_MARKET_2026', 'Wrocław — Jarmark Bożonarodzeniowy', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=WROCLAW_MARKET_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
       </div>
-
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>🎄</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Jarmark i święta</div>
+            <h3>Gdańsk — Jarmark Bożonarodzeniowy</h3>
+            <p>Świąteczny city break nad Bałtykiem i jeden z najbardziej rozpoznawalnych jarmarków w Polsce.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('GDANSK_MARKET_2026', 'Gdańsk — Jarmark Bożonarodzeniowy', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=GDANSK_MARKET_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--abroad" aria-hidden="true"><span>🎄</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Jarmark i święta</div>
+            <h3>Praga — świąteczny city break</h3>
+            <p>Stare Miasto, jarmark i wspólne odkrywanie czeskiej stolicy.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('PRAGUE_MARKET_2026', 'Praga — świąteczny city break', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=PRAGUE_MARKET_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--sport" aria-hidden="true"><span>⚽</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Sport</div>
+            <h3>FC Barcelona — Manchester City</h3>
+            <p>Wyjazd na mecz Ligi Mistrzów w Barcelonie i wspólne przeżywanie spotkania.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('BARCA_MAN_CITY_2026', 'FC Barcelona — Manchester City', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=BARCA_MAN_CITY_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--sport" aria-hidden="true"><span>⚽</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Sport</div>
+            <h3>Liverpool — Manchester United</h3>
+            <p>Klasyk Premier League i piłkarski wyjazd do Liverpoolu.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('LIVERPOOL_MAN_UTD_2026', 'Liverpool — Manchester United', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=LIVERPOOL_MAN_UTD_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>⚽</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Sport</div>
+            <h3>Legia Warszawa — Raków Częstochowa</h3>
+            <p>Mecz Ekstraklasy i wspólny piłkarski wyjazd do Warszawy.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('LEGIA_RAKOW_2026', 'Legia Warszawa — Raków Częstochowa', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=LEGIA_RAKOW_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="trip-slide">
+        <article class="trip featured-trip">
+          <div class="trip-featured-visual trip-featured-visual--abroad" aria-hidden="true"><span>✨</span></div>
+          <div class="trip-content">
+            <div class="trip-tag">Jarmark i święta</div>
+            <h3>Zagrzeb — Advent</h3>
+            <p>Adwentowe atrakcje w centrum Zagrzebia i wspólny zimowy city break.</p>
+            <div class="trip-actions">
+              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('ZAGREB_ADVENT_2026', 'Zagrzeb — Advent', this)">Zobacz ekipę</button>
+              <a class="trip-button" href="profil.html?trip=ZAGREB_ADVENT_2026">Dołącz do wyjazdu</a>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
+    <button type="button" class="trip-carousel-arrow trip-carousel-arrow--next" data-carousel-next aria-label="Następne wyjazdy"><span aria-hidden="true">→</span></button>
   </div>
-
-</div>
-     </div> 
-  </section>
 
 
   <section class="cta" id="dolacz">
@@ -2821,7 +2841,41 @@ function closeTeamModal() {
   document.body.style.overflow = "";
 }
 
-function showTeam(trip, button) {
+function showFeaturedTripTeam(trip, label, button) {
+  showTeam(trip, button, label);
+}
+
+function initTripCarousel() {
+  const carousel = document.querySelector("[data-trip-carousel]");
+  if (!carousel) return;
+  const track = carousel.querySelector("[data-carousel-track]");
+  const prev = carousel.querySelector("[data-carousel-prev]");
+  const next = carousel.querySelector("[data-carousel-next]");
+  if (!track || !prev || !next) return;
+
+  const getStep = () => {
+    const slide = track.querySelector(".trip-slide");
+    if (!slide) return track.clientWidth;
+    const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || "0") || 0;
+    return slide.getBoundingClientRect().width + gap;
+  };
+
+  const updateButtons = () => {
+    const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = track.scrollLeft >= maxScroll - 4;
+  };
+
+  prev.addEventListener("click", () => track.scrollBy({left:-getStep(),behavior:"smooth"}));
+  next.addEventListener("click", () => track.scrollBy({left:getStep(),behavior:"smooth"}));
+  track.addEventListener("scroll", updateButtons, {passive:true});
+  window.addEventListener("resize", updateButtons);
+  updateButtons();
+}
+
+document.addEventListener("DOMContentLoaded", initTripCarousel);
+
+function showTeam(trip, button, tripLabel) {
   const existingModal = document.getElementById("team-modal");
 
   if (existingModal) {
@@ -2848,7 +2902,7 @@ function showTeam(trip, button) {
 
       <h2>Ekipa na wyjazd</h2>
 
-      <p class="team-modal-trip-name">${escapeHtml(trip)}</p>
+      <p class="team-modal-trip-name">${escapeHtml(tripLabel || trip)}</p>
 
       <div class="team-modal-content">
         <div class="team-results">
