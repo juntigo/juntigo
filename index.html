@@ -2667,7 +2667,7 @@ async function loadTripInterestCounts() {
 }
 
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
-async async function loadJuntigoNotifications() {
+async function loadJuntigoNotifications() {
     const badge =
         document.getElementById("profile-notification-badge");
 
@@ -3972,7 +3972,7 @@ function getInstagramUrl(value) {
   return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
 }
   
-async async function saveInterest(event, trip, toUserId, toName) {
+async function saveInterest(event, trip, toUserId, toName) {
     if (event) event.preventDefault();
 
     const contactButton =
