@@ -2789,7 +2789,7 @@ function renderHomepageTrips(){
           <div class="trip-date">${escapeHtml(t.date)}</div>
           <div class="trip-actions">
             <button class="trip-team" type="button" onclick="showFeaturedTripTeam('${escapeHtml(t.tripId)}', '${escapeHtml(t.title)}', this)">Zobacz ekipę</button>
-            <button type="button" class="trip-button" onclick="openJoinForm('${escapeHtml(t.title)}')">Dołącz do wyjazdu</button>
+            <button type="button" class="trip-button" onclick="openJoinForm('${escapeHtml(t.tripId)}', '${escapeHtml(t.title)}')">Dołącz do wyjazdu</button>
           </div>
         </div>
       </article>
@@ -3681,7 +3681,8 @@ function closeProposalForm() {
     document.body.style.overflow = "";
 }
 
-async function openJoinForm(trip) {
+async function openJoinForm(trip, displayName) {
+    const tripLabel = displayName || trip;
     const existingModal = document.getElementById("join-modal");
 
     if (existingModal) {
@@ -3705,7 +3706,7 @@ async function openJoinForm(trip) {
 
                 <h2>Dołącz do wyjazdu</h2>
 
-                <p class="join-trip-name">${escapeHtml(trip)}</p>
+                <p class="join-trip-name">${escapeHtml(tripLabel)}</p>
 
                 <p class="join-description">
                     Zostaw swoje dane, a znajdziemy osoby zainteresowane tym samym wyjazdem.
@@ -3904,7 +3905,7 @@ formData.append(
         const data = await response.json();
 
        if (data.success) {
-    showJoinSuccess(trip);
+    showJoinSuccess(tripLabel);
 } else {
     console.error(data.error);
     status.textContent = "Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.";
