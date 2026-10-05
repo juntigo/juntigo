@@ -2780,7 +2780,8 @@ function toggleMobileMenu() {
 
     if (!menu) return;
 
-    menu.classList.toggle("mobile-open");
+    const isOpen = menu.classList.toggle("mobile-open");
+    document.body.style.overflow = isOpen ? "hidden" : "";
 }
   document.querySelectorAll('.nav-menu .nav-link').forEach(link => {
     link.addEventListener('click', () => {
