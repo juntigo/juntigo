@@ -9,10 +9,10 @@
   <link rel="icon" type="image/png" href="juntigo-logo.png">
 
   <title>Juntigo — Łączymy podróżników</title>
-  <meta name="description" content="Nie czekaj, aż ktoś pojedzie z Tobą. Znajdź ludzi na wycieczkę, wydarzenie kulturalne, rozrywkowe lub sportowe.">
+  <meta name="description" content="Nie czekaj, aż ktoś pojedzie z Tobą. Znajdź ludzi na wycieczkę lub wydarzenie.">
   <link rel="canonical" href="https://juntigo.pl/">
 <meta property="og:title" content="Juntigo — Łączymy podróżników">
-<meta property="og:description" content="Znajdź ludzi na wspólny wycieczkę, wydarzenie, wyjazd sportowy lub inną podróż.">
+<meta property="og:description" content="Znajdź ludzi na wspólną wycieczkę lub wydarzenie.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://juntigo.pl/">
 <meta property="og:image" content="https://juntigo.pl/juntigo-hero.jpg">
@@ -30,7 +30,7 @@
   "@type": "WebSite",
   "name": "Juntigo",
   "url": "https://juntigo.pl/",
-  "description": "Juntigo łączy podróżników zainteresowanych wspólnymi wyjazdami, wycieczkami, wydarzeniami i sportem.",
+  "description": "Juntigo łączy podróżników zainteresowanych wspólnymi wycieczkami i wydarzeniami.",
   "inLanguage": "pl-PL"
 }
 </script>
@@ -2451,12 +2451,6 @@
   <p>Koncerty, festiwale, imprezy i wyjątkowe wydarzenia.</p>
 </div>
 
-        <div class="category">
-          <div class="category-icon">⚽</div>
-          <h3>Sport</h3>
-          <p>Mecze, F1, tenis, koszykówka i największe wydarzenia sportowe.</p>
-        </div>
-
       </div>
     </div>
   </section>
@@ -2732,10 +2726,7 @@ function showFeaturedTripTeam(trip, label, button) {
 
 const HOME_TYPE_LABELS={
   city:"Wycieczki",
-  sport:"Sport",
-  event:"Wydarzenia",
-  market:"Jarmarki i święta",
-  newyear:"Sylwester"
+  event:"Wydarzenia"
 };
 
 const HOME_TRIPS=[
@@ -3522,11 +3513,8 @@ async function openProposalForm() {
                             <label>
                                 Kategoria
                                 <select id="proposal-category" required>
-                                    <option value="wycieczkęi">wycieczkęi</option>
-                                    <option value="Sport">Sport</option>
+                                    <option value="Wycieczki">Wycieczki</option>
                                     <option value="Wydarzenia">Wydarzenia</option>
-                                    <option value="Jarmarki i święta">Jarmarki i święta</option>
-                                    <option value="Sylwester">Sylwester</option>
                                 </select>
                             </label>
 
@@ -3605,11 +3593,8 @@ async function openProposalForm() {
         }
 
         const allowedProposalCategories = new Set([
-            "wycieczkęi",
-            "Sport",
-            "Wydarzenia",
-            "Jarmarki i święta",
-            "Sylwester"
+            "Wycieczki",
+            "Wydarzenia"
         ]);
 
         if (!allowedProposalCategories.has(category)) {
