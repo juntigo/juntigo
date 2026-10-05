@@ -212,7 +212,7 @@ async function loadAccountProfile(sessionToken) {
 }
 
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-  async function loadAccountInterests(sessionToken) {
+  async async function loadAccountInterests(sessionToken) {
   const interestList = document.getElementById("interest-list");
   const tokenAtStart = sessionToken;
 
@@ -352,7 +352,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       '</div>';
   }
 }
-  async async function loadAccountMatches(sessionToken) {
+  async function loadAccountMatches(sessionToken) {
   const matchList = document.getElementById("match-list");
   const tokenAtStart = sessionToken;
 
