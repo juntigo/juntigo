@@ -170,7 +170,7 @@ const GOOGLE_CLIENT_ID="853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googl
 let juntigoSessionToken=localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY)||"";
   let juntigoUserId="";
 function setAccountError(message){const error=document.getElementById("account-error");if(!error)return;error.textContent=message||"";error.style.display=message?"block":"none";}
-async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const url=JUNTIGO_API+"?action=profile&sessionToken="+encodeURIComponent(sessionToken);const response=await fetch(url,{method:"GET"});const result=await response.json();if(getJuntigoSessionToken()!==sessionToken){return;}if(!result.success){localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);juntigoSessionToken="";juntigoUserId="";activeChatMatchId="";activeChatPersonName="";activeChatTrip="";setChatError("");document.getElementById("account-login-status").textContent="Sesja wygasła. Zaloguj się ponownie.";initializeGoogleLogin();return;}const profile=result.profile;const identity=result.identity||{};if(getJuntigoSessionToken()!==sessionToken){return;}juntigoUserId=String(identity.userId||"").trim();document.getElementById("account-login-status").textContent="Zalogowano jako: "+(identity.name||identity.email||"użytkownik");if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Profil uzupełniony":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if (
+async function loadAccountProfile(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const url=JUNTIGO_API+"?action=profile&sessionToken="+encodeURIComponent(sessionToken);const response=await fetch(url,{method:"GET"});const result=await response.json();if(getJuntigoSessionToken()!==sessionToken){return;}if(!result.success){clearJuntigoSession();juntigoSessionToken="";juntigoUserId="";activeChatMatchId="";activeChatPersonName="";activeChatTrip="";setChatError("");document.getElementById("account-login-status").textContent="Sesja wygasła. Zaloguj się ponownie.";initializeGoogleLogin();return;}const profile=result.profile;const identity=result.identity||{};if(getJuntigoSessionToken()!==sessionToken){return;}juntigoUserId=String(identity.userId||"").trim();document.getElementById("account-login-status").textContent="Zalogowano jako: "+(identity.name||identity.email||"użytkownik");if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Profil uzupełniony":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if (
   profile.photo &&
   /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))
 ) {
@@ -317,7 +317,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
       error.message || "Nie udało się wczytać zainteresowań.";
 
     if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
-      localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+      clearJuntigoSession();
       juntigoSessionToken = "";
       window.location.href = "konto.html";
       return;
@@ -461,7 +461,7 @@ matchList.querySelectorAll(".match-item").forEach(function(item) {
       error.message || "Nie udało się wczytać dopasowań.";
 
     if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
-      localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+      clearJuntigoSession();
       juntigoSessionToken = "";
       window.location.href = "konto.html";
       return;
@@ -593,7 +593,7 @@ async function loadChatMessages() {
     setChatError(errorMessage);
 
     if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
-      localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+      clearJuntigoSession();
       juntigoSessionToken = "";
       juntigoUserId = "";
       window.location.href = "konto.html";
@@ -644,7 +644,7 @@ async function markMatchAsRead(matchId) {
       console.warn("Nie udało się oznaczyć matcha jako przeczytanego:", errorMessage);
       if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage) &&
           getJuntigoSessionToken() === tokenAtStart) {
-        localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+        clearJuntigoSession();
         juntigoSessionToken = "";
         juntigoUserId = "";
         window.location.href = "konto.html";
@@ -672,7 +672,7 @@ async function markMessagesRead(matchId) {
       console.warn("Nie udało się oznaczyć wiadomości jako przeczytanych:", errorMessage);
       if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage) &&
           getJuntigoSessionToken() === tokenAtStart) {
-        localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+        clearJuntigoSession();
         juntigoSessionToken = "";
         juntigoUserId = "";
         window.location.href = "konto.html";
@@ -825,7 +825,7 @@ async function sendChatMessage() {
     setChatError(errorMessage);
 
     if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
-      localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+      clearJuntigoSession();
       juntigoSessionToken = "";
       window.location.href = "konto.html";
       return;
@@ -869,7 +869,7 @@ async function handleGoogleCredential(response){const idToken=response.credentia
 function initializeGoogleLogin(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initializeGoogleLogin,300);return;}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:true});google.accounts.id.renderButton(document.getElementById("google-login-button"),{theme:"outline",size:"large",text:"signin_with",shape:"rectangular"});}
 window.addEventListener("load",function(){if(juntigoSessionToken){loadAccountProfile(juntigoSessionToken);}else{initializeGoogleLogin();}});
 function logoutJuntigo(){
-  localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+  clearJuntigoSession();
   juntigoSessionToken="";
   juntigoUserId="";
 
