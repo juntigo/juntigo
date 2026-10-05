@@ -40,7 +40,7 @@ nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;
 .filter select{width:100%;min-height:48px;padding:11px 14px;border:1px solid #d8dee6;border-radius:12px;background:#fff;color:var(--navy);font:inherit;font-weight:700;outline:none}
 .filter select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,116,23,.12)}
 .results-bar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:20px}
-.result-count{color:var(--navy);font-weight:900}
+.result-count{color:var(--navy);font-weight:900}.active-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.filter-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#f1f4f7;color:var(--navy);font-size:12px;font-weight:800}.filter-chip button{border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;padding:0}.clear-filters{border:0;background:transparent;color:var(--orange);font:inherit;font-size:12px;font-weight:900;cursor:pointer;padding:7px 4px}
 .view-switch{display:flex;background:var(--soft);padding:4px;border-radius:999px}
 .view-switch button{border:0;background:transparent;color:var(--muted);padding:9px 16px;border-radius:999px;font:inherit;font-weight:800;cursor:pointer}
 .view-switch button.active{background:var(--navy);color:#fff}
@@ -110,6 +110,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 <button type="button" data-view="all">Wszystkie wyjazdy</button>
 </div>
 </div>
+<div class="active-filters" id="activeFilters" aria-live="polite"></div>
 </div>
 </div>
 </section>
@@ -171,6 +172,7 @@ const monthFilter=document.getElementById("monthFilter");
 const typeFilter=document.getElementById("typeFilter");
 const directionFilter=document.getElementById("directionFilter");
 const resultCount=document.getElementById("resultCount");
+const activeFilters=document.getElementById("activeFilters");
 const calendarView=document.getElementById("calendarView");
 const allView=document.getElementById("allView");
 
@@ -190,6 +192,33 @@ function card(t){
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]))}
 function render(){
  const trips=filteredTrips();
+ activeFilters.replaceChildren();
+ const labels=[];
+ if(monthFilter.value!=="all"){
+   const option=monthFilter.options[monthFilter.selectedIndex];
+   labels.push({key:"month",label:option.textContent,select:monthFilter});
+ }
+ if(typeFilter.value!=="all"){
+   const option=typeFilter.options[typeFilter.selectedIndex];
+   labels.push({key:"type",label:option.textContent,select:typeFilter});
+ }
+ if(directionFilter.value!=="all"){
+   const option=directionFilter.options[directionFilter.selectedIndex];
+   labels.push({key:"direction",label:option.textContent,select:directionFilter});
+ }
+ labels.forEach(item=>{
+   const chip=document.createElement("span");
+   chip.className="filter-chip";
+   chip.innerHTML=escapeHtml(item.label)+' <button type="button" aria-label="Usuń filtr '+escapeHtml(item.label)+'">×</button>';
+   chip.querySelector("button").addEventListener("click",()=>{item.select.value="all";render();});
+   activeFilters.appendChild(chip);
+ });
+ if(labels.length){
+   const clear=document.createElement("button");
+   clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";
+   clear.addEventListener("click",()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render();});
+   activeFilters.appendChild(clear);
+ }
  resultCount.textContent=trips.length+" "+(trips.length===1?"wyjazd":(trips.length<5?"wyjazdy":"wyjazdów"));
  calendarView.replaceChildren();allView.replaceChildren();
  const grouped=new Map();
