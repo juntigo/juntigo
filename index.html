@@ -2866,28 +2866,7 @@ function showTeam(trip, button) {
   modal.dataset.teamRequestId = teamRequestId;
   const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (sessionToken ? "&sessionToken=" + encodeURIComponent(sessionToken) : "");
 
-const interestStatusPromise = sessionToken
-  ? fetch(
-      JUNTIGO_API +
-      "?action=interestStatus" +
-      "&sessionToken=" + encodeURIComponent(sessionToken) +
-      "&trip=" + encodeURIComponent(trip)
-    )
-      .then(response => response.json())
-      .catch(() => ({
-        success: false,
-        interestedUserIds: []
-      }))
-  : Promise.resolve({
-      success: false,
-      interestedUserIds: []
-    });
-
-Promise.all([
-  fetch(url).then(response => response.json()),
-  interestStatusPromise
-])
-  .then(([data, interestStatus]) => {
+fetch(url).then(response => response.json()).then((data) => {
 
     if (
       document.getElementById("team-modal") !== modal ||
@@ -2895,12 +2874,6 @@ Promise.all([
     ) {
       return;
     }
-
-    const interestedUserIds = new Set(
-      Array.isArray(interestStatus.interestedUserIds)
-        ? interestStatus.interestedUserIds.map(id => String(id).trim())
-        : []
-    );
 
       if (!data.success) {
         if (
@@ -3002,8 +2975,7 @@ ${person.trips ? `
 
             ${person.userId ? `
   ${(() => {
-    const interestSent =
-      interestedUserIds.has(String(person.userId).trim());
+    const interestSent = person.alreadyInterested === true;
 
     return `
                 <div class="person-card-actions">
