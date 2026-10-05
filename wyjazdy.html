@@ -62,7 +62,7 @@ main{padding:32px 0 90px}
 .trip-card h3{color:var(--navy);font-size:21px;line-height:1.2;margin-bottom:8px}
 .trip-location{color:var(--muted);font-size:14px;font-weight:700;margin-bottom:12px}
 .trip-description{color:#64748b;font-size:14px;line-height:1.55}
-.trip-date{margin-top:auto;padding-top:16px;color:var(--navy);font-size:14px;font-weight:900}
+.trip-date{padding-top:16px;color:var(--navy);font-size:14px;font-weight:900}.trip-action{margin-top:14px;display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:var(--orange);color:#fff;font-size:13px;font-weight:900}.trip-action:hover{background:var(--navy)}
 .empty{padding:48px 24px;background:#fff;border:1px dashed #cfd6df;border-radius:20px;text-align:center;color:var(--muted)}
 .empty strong{display:block;color:var(--navy);font-size:19px;margin-bottom:6px}
 .hidden{display:none!important}
@@ -184,7 +184,7 @@ function filteredTrips(){
 function card(t){
  const c=document.createElement("article");
  c.className="trip-card "+(t.direction==="poland"?"poland ":"")+(t.type==="sport"?"sport":"");
- c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+(t.direction==="poland"?"🇵🇱 Polska":"🌍 Zagranica")+'</span></div><h3>'+escapeHtml(t.title)+'</h3><div class="trip-location">'+escapeHtml(t.destination)+'</div><p class="trip-description">'+escapeHtml(t.description)+'</p><div class="trip-date">'+escapeHtml(t.date)+'</div></div>';
+ c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+(t.direction==="poland"?"🇵🇱 Polska":"🌍 Zagranica")+'</span></div><h3>'+escapeHtml(t.title)+'</h3><div class="trip-location">'+escapeHtml(t.destination)+'</div><p class="trip-description">'+escapeHtml(t.description)+'</p><div class="trip-date">'+escapeHtml(t.date)+'</div><a class="trip-action" href="profil.html?trip='+encodeURIComponent(t.tripId||t.id)+'">Wybieram ten wyjazd</a></div>';
  return c;
 }
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]))}
