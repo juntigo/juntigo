@@ -3552,6 +3552,7 @@ async function openProposalForm() {
     `;
 
     document.body.appendChild(modal);
+    document.body.style.overflow = "hidden";
 
     document.getElementById("proposal-form").addEventListener("submit", async function(event) {
         event.preventDefault();
@@ -3838,6 +3839,7 @@ async function openJoinForm(trip) {
     `;
 
     document.body.appendChild(modal);
+    document.body.style.overflow = "hidden";
 
    document.getElementById("join-form").addEventListener("submit", async function(event) {
     event.preventDefault();
