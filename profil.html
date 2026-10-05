@@ -1514,11 +1514,24 @@ style.replaceChildren(
         .map(item => item.trim())
         .filter(Boolean);
 
+const tripLabels = {
+  GDANSK_MARKET_2026: "🎄 Gdańsk — Jarmark", WROCLAW_MARKET_2026: "🎄 Wrocław — Jarmark",
+  POZNAN_MARKET_2026: "🎄 Poznań — Betlejem Poznańskie", WARSAW_MARKET_2026: "🎄 Warszawa — Jarmark",
+  KRAKOW_MARKET_2026: "🎄 Kraków — Jarmark", VIENNA_MARKET_2026: "🎄 Wiedeń — Christkindlmarkt",
+  BERLIN_MARKET_2026: "🎄 Berlin — jarmarki", DRESDEN_MARKET_2026: "🎄 Drezno — Striezelmarkt",
+  PRAGUE_MARKET_2026: "🎄 Praga — jarmark", ZAGREB_ADVENT_2026: "✨ Zagrzeb — Advent",
+  LEGIA_RAKOW_2026: "⚽ Legia — Raków", GKS_LECH_2026: "⚽ GKS Katowice — Lech",
+  LECH_POGON_2026: "⚽ Lech — Pogoń", LIVERPOOL_MAN_UTD_2026: "⚽ Liverpool — Manchester United",
+  ARSENAL_MAN_CITY_2026: "⚽ Arsenal — Manchester City", BARCA_CELTA_2026: "⚽ Barcelona — Celta",
+  BARCA_MAN_CITY_2026: "⚽ Barcelona — Manchester City", GKS_LEGIA_2026: "⚽ GKS Katowice — Legia",
+  LEGIA_POGON_2026: "⚽ Legia — Pogoń"
+};
+
 trips.replaceChildren(
   ...normalizedTrips.map(item => {
     const tag = document.createElement("span");
     tag.className = "profile-view-tag";
-    tag.textContent = item;
+    tag.textContent = tripLabels[item] || item;
     return tag;
   })
 );
