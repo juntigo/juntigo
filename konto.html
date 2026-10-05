@@ -702,6 +702,10 @@ function startChatRefresh(matchId, sessionToken) {
       return;
     }
 
+    if (document.hidden) {
+      return;
+    }
+
     await loadChatMessages(true);
   }, 12000);
 }
@@ -712,6 +716,14 @@ function stopChatRefresh() {
     chatRefreshTimer = null;
   }
 }
+
+document.addEventListener("visibilitychange", function() {
+  if (document.hidden || !activeChatMatchId || !juntigoSessionToken) {
+    return;
+  }
+
+  loadChatMessages(true);
+});
 
 async function openMatchChat(matchId, personName, trip) {
   if (!juntigoSessionToken) {
