@@ -870,6 +870,10 @@ async function sendChatMessage() {
     return;
   }
 
+  const clientMessageId = (window.crypto && typeof window.crypto.randomUUID === "function")
+    ? window.crypto.randomUUID()
+    : "MSG-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+
   button.disabled = true;
   button.textContent = "Wysyłamy…";
   setChatError("");
@@ -881,7 +885,8 @@ async function sendChatMessage() {
         type: "sendMessage",
         sessionToken: tokenAtStart,
         matchId: matchIdAtStart,
-        message: message
+        message: message,
+        clientMessageId: clientMessageId
       })
     });
 
