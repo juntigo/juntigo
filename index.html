@@ -510,6 +510,10 @@
     .trip-carousel-arrow--prev{left:-27px}
     .trip-carousel-arrow--next{right:-27px}
     .trip-carousel-arrow:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+    .trips-all-link{display:flex;justify-content:center;margin-top:8px}
+    .trips-all-link a{display:inline-flex;align-items:center;gap:8px;color:white;font-size:15px;font-weight:900;text-decoration:none;border-bottom:2px solid var(--orange);padding-bottom:4px}
+    .trips-all-link a:hover{color:var(--orange)}
+
     .trip-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -2391,7 +2395,33 @@
   </header>
 
 
-  <section class="categories">
+  <section class="trips" id="wyjazdy">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Wyjazdy Juntigo</h2>
+        <p>
+          Wybierz wyjazd, który Cię interesuje i zobacz, kto również chce tam pojechać.
+          Cała aktualna oferta jest dostępna poniżej.
+        </p>
+      </div>
+
+      <div class="trip-carousel" data-trip-carousel>
+        <button type="button" class="trip-carousel-arrow trip-carousel-arrow--prev" data-carousel-prev aria-label="Poprzednie wyjazdy" disabled>
+          <span aria-hidden="true">←</span>
+        </button>
+        <div class="trip-carousel-track" data-carousel-track tabindex="0" role="region" aria-label="Wszystkie wyjazdy Juntigo"></div>
+        <button type="button" class="trip-carousel-arrow trip-carousel-arrow--next" data-carousel-next aria-label="Następne wyjazdy">
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <div class="trips-all-link">
+        <a href="wyjazdy.html">Zobacz wszystkie wyjazdy <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+<section class="categories">
     <div class="container">
 
       <div class="section-heading">
@@ -2468,155 +2498,6 @@
       </div>
     </div>
   </section>
-
-
-  <section class="trips" id="wyjazdy">
-    <div class="container">
-
-      <div class="section-heading">
-        <h2>Wyjazdy Juntigo</h2>
-        <p>
-          Wybierz wyjazd, który Cię interesuje. Jeśli chcesz pojechać na coś,
-  czego jeszcze nie ma na stronie, zgłoś swój pomysł w formularzu.
-        </p>
-      </div>
-
-    
-
-  <div class="trip-carousel" data-trip-carousel>
-    <button type="button" class="trip-carousel-arrow trip-carousel-arrow--prev" data-carousel-prev aria-label="Poprzednie wyjazdy" disabled><span aria-hidden="true">←</span></button>
-    <div class="trip-carousel-track" data-carousel-track tabindex="0" role="region" aria-label="Wyjazdy Juntigo">
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--abroad" aria-hidden="true"><span>🎄</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Jarmark i święta</div>
-            <h3>Wiedeń — Christkindlmarkt</h3>
-            <p>Świąteczny city break w Wiedniu, jarmarki, iluminacje i centrum miasta.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('VIENNA_MARKET_2026', 'Wiedeń — Christkindlmarkt', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Wiedeń — Christkindlmarkt')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>🎄</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Jarmark i święta</div>
-            <h3>Kraków — Jarmark Bożonarodzeniowy</h3>
-            <p>Klasyczny świąteczny weekend na Rynku Głównym i wspólne zwiedzanie Krakowa.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('KRAKOW_MARKET_2026', 'Kraków — Jarmark Bożonarodzeniowy', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Kraków — Jarmark Bożonarodzeniowy')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>🎄</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Jarmark i święta</div>
-            <h3>Wrocław — Jarmark Bożonarodzeniowy</h3>
-            <p>Świąteczny Wrocław, Rynek i wspólny city break w grudniowym klimacie.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('WROCLAW_MARKET_2026', 'Wrocław — Jarmark Bożonarodzeniowy', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Wrocław — Jarmark Bożonarodzeniowy')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>🎄</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Jarmark i święta</div>
-            <h3>Gdańsk — Jarmark Bożonarodzeniowy</h3>
-            <p>Świąteczny city break nad Bałtykiem i jeden z najbardziej rozpoznawalnych jarmarków w Polsce.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('GDANSK_MARKET_2026', 'Gdańsk — Jarmark Bożonarodzeniowy', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Gdańsk — Jarmark Bożonarodzeniowy')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--abroad" aria-hidden="true"><span>🎄</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Jarmark i święta</div>
-            <h3>Praga — świąteczny city break</h3>
-            <p>Stare Miasto, jarmark i wspólne odkrywanie czeskiej stolicy.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('PRAGUE_MARKET_2026', 'Praga — świąteczny city break', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Praga — świąteczny city break')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--sport" aria-hidden="true"><span>⚽</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Sport</div>
-            <h3>FC Barcelona — Manchester City</h3>
-            <p>Wyjazd na mecz Ligi Mistrzów w Barcelonie i wspólne przeżywanie spotkania.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('BARCA_MAN_CITY_2026', 'FC Barcelona — Manchester City', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('FC Barcelona — Manchester City')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--sport" aria-hidden="true"><span>⚽</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Sport</div>
-            <h3>Liverpool — Manchester United</h3>
-            <p>Klasyk Premier League i piłkarski wyjazd do Liverpoolu.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('LIVERPOOL_MAN_UTD_2026', 'Liverpool — Manchester United', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Liverpool — Manchester United')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--poland" aria-hidden="true"><span>⚽</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Sport</div>
-            <h3>Legia Warszawa — Raków Częstochowa</h3>
-            <p>Mecz Ekstraklasy i wspólny piłkarski wyjazd do Warszawy.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('LEGIA_RAKOW_2026', 'Legia Warszawa — Raków Częstochowa', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Legia Warszawa — Raków Częstochowa')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="trip-slide">
-        <article class="trip featured-trip">
-          <div class="trip-featured-visual trip-featured-visual--abroad" aria-hidden="true"><span>✨</span></div>
-          <div class="trip-content">
-            <div class="trip-tag">Jarmark i święta</div>
-            <h3>Zagrzeb — Advent</h3>
-            <p>Adwentowe atrakcje w centrum Zagrzebia i wspólny zimowy city break.</p>
-            <div class="trip-actions">
-              <button class="trip-team" type="button" onclick="showFeaturedTripTeam('ZAGREB_ADVENT_2026', 'Zagrzeb — Advent', this)">Zobacz ekipę</button>
-              <button type="button" class="trip-button" onclick="openJoinForm('Zagrzeb — Advent')">Dołącz do wyjazdu</button>
-            </div>
-          </div>
-        </article>
-      </div>
-    </div>
-    <button type="button" class="trip-carousel-arrow trip-carousel-arrow--next" data-carousel-next aria-label="Następne wyjazdy"><span aria-hidden="true">→</span></button>
-  </div>
-  </div>
-</section>
 
 
   <section class="cta" id="dolacz">
@@ -2845,6 +2726,78 @@ function showFeaturedTripTeam(trip, label, button) {
   showTeam(trip, button, label);
 }
 
+const HOME_TYPE_LABELS={
+  market:"Jarmarki i święta",
+  sport:"Sport",
+  city:"City break",
+  event:"Wydarzenia",
+  music:"Festiwale i koncerty",
+  active:"Aktywnie",
+  newyear:"Sylwester"
+};
+
+const HOME_TRIPS=[
+  {tripId:"VIENNA_MARKET_2026",type:"market",direction:"abroad",destination:"Wiedeń",title:"Christkindlmarkt na Rathausplatz",date:"13 listopada – 26 grudnia 2026",description:"Klasyczny świąteczny city break w Wiedniu.",icon:"🎄"},
+  {tripId:"KRAKOW_MARKET_2026",type:"market",direction:"poland",destination:"Kraków",title:"Jarmark Bożonarodzeniowy w Krakowie",date:"27 listopada 2026 – 6 stycznia 2027",description:"Rynek Główny, świąteczna atmosfera i klasyczny weekend w Krakowie.",icon:"🎄"},
+  {tripId:"WROCLAW_MARKET_2026",type:"market",direction:"poland",destination:"Wrocław",title:"Jarmark Bożonarodzeniowy we Wrocławiu",date:"20 listopada 2026 – 7 stycznia 2027",description:"Rynek, świąteczne atrakcje i centrum miasta idealne na wspólny weekend.",icon:"🎄"},
+  {tripId:"GDANSK_MARKET_2026",type:"market",direction:"poland",destination:"Gdańsk",title:"Jarmark Bożonarodzeniowy w Gdańsku",date:"20 listopada – 23 grudnia 2026",description:"Baltic city break, świąteczne iluminacje i jeden z najbardziej rozpoznawalnych jarmarków w Polsce.",icon:"🎄"},
+  {tripId:"POZNAN_MARKET_2026",type:"market",direction:"poland",destination:"Poznań",title:"Betlejem Poznańskie",date:"20 listopada 2026 – 3 stycznia 2027",description:"Jarmark w centrum Poznania połączony ze zwiedzaniem miasta.",icon:"🎄"},
+  {tripId:"WARSAW_MARKET_2026",type:"market",direction:"poland",destination:"Warszawa",title:"Jarmark Bożonarodzeniowy w Warszawie",date:"20 listopada 2026 – 6 stycznia 2027",description:"Świąteczny Warszawa city break z jarmarkiem i wieczornym zwiedzaniem stolicy.",icon:"🎄"},
+  {tripId:"BERLIN_MARKET_2026",type:"market",direction:"abroad",destination:"Berlin",title:"Świąteczny Berlin",date:"listopad – grudzień 2026",description:"Kilka różnych jarmarków w jednej europejskiej stolicy.",icon:"🎄"},
+  {tripId:"DRESDEN_MARKET_2026",type:"market",direction:"abroad",destination:"Drezno",title:"Striezelmarkt",date:"25 listopada – 24 grudnia 2026",description:"Jeden z najstarszych i najbardziej charakterystycznych jarmarków w Niemczech.",icon:"🎄"},
+  {tripId:"PRAGUE_MARKET_2026",type:"market",direction:"abroad",destination:"Praga",title:"Jarmark na Rynku Staromiejskim",date:"28 listopada 2026 – 6 stycznia 2027",description:"Świąteczna Praga, Stare Miasto i jeden z najbardziej rozpoznawalnych jarmarków Europy.",icon:"🎄"},
+  {tripId:"ZAGREB_ADVENT_2026",type:"market",direction:"abroad",destination:"Zagrzeb",title:"Advent Zagreb",date:"28 listopada 2026 – 7 stycznia 2027",description:"Adwentowe wydarzenia rozproszone po centrum Zagrzebia.",icon:"✨"},
+  {tripId:"LEGIA_RAKOW_2026",type:"sport",direction:"poland",destination:"Warszawa",title:"Legia Warszawa – Raków Częstochowa",date:"7 listopada 2026",description:"Mecz Ekstraklasy i okazja na piłkarski wyjazd do Warszawy.",icon:"⚽"},
+  {tripId:"GKS_LECH_2026",type:"sport",direction:"poland",destination:"Katowice",title:"GKS Katowice – Lech Poznań",date:"21 listopada 2026",description:"Mecz Ekstraklasy w Katowicach.",icon:"⚽"},
+  {tripId:"LECH_POGON_2026",type:"sport",direction:"poland",destination:"Poznań",title:"Lech Poznań – Pogoń Szczecin",date:"28 listopada 2026",description:"Mecz Ekstraklasy na stadionie Lecha.",icon:"⚽"},
+  {tripId:"LIVERPOOL_MAN_UTD_2026",type:"sport",direction:"abroad",destination:"Liverpool",title:"Liverpool – Manchester United",date:"22 listopada 2026",description:"Premier League — klasyk angielskiego futbolu.",icon:"⚽"},
+  {tripId:"ARSENAL_MAN_CITY_2026",type:"sport",direction:"abroad",destination:"Londyn",title:"Arsenal – Manchester City",date:"29 listopada 2026",description:"Premier League na Emirates Stadium.",icon:"⚽"},
+  {tripId:"BARCA_CELTA_2026",type:"sport",direction:"abroad",destination:"Barcelona",title:"FC Barcelona – Celta Vigo",date:"6 grudnia 2026",description:"LaLiga na Spotify Camp Nou.",icon:"⚽"},
+  {tripId:"BARCA_MAN_CITY_2026",type:"sport",direction:"abroad",destination:"Barcelona",title:"FC Barcelona – Manchester City",date:"8 grudnia 2026",description:"Mecz fazy ligowej Ligi Mistrzów na Spotify Camp Nou.",icon:"⚽"},
+  {tripId:"GKS_LEGIA_2026",type:"sport",direction:"poland",destination:"Katowice",title:"GKS Katowice – Legia Warszawa",date:"5 grudnia 2026",description:"Mecz Ekstraklasy w Katowicach.",icon:"⚽"},
+  {tripId:"LEGIA_POGON_2026",type:"sport",direction:"poland",destination:"Warszawa",title:"Legia Warszawa – Pogoń Szczecin",date:"12 grudnia 2026",description:"Mecz Ekstraklasy w Warszawie.",icon:"⚽"},
+  {tripId:"GDANSK_MARKET_2026",type:"market",direction:"poland",destination:"Gdańsk",title:"Gdańsk — jarmark w grudniu",date:"1–23 grudnia 2026",description:"Grudniowy termin na świąteczny city break nad Bałtykiem.",icon:"🎄"},
+  {tripId:"WROCLAW_MARKET_2026",type:"market",direction:"poland",destination:"Wrocław",title:"Wrocław — jarmark w grudniu",date:"1–23 grudnia 2026",description:"Świąteczny weekend we Wrocławiu.",icon:"🎄"},
+  {tripId:"KRAKOW_MARKET_2026",type:"market",direction:"poland",destination:"Kraków",title:"Kraków — jarmark w grudniu",date:"1–31 grudnia 2026",description:"Świąteczny Kraków i Rynek Główny.",icon:"🎄"},
+  {tripId:"VIENNA_MARKET_2026",type:"market",direction:"abroad",destination:"Wiedeń",title:"Wiedeń — świąteczny city break",date:"1–26 grudnia 2026",description:"Jarmarki, iluminacje i centrum Wiednia.",icon:"🎄"},
+  {tripId:"PRAGUE_MARKET_2026",type:"market",direction:"abroad",destination:"Praga",title:"Praga — świąteczny city break",date:"1–31 grudnia 2026",description:"Stare Miasto i świąteczna atmosfera czeskiej stolicy.",icon:"🎄"},
+  {tripId:"ZAGREB_ADVENT_2026",type:"market",direction:"abroad",destination:"Zagrzeb",title:"Zagrzeb — Advent",date:"1–31 grudnia 2026",description:"Adwentowe atrakcje w centrum Zagrzebia.",icon:"✨"}
+];
+
+function renderHomepageTrips(){
+  const track=document.querySelector("[data-carousel-track]");
+  if(!track) return;
+  track.replaceChildren();
+
+  HOME_TRIPS.forEach((t)=>{
+    const slide=document.createElement("div");
+    slide.className="trip-slide";
+    const visualClass=t.type==="sport"
+      ? "trip-featured-visual trip-featured-visual--sport"
+      : (t.direction==="poland"
+        ? "trip-featured-visual trip-featured-visual--poland"
+        : "trip-featured-visual trip-featured-visual--abroad");
+
+    slide.innerHTML=`
+      <article class="trip featured-trip">
+        <div class="${visualClass}" aria-hidden="true"><span>${t.icon}</span></div>
+        <div class="trip-content">
+          <div class="trip-tag">${escapeHtml(HOME_TYPE_LABELS[t.type]||"Wyjazd")}</div>
+          <h3>${escapeHtml(t.title)}</h3>
+          <p class="trip-destination">${escapeHtml(t.destination)}</p>
+          <p>${escapeHtml(t.description)}</p>
+          <div class="trip-date">${escapeHtml(t.date)}</div>
+          <div class="trip-actions">
+            <button class="trip-team" type="button" onclick="showFeaturedTripTeam('${escapeHtml(t.tripId)}', '${escapeHtml(t.title)}', this)">Zobacz ekipę</button>
+            <button type="button" class="trip-button" onclick="openJoinForm('${escapeHtml(t.title)}')">Dołącz do wyjazdu</button>
+          </div>
+        </div>
+      </article>
+    `;
+    track.appendChild(slide);
+  });
+}
+
 function initTripCarousel() {
   const carousel = document.querySelector("[data-trip-carousel]");
   if (!carousel) return;
@@ -2873,7 +2826,7 @@ function initTripCarousel() {
   updateButtons();
 }
 
-document.addEventListener("DOMContentLoaded", initTripCarousel);
+document.addEventListener("DOMContentLoaded", () => { renderHomepageTrips(); initTripCarousel(); });
 
 function showTeam(trip, button, tripLabel) {
   const existingModal = document.getElementById("team-modal");
