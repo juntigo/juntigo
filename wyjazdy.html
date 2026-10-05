@@ -1786,7 +1786,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 </select></div>
 <div class="filter"><label for="typeFilter">Typ wyjazdu</label><select id="typeFilter">
 <option value="all">Wszystkie</option>
-<option value="city">✈️ Wycieczki</option>
+<option value="city">✈️ Wycieczki</option><option value="event">🎫 Wydarzenia</option>
 <option value="event">🎫 Wydarzenia</option>
 </select></div>
 <div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter">
@@ -2273,6 +2273,28 @@ const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Wa
 
 const EVENT_TRIPS=[];
 
+const EVENTS=[
+["EVENT_WARSAW_BEER_2026","Warszawski Festiwal Piwa","Warszawa","Polska","pl","🍺","2026-10-15","15–17 października 2026"],
+["EVENT_KRAKOW_CONRAD_2026","Festiwal Conrada","Kraków","Polska","pl","📚","2026-10-19","19–25 października 2026"],
+["EVENT_WROCLAW_ONELOVE_2026","One Love Wrocław Music Festival","Wrocław","Polska","pl","🎵","2026-11-21","21 listopada 2026"],
+["EVENT_GDANSK_WITCHER_2026","WIEDŹMIN. Muzyka Kontynentu","Gdańsk","Polska","pl","🎻","2026-11-05","5 listopada 2026"],
+["EVENT_PRAGUE_SIGNAL_2026","Signal Festival","Praga","Czechy","cz","💡","2026-10-15","15–18 października 2026"],
+["EVENT_VIENNA_VIENNALE_2026","Viennale — Vienna International Film Festival","Wiedeń","Austria","at","🎬","2026-10-22","22 października – 3 listopada 2026"],
+["EVENT_BERLIN_LIGHTS_2026","Festival of Lights","Berlin","Niemcy","de","✨","2026-10-09","9–18 października 2026"],
+["EVENT_AMSTERDAM_ADE_2026","Amsterdam Dance Event","Amsterdam","Holandia","nl","🎧","2026-10-21","21–25 października 2026"],
+["EVENT_BARCELONA_INEDIT_2026","IN-EDIT Barcelona","Barcelona","Hiszpania","es","🎞️","2026-10-29","29 października – 8 listopada 2026"],
+["EVENT_MADRID_JAZZ_2026","JAZZMADRID26","Madryt","Hiszpania","es","🎷","2026-10-02","2 października – 30 listopada 2026"],
+["EVENT_PARIS_GAMES_2026","Paris Games Week","Paryż","Francja","fr","🎮","2026-10-22","22–25 października 2026"],
+["EVENT_MILAN_JAZZMI_2026","JazzMi 2026","Mediolan","Włochy","it","🎷","2026-10-19","19 października – 8 listopada 2026"],
+["EVENT_LISBON_DOCLISBOA_2026","Doclisboa","Lizbona","Portugalia","pt","🎬","2026-10-15","15–25 października 2026"],
+["EVENT_LONDON_JAZZ_2026","EFG London Jazz Festival","Londyn","Anglia","gb-eng","🎷","2026-11-13","13–22 listopada 2026"],
+["EVENT_LONDON_LORD_MAYOR_2026","Lord Mayor Show","Londyn","Anglia","gb-eng","🎭","2026-11-14","14 listopada 2026"],
+["EVENT_PARIS_ORELSAN_2026","Orelsan — koncert","Paryż","Francja","fr","🎤","2026-12-09","9–20 grudnia 2026"],
+["EVENT_MADRID_HOMENS_G_2026","Hombres G — koncert","Madryt","Hiszpania","es","🎤","2026-12-11","11–12 grudnia 2026"],
+["EVENT_LISBON_TRIBECA_2026","Tribeca Festival Lisboa","Lizbona","Portugalia","pt","🎬","2026-12-09","9–13 grudnia 2026"],
+["EVENT_AMSTERDAM_LIGHT_2026","Amsterdam Light Festival","Amsterdam","Holandia","nl","✨","2026-11-26","26 listopada – 31 grudnia 2026"]
+].map(x=>({tripId:x[0],destination:x[1],city:x[2],country:x[3],countryCode:x[4],icon:x[5],type:"event",dateStart:x[6],dateLabel:x[7]}));
+
 const CITY_TRIPS=COUNTRIES.flatMap(country=>country.items.map(item=>({
 tripId:"CITY_"+item[0],destination:item[1],icon:item[2],variant:item[3]||"",country:country.name,countryCode:country.code,type:"city",direction:country.code==="pl"?"poland":"abroad"
 })));
@@ -2290,7 +2312,7 @@ function flagUrl(code){return "https://flagcdn.com/w80/"+code+".png";}
 function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(code)+'" alt="'+escapeHtml(alt||"Flaga")+'" loading="lazy">';}
 
 function filteredTrips(){
-const type=typeFilter.value,direction=directionFilter.value;
+const type=typeFilter.value,direction=directionFilter.value,month=monthFilter.value;
 const source=type==="event"?EVENT_TRIPS:CITY_TRIPS;
 return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction));
 }
@@ -2322,7 +2344,7 @@ if(!trips.length){allView.innerHTML='<div class="empty"><strong>Brak wyjazdów.<
 const grid=document.createElement("div");grid.className="trip-grid";
 trips.forEach(t=>{
 const c=document.createElement("article");c.className="trip-card";
-c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">🌍 Cały świat</span></div><h3>'+escapeHtml(t.destination)+'</h3><div class="country-line">'+flagImg(t.countryCode,t.country)+'<span>'+escapeHtml(t.country)+'</span></div><p class="trip-description">Wyjazd nastawiony na poznawanie kierunku, zwiedzanie i wspólne odkrywanie miasta lub regionu.</p><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
+c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+escapeHtml(t.city||t.country)+'</span></div><h3>'+escapeHtml(t.destination)+'</h3><div class="country-line">'+flagImg(t.countryCode,t.country)+'<span>'+escapeHtml(t.country)+'</span></div><p class="trip-description">Wyjazd nastawiony na poznawanie kierunku, zwiedzanie i wspólne odkrywanie miasta lub regionu.</p><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
 grid.appendChild(c);
 });
 allView.appendChild(grid);
@@ -2338,7 +2360,7 @@ const chip=document.createElement("span");chip.className="filter-chip";chip.inne
 chip.querySelector("button").onclick=()=>{select.value="all";render()};activeFilters.appendChild(chip);
 });
 const clear=document.createElement("button");clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";clear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render()};activeFilters.appendChild(clear);
-const cityMode=typeFilter.value==="city"||typeFilter.value==="all";
+const cityMode=typeFilter.value==="city";
 cityBreakView.classList.toggle("hidden",!cityMode);
 allView.classList.toggle("hidden",cityMode);
 if(cityMode)renderCountryGroups(trips);else renderAllTrips(trips);
