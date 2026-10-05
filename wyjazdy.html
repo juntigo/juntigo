@@ -2374,7 +2374,7 @@ return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.dir
 function cityCard(t){
 const card=document.createElement("article");card.className="city-card";
 const variantText=t.variant?'<div class="city-variant">'+escapeHtml(t.variant)+'</div>':"";
-card.innerHTML='<div class="city-icon" aria-hidden="true">'+t.icon+'</div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ Wycieczka</span></div><h3>'+escapeHtml(t.destination)+'</h3>'+variantText+'<p>'+escapeHtml(t.description)+'</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
+card.innerHTML='<div class="city-icon"><img class="city-photo" data-city="'+escapeHtml(t.destination)+'" data-country="'+escapeHtml(t.country)+'" alt="Zdjęcie '+escapeHtml(t.destination)+'" loading="lazy"><div class="city-photo-fallback" aria-hidden="true">'+t.icon+'</div></div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ Wycieczka</span></div><h3>'+escapeHtml(t.destination)+'</h3>'+variantText+'<p>'+escapeHtml(t.description)+'</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
 return card;
 }
 
