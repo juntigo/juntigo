@@ -69,6 +69,31 @@ main{padding:32px 0 90px}
 .year-note{margin:4px 0 30px;padding:18px 20px;background:#fff;border:1px solid var(--border);border-radius:16px;color:var(--muted)}
 .year-note strong{color:var(--navy)}
 footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;font-size:14px}
+.citybreak-intro{margin:8px 0 28px;padding:28px 30px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 10px 28px rgba(7,27,51,.05)}
+.citybreak-intro-eyebrow{color:var(--orange);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.citybreak-intro h2{color:var(--navy);font-size:30px;letter-spacing:-.8px;margin-bottom:8px}
+.citybreak-intro p{color:var(--muted);max-width:800px;font-size:15px}
+.country-section{margin-bottom:16px;background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 7px 22px rgba(7,27,51,.04)}
+.country-section summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 24px;cursor:pointer;color:var(--navy);font-weight:900}
+.country-section summary::-webkit-details-marker{display:none}
+.country-title{display:flex;align-items:center;gap:12px;font-size:22px}
+.country-flag{font-size:28px}
+.country-count{color:var(--muted);font-size:13px;font-weight:800}
+.country-chevron{display:inline-block;margin-left:6px;transition:transform .2s ease}
+.country-section[open] .country-chevron{transform:rotate(180deg)}
+.city-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0 20px 20px}
+.city-card{border:1px solid #e6eaf0;border-radius:18px;background:#fbfcfd;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.city-icon{height:105px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d2948,#173e67);color:#fff;font-size:42px}
+.city-content{padding:17px;display:flex;flex-direction:column;flex:1}
+.city-meta{margin-bottom:9px}
+.city-card h3{color:var(--navy);font-size:20px;line-height:1.2;margin-bottom:5px}
+.city-variant{color:var(--orange);font-size:12px;font-weight:900;margin-bottom:8px}
+.city-card p{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:14px}
+.city-actions{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+.city-actions .trip-team-action,.city-actions .trip-action{margin-top:0}
+@media(max-width:1000px){.city-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.citybreak-intro{padding:22px}.citybreak-intro h2{font-size:25px}.country-section summary{padding:17px 18px}.country-title{font-size:19px}.country-count{font-size:12px}.city-grid{grid-template-columns:1fr;padding:0 14px 14px}}
+
 @media(max-width:900px){.trip-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.nav-menu{gap:18px}}
 @media(max-width:650px){.nav-inner{height:76px}.nav-menu{display:none}.nav-cta{font-size:13px;padding:10px 14px}.hero{padding:56px 0}.hero p{font-size:17px}.filters{grid-template-columns:1fr}.results-bar{align-items:flex-start;flex-direction:column}.trip-grid{grid-template-columns:1fr}.month-heading h2{font-size:28px}}
 #join-modal {
@@ -1742,30 +1767,14 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 </div>
 </header>
 
-<section class="controls-wrap">
-<div class="container">
-<div class="controls">
-<div class="filters">
-<div class="filter"><label for="monthFilter">Miesiąc</label><select id="monthFilter"><option value="all">Wszystkie</option></select></div>
-<div class="filter"><label for="typeFilter">Typ wyjazdu</label><select id="typeFilter"><option value="all">Wszystkie</option></select></div>
-<div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter"><option value="all">Wszystkie</option><option value="poland">🇵🇱 Polska</option><option value="abroad">🌍 Cały świat</option></select></div>
-</div>
-<div class="results-bar">
-<div class="result-count" id="resultCount">0 wyjazdów</div>
-<div class="view-switch" role="tablist" aria-label="Widok wyjazdów">
-<button type="button" class="active" data-view="calendar">Kalendarz</button>
-<button type="button" data-view="all">Wszystkie wyjazdy</button>
-</div>
-</div>
-<div class="active-filters" id="activeFilters" aria-live="polite"></div>
-</div>
-</div>
-</section>
-
 <main>
 <div class="container">
-<div id="calendarView"></div>
-<div id="allView" class="hidden"></div>
+<div class="citybreak-intro">
+<div class="citybreak-intro-eyebrow">City breaki</div>
+<h2>Wybierz kraj, a następnie kierunek.</h2>
+<p>Na tym etapie pokazujemy wyłącznie kierunki City Break. Konkretne wyjazdy sportowe, wydarzenia, jarmarki i Sylwester dodamy osobno.</p>
+</div>
+<div id="countryList"></div>
 </div>
 </main>
 
@@ -2186,201 +2195,77 @@ function showJoinSuccess(trip) {
 }
 </script>
 <script>
-const TYPE_LABELS={
-  city:"✈️ City breaki",
-  sport:"⚽ Sport",
-  event:"🎉 Wydarzenia",
-  market:"🎄 Jarmarki i święta",
-  newyear:"🎆 Sylwester"
-};
-
-const TRIPS=[];
-
-const MONTHS=[
-[2026,11,"Listopad 2026"],[2026,12,"Grudzień 2026"],
-[2027,1,"Styczeń 2027"],[2027,2,"Luty 2027"],[2027,3,"Marzec 2027"],[2027,4,"Kwiecień 2027"],[2027,5,"Maj 2027"],[2027,6,"Czerwiec 2027"],[2027,7,"Lipiec 2027"],[2027,8,"Sierpień 2027"],[2027,9,"Wrzesień 2027"],[2027,10,"Październik 2027"],[2027,11,"Listopad 2027"],[2027,12,"Grudzień 2027"]
+const TYPE_LABELS={city:"✈️ City breaki"};
+const COUNTRIES=[
+{name:"Hiszpania",flag:"🇪🇸",items:[["MADRYT","Madryt","🏙️"],["BARCELONA","Barcelona","🏙️"],["SEVILLA","Sevilla","🏙️"],["MALAGA","Malaga","🏙️"],["ALICANTE","Alicante","🏙️"],["PALMA_DE_MALLORCA","Palma de Mallorca","🏝️"],["GIRONA","Girona","🏙️"],["WALENCJA","Walencja","🏙️"],["BILBAO","Bilbao","🏙️"],["MINORKA","Minorka","🏝️"],["TENERYFA","Teneryfa","🏝️"],["LAS_PALMAS_DE_GRAN_CANARIA","Las Palmas de Gran Canaria","🏝️"],["FUERTEVENTURA","Fuerteventura","🏝️"],["LANZAROTE","Lanzarote","🏝️"]]},
+{name:"Włochy",flag:"🇮🇹",items:[["RZYM","Rzym","🏙️"],["BARI","Bari","🏙️"],["PESCARA","Pescara","🏙️"],["REGGIO_DI_CALABRIA","Reggio di Calabria","🏙️"],["OLBIA_SARDYNIA","Olbia – Sardynia","🏝️"],["PERUGIA","Perugia","🏙️"],["LAMEZIA_TERME","Lamezia Terme","🏙️"],["ANKONA","Ankona","🏙️"],["GENUA","Genua","🏙️"],["ALGHERO_SARDYNIA","Alghero – Sardynia","🏝️"],["RIMINI","Rimini","🏙️"],["NEAPOL","Neapol","🏙️"],["CAGLIARI_SARDYNIA","Cagliari – Sardynia","🏝️"],["PIZA","Piza","🏙️"],["FLORENCJA","Florencja","🏙️"],["BOLONIA","Bolonia","🏙️"],["PALERMO_SYCYLIA","Palermo – Sycylia","🏝️"],["KATANIA_SYCYLIA","Katania – Sycylia","🏝️"],["TRAPANI_SYCYLIA","Trapani – Sycylia","🏝️"],["MEDIOLAN","Mediolan","🏙️"],["WENECJA","Wenecja","🏙️"],["BRINDISI","Brindisi","🏙️"],["TURYN","Turyn","🏙️"],["TRIEST","Triest","🏙️"]]},
+{name:"Francja",flag:"🇫🇷",items:[["PARYZ","Paryż","🏙️"],["NICEA","Nicea","🏙️"],["MARSYLIA","Marsylia","🏙️"]]},
+{name:"Portugalia",flag:"🇵🇹",items:[["LIZBONA","Lizbona","🏙️"],["PORTO","Porto","🏙️"],["FARO","Faro","🏙️"]]},
+{name:"Słowacja",flag:"🇸🇰",items:[["BRATYSLAWA","Bratysława","🏙️"]]},
+{name:"Litwa",flag:"🇱🇹",items:[["WILNO","Wilno","🏙️"]]},
+{name:"Norwegia",flag:"🇳🇴",items:[["OSLO","Oslo","🏙️"]]},
+{name:"Dania",flag:"🇩🇰",items:[["KOPENHAGA","Kopenhaga","🏙️"]]},
+{name:"Bułgaria",flag:"🇧🇬",items:[["SOFIA","Sofia","🏙️"],["BURGAS","Burgas","🏙️"],["WARNA","Warna","🏙️"]]},
+{name:"Szwecja",flag:"🇸🇪",items:[["SZTOKHOLM","Sztokholm","🏙️"]]},
+{name:"Albania",flag:"🇦🇱",items:[["TIRANA","Tirana","🏙️"]]},
+{name:"Węgry",flag:"🇭🇺",items:[["BUDAPESZT","Budapeszt","🏙️"]]},
+{name:"Estonia",flag:"🇪🇪",items:[["TALLINN","Tallinn","🏙️"]]},
+{name:"Turcja",flag:"🇹🇷",items:[["ANTALYA","Antalya","🏙️"],["IZMIR","Izmir","🏙️"]]},
+{name:"Grecja",flag:"🇬🇷",items:[["ATENY","Ateny","🏙️"],["KRETA","Kreta","🏝️","Heraklion / Chania"],["SALONIKI","Saloniki","🏙️"],["KORFU","Korfu","🏝️"],["RODOS","Rodos","🏝️"],["ZAKINTOS","Zakintos","🏝️"],["KOS","Kos","🏝️"]]},
+{name:"Anglia",flag:"🏴",items:[["LONDYN","Londyn","🏙️"],["LIVERPOOL","Liverpool","🏙️"],["NEWCASTLE_UPON_TYNE","Newcastle upon Tyne","🏙️"],["BIRMINGHAM","Birmingham","🏙️"],["MANCHESTER","Manchester","🏙️"],["BRISTOL","Bristol","🏙️"],["LEEDS","Leeds","🏙️"],["NOTTINGHAM","Nottingham","🏙️"],["BOURNEMOUTH","Bournemouth","🏙️"]]},
+{name:"Szkocja",flag:"🏴",items:[["EDYNBURG","Edynburg","🏙️"],["GLASGOW","Glasgow","🏙️"],["ABERDEEN","Aberdeen","🏙️"]]},
+{name:"Irlandia Północna",flag:"🇬🇧",items:[["BELFAST","Belfast","🏙️"]]},
+{name:"Rumunia",flag:"🇷🇴",items:[["BUKARESZT","Bukareszt","🏙️"]]},
+{name:"Belgia",flag:"🇧🇪",items:[["BRUKSELA","Bruksela","🏙️"]]},
+{name:"Niemcy",flag:"🇩🇪",items:[["DUSSELDORF","Düsseldorf","🏙️"],["HAMBURG","Hamburg","🏙️"],["MEMMINGEN","Memmingen","🏙️"],["DORTMUND","Dortmund","🏙️"],["STUTTGART","Stuttgart","🏙️"],["MONACHIUM","Monachium","🏙️"],["BERLIN","Berlin","🏙️"]]},
+{name:"Czechy",flag:"🇨🇿",items:[["PRAGA","Praga","🏙️"]]},
+{name:"Chorwacja",flag:"🇭🇷",items:[["ZAGRZEB","Zagrzeb","🏙️"],["DUBROWNIK","Dubrownik","🏙️"],["ZADAR","Zadar","🏙️"],["SPLIT","Split","🏙️"],["RIJEKA","Rijeka","🏙️"]]},
+{name:"Austria",flag:"🇦🇹",items:[["WIEDEN","Wiedeń","🏙️"]]},
+{name:"Czarnogóra",flag:"🇲🇪",items:[["PODGORICA","Podgorica","🏙️"]]},
+{name:"Szwajcaria",flag:"🇨🇭",items:[["BAZYLEA","Bazylea","🏙️"]]},
+{name:"Finlandia",flag:"🇫🇮",items:[["TURKU","Turku","🏙️"],["HELSINKI","Helsinki","🏙️"]]},
+{name:"Łotwa",flag:"🇱🇻",items:[["RYGA","Ryga","🏙️"]]},
+{name:"Irlandia",flag:"🇮🇪",items:[["SHANNON","Shannon","🏙️"],["DUBLIN","Dublin","🏙️"]]},
+{name:"Malta",flag:"🇲🇹",items:[["VALLETTA","Valletta","🏙️"]]},
+{name:"Mołdawia",flag:"🇲🇩",items:[["KISZYNIÓW","Kiszyniów","🏙️"]]},
+{name:"Cypr",flag:"🇨🇾",items:[["LARNAKA","Larnaka","🏙️"],["PAFOS","Pafos","🏙️"]]},
+{name:"Gruzja",flag:"🇬🇪",items:[["KUTAISI","Kutaisi","🏙️"],["TBILISI","Tbilisi","🏙️"]]},
+{name:"Holandia",flag:"🇳🇱",items:[["EINDHOVEN","Eindhoven","🏙️"],["AMSTERDAM","Amsterdam","🏙️"]]},
+{name:"Islandia",flag:"🇮🇸",items:[["REYKJAVIK","Reykjavik","🏙️"]]},
+{name:"Maroko",flag:"🇲🇦",items:[["RABAT","Rabat","🏙️"],["MARRAKESZ","Marrakesz","🏙️"],["AGADIR","Agadir","🏙️"]]}
 ];
-
-const monthFilter=document.getElementById("monthFilter");
-const typeFilter=document.getElementById("typeFilter");
-const directionFilter=document.getElementById("directionFilter");
-const resultCount=document.getElementById("resultCount");
-const activeFilters=document.getElementById("activeFilters");
-const calendarView=document.getElementById("calendarView");
-const allView=document.getElementById("allView");
-
-MONTHS.forEach(([y,m,label])=>{const o=document.createElement("option");o.value=y+"-"+m;o.textContent=label;monthFilter.appendChild(o)});
-Object.entries(TYPE_LABELS).forEach(([key,label])=>{const o=document.createElement("option");o.value=key;o.textContent=label;typeFilter.appendChild(o)});
-
-function filteredTrips(){
- const month=monthFilter.value,type=typeFilter.value,direction=directionFilter.value;
- return TRIPS.filter(t=>(month==="all"||month===t.year+"-"+t.month)&&(type==="all"||type===t.type)&&(direction==="all"||direction===t.direction));
-}
-function card(t){
- const c=document.createElement("article");
- c.className="trip-card "+(t.direction==="poland"?"poland ":"")+(t.type==="sport"?"sport":"");
- const tripId=String(t.tripId||t.id||"");
- c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+(t.direction==="poland"?"🇵🇱 Polska":"🌍 Cały świat")+'</span></div><h3>'+escapeHtml(t.title)+'</h3><div class="trip-location">'+escapeHtml(t.destination)+'</div><p class="trip-description">'+escapeHtml(t.description)+'</p><div class="trip-date">'+escapeHtml(t.date)+'</div><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(tripId)+'">Dołącz do wyjazdu</button></div></div>';
- return c;
-}
-function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]))}
-function render(){
- const trips=filteredTrips();
- activeFilters.replaceChildren();
- const labels=[];
- if(monthFilter.value!=="all"){
-   const option=monthFilter.options[monthFilter.selectedIndex];
-   labels.push({key:"month",label:option.textContent,select:monthFilter});
- }
- if(typeFilter.value!=="all"){
-   const option=typeFilter.options[typeFilter.selectedIndex];
-   labels.push({key:"type",label:option.textContent,select:typeFilter});
- }
- if(directionFilter.value!=="all"){
-   const option=directionFilter.options[directionFilter.selectedIndex];
-   labels.push({key:"direction",label:option.textContent,select:directionFilter});
- }
- labels.forEach(item=>{
-   const chip=document.createElement("span");
-   chip.className="filter-chip";
-   chip.innerHTML=escapeHtml(item.label)+' <button type="button" aria-label="Usuń filtr '+escapeHtml(item.label)+'">×</button>';
-   chip.querySelector("button").addEventListener("click",()=>{item.select.value="all";render();});
-   activeFilters.appendChild(chip);
- });
- if(labels.length){
-   const clear=document.createElement("button");
-   clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";
-   clear.addEventListener("click",()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render();});
-   activeFilters.appendChild(clear);
- }
- resultCount.textContent=trips.length+" "+(trips.length===1?"wyjazd":(trips.length<5?"wyjazdy":"wyjazdów"));
- calendarView.replaceChildren();allView.replaceChildren();
- const grouped=new Map();
- MONTHS.forEach(([y,m,label])=>grouped.set(y+"-"+m,{year:y,month:m,label,trips:[]}));
- trips.forEach(t=>{const key=t.year+"-"+t.month;if(!grouped.has(key))grouped.set(key,{year:t.year,month:t.month,label:key,trips:[]});grouped.get(key).trips.push(t)});
- for(const group of grouped.values()){
-   if(!group.trips.length) continue;
-   const section=document.createElement("section");section.className="month-section";
-   section.innerHTML='<div class="month-heading"><h2>'+group.label+'</h2><span>'+group.trips.length+' '+(group.trips.length===1?"wyjazd":group.trips.length<5?"wyjazdy":"wyjazdów")+'</span></div>';
-   const grid=document.createElement("div");grid.className="trip-grid";group.trips.forEach(t=>grid.appendChild(card(t)));section.appendChild(grid);calendarView.appendChild(section);
- }
- if(!calendarView.children.length){
-   calendarView.innerHTML='<div class="empty"><strong>Nie znaleźliśmy jeszcze wyjazdów spełniających te kryteria.</strong>Spróbuj zmienić filtry.</div>';
- }
- if(trips.length){
-   const grid=document.createElement("div");grid.className="trip-grid";trips.forEach(t=>grid.appendChild(card(t)));allView.appendChild(grid);
- }else{
-   allView.innerHTML='<div class="empty"><strong>Nie znaleźliśmy jeszcze wyjazdów spełniających te kryteria.</strong>Spróbuj zmienić filtry.</div>';
- }
-}
-document.querySelectorAll(".view-switch button").forEach(btn=>btn.addEventListener("click",()=>{
- document.querySelectorAll(".view-switch button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
- const isCalendar=btn.dataset.view==="calendar";calendarView.classList.toggle("hidden",!isCalendar);allView.classList.toggle("hidden",isCalendar);
-}));
-[monthFilter,typeFilter,directionFilter].forEach(el=>el.addEventListener("change",render));
-render();
-
-async function sendTripInterest(button, trip, toUserId, personName){
-  button.disabled=true;
-  button.textContent="Zapisywanie...";
-  try{
-    const session=await validateJuntigoSession();
-    if(!session.authenticated){
-      window.location.href="konto.html";
-      return;
-    }
-    const body=new URLSearchParams();
-    body.append("type","interest");
-    body.append("sessionToken",getJuntigoSessionToken());
-    body.append("trip",trip);
-    body.append("toUserId",toUserId);
-    const response=await fetch(JUNTIGO_API,{method:"POST",body});
-    const data=await response.json();
-    if(!data.success){
-      if(data.sessionInvalid){
-        clearJuntigoSession();
-        window.location.href="konto.html";
-        return;
-      }
-      button.disabled=false;
-      button.textContent=data.error||"Spróbuj ponownie";
-      return;
-    }
-    if(data.match===true){
-      button.classList.add("is-match");
-      button.textContent="Match";
-      button.disabled=true;
-      setTimeout(()=>{window.location.href="konto.html";},900);
-      return;
-    }
-    button.classList.add("is-sent");
-    button.textContent="Zainteresowanie wysłane";
-    button.disabled=true;
-  }catch(error){
-    console.error("Błąd zainteresowania:",error);
-    button.disabled=false;
-    button.textContent="Spróbuj ponownie";
-  }
-}
-
-async function loadTripTeam(button){
-  const trip=button.dataset.trip;
-  const card=button.closest(".trip-card");
-  let box=card.querySelector(".team-results");
-  if(box){box.remove();button.textContent="Zobacz ekipę";return;}
-  box=document.createElement("div");
-  box.className="team-results";
-  box.innerHTML="<div class=\"team-empty\">Szukamy ekipy...</div>";
-  card.querySelector(".trip-content").appendChild(box);
-  button.textContent="Ukryj ekipę";
-  try{
-    const session=await validateJuntigoSession();
-    const token=session.authenticated?getJuntigoSessionToken():"";
-    const url=JUNTIGO_API+"?trip="+encodeURIComponent(trip)+(token?"&sessionToken="+encodeURIComponent(token):"");
-    const response=await fetch(url);
-    const data=await response.json();
-    if(!data.success){
-      if(data.sessionInvalid){
-        clearJuntigoSession();
-        window.location.href="konto.html";
-        return;
-      }
-      box.innerHTML="<div class=\"team-empty\">Nie udało się pobrać ekipy.</div>";
-      return;
-    }
-    if(!Array.isArray(data.people)||!data.people.length){
-      box.innerHTML="<div class=\"team-empty\"><strong>Na razie nikogo tu nie ma.</strong><br>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</div>";
-      return;
-    }
-    const people=data.people.slice(0,6);
-    box.innerHTML="<div class=\"team-heading\"><strong>Osoby zainteresowane</strong><span>"+data.count+"</span></div>"+
-      people.map(p=>{
-        const safeId=escapeHtml(p.userId||"");
-        const already=!!p.alreadyInterested;
-        const isSelf=session.authenticated && p.userId===session.identity?.userId;
-        const action=isSelf?"<span class=\"team-self\">To Ty</span>":
-          (already?"<button type=\"button\" class=\"person-interest is-sent\" disabled>Zainteresowanie wysłane</button>":
-          (safeId?"<button type=\"button\" class=\"person-interest\" data-interest-trip=\""+escapeHtml(trip)+"\" data-interest-user=\""+safeId+"\">Jestem zainteresowany</button>":""));
-        return "<div class=\"person-mini\"><div><strong>"+escapeHtml(p.name||"Użytkownik")+"</strong><span>"+(p.age?escapeHtml(p.age+" lat"):"")+(p.city?" · "+escapeHtml(p.city):"")+"</span></div>"+action+"</div>";
-      }).join("");
-  }catch(error){
-    console.error("Błąd pobierania ekipy:",error);
-    box.innerHTML="<div class=\"team-empty\">Wystąpił błąd podczas pobierania ekipy.</div>";
-  }
-}
-document.addEventListener("click",e=>{
-  const teamButton=e.target.closest(".trip-team-action");
-  if(teamButton){loadTripTeam(teamButton);return;}
-  const interestButton=e.target.closest(".person-interest:not([disabled])");
-  if(interestButton){
-    sendTripInterest(
-      interestButton,
-      interestButton.dataset.interestTrip,
-      interestButton.dataset.interestUser,
-      interestButton.closest(".person-mini")?.querySelector("strong")?.textContent||""
-    );
-  }
+function cityTripId(id){return "CITY_"+id;}
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));}
+function renderCityBreaks(){
+const root=document.getElementById("countryList");root.replaceChildren();
+COUNTRIES.forEach((country,index)=>{
+const details=document.createElement("details");details.className="country-section";if(index===0)details.open=true;
+const summary=document.createElement("summary");
+summary.innerHTML='<span class="country-title"><span class="country-flag">'+country.flag+'</span><span>'+escapeHtml(country.name)+'</span></span><span class="country-count">'+country.items.length+' '+(country.items.length===1?"kierunek":country.items.length<5?"kierunki":"kierunków")+' <span class="country-chevron">⌄</span></span>';
+details.appendChild(summary);
+const grid=document.createElement("div");grid.className="city-grid";
+country.items.forEach(item=>{
+const [id,name,icon,variant]=item;const tripId=cityTripId(id);const card=document.createElement("article");card.className="city-card";
+const variantText=variant?'<div class="city-variant">'+escapeHtml(variant)+'</div>':"";
+card.innerHTML='<div class="city-icon" aria-hidden="true">'+icon+'</div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ City break</span></div><h3>'+escapeHtml(name)+'</h3>'+variantText+'<p>Wyjazd nastawiony na poznawanie kierunku, zwiedzanie i wspólne odkrywanie miasta lub regionu.</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(tripId)+'">Jestem zainteresowany</button></div></div>';
+grid.appendChild(card);
 });
-</script>
-</body>
+details.appendChild(grid);root.appendChild(details);
+});
+}
+renderCityBreaks();
+async function loadTripTeam(button){
+const trip=button.dataset.trip;const card=button.closest(".city-card");let box=card.querySelector(".team-results");
+if(box){box.remove();button.textContent="Zobacz ekipę";return;}
+box=document.createElement("div");box.className="team-results";box.innerHTML='<div class="team-empty">Szukamy ekipy...</div>';card.querySelector(".city-content").appendChild(box);button.textContent="Ukryj ekipę";
+try{
+const session=await validateJuntigoSession();const token=session.authenticated?getJuntigoSessionToken():"";
+const response=await fetch(JUNTIGO_API+"?trip="+encodeURIComponent(trip)+(token?"&sessionToken="+encodeURIComponent(token):""));const data=await response.json();
+if(!data.success){box.innerHTML='<div class="team-empty">Nie udało się pobrać ekipy.</div>';return;}
+if(!Array.isArray(data.people)||!data.people.length){box.innerHTML='<div class="team-empty"><strong>Na razie nikogo tu nie ma.</strong><br>Bądź pierwszą osobą zainteresowaną tym kierunkiem.</div>';return;}
+box.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+data.count+'</span></div>'+data.people.slice(0,6).map(p=>'<div class="person-mini"><div><strong>'+escapeHtml(p.name||"Użytkownik")+'</strong><span>'+(p.age?escapeHtml(p.age+" lat"):"")+(p.city?" · "+escapeHtml(p.city):"")+'</span></div></div>').join("");
+}catch(error){console.error(error);box.innerHTML='<div class="team-empty">Wystąpił błąd podczas pobierania ekipy.</div>';}
+}
+document.addEventListener("click",event=>{const teamButton=event.target.closest(".trip-team-action");if(teamButton)loadTripTeam(teamButton);});
+</script></body>
 </html>
