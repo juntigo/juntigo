@@ -2702,11 +2702,20 @@ async function loadTripInterestCounts() {
 }
 
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
+let juntigoNotificationsInFlight = false;
+
 async function loadJuntigoNotifications() {
+    if (document.hidden || juntigoNotificationsInFlight) {
+        return;
+    }
+
+    juntigoNotificationsInFlight = true;
+
     const badge =
         document.getElementById("profile-notification-badge");
 
     if (!badge) {
+        juntigoNotificationsInFlight = false;
         return;
     }
 
@@ -2715,6 +2724,7 @@ async function loadJuntigoNotifications() {
 
     if (!sessionToken) {
         badge.style.display = "none";
+        juntigoNotificationsInFlight = false;
         return;
     }
 
@@ -2765,11 +2775,18 @@ async function loadJuntigoNotifications() {
         );
 
         badge.style.display = "none";
+    } finally {
+        juntigoNotificationsInFlight = false;
     }
 }
 
-
   loadJuntigoNotifications();
+
+  document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) {
+          loadJuntigoNotifications();
+      }
+  });
 
 setInterval(
     loadJuntigoNotifications,
