@@ -2230,7 +2230,8 @@ function showJoinSuccess(trip) {
 <script>
 const TYPE_LABELS={city:"✈️ City breaki"};
 
-const COUNTRIES=[
+const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Warszawa","🏙️"],["KRAKOW","Kraków","🏙️"],["WROCLAW","Wrocław","🏙️"],["LODZ","Łódź","🏙️"],["POZNAN","Poznań","🏙️"],["GDANSK","Gdańsk","🏙️"],["KATOWICE","Katowice","🏙️"],["SZCZECIN","Szczecin","🏙️"],["TORUN","Toruń","🏙️"],["CZESTOCHOWA","Częstochowa","🏙️"],["BYDGOSZCZ","Bydgoszcz","🏙️"],["LUBLIN","Lublin","🏙️"],["BIALYSTOK","Białystok","🏙️"],["GDYNIA","Gdynia","🏙️"],["RZESZOW","Rzeszów","🏙️"]]},
+
 {name:"Albania",code:"al",flag:"🇦🇱",items:[["TIRANA","Tirana","🏙️"]]},
 {name:"Austria",code:"at",flag:"🇦🇹",items:[["WIEDEN","Wiedeń","🏙️"]]},
 {name:"Belgia",code:"be",flag:"🇧🇪",items:[["BRUKSELA","Bruksela","🏙️"]]},
@@ -2270,7 +2271,7 @@ const COUNTRIES=[
 ];
 
 const CITY_TRIPS=COUNTRIES.flatMap(country=>country.items.map(item=>({
-tripId:"CITY_"+item[0],destination:item[1],icon:item[2],variant:item[3]||"",country:country.name,countryCode:country.code,type:"city",direction:"abroad"
+tripId:"CITY_"+item[0],destination:item[1],icon:item[2],variant:item[3]||"",country:country.name,countryCode:country.code,type:"city",direction:country.code==="pl"?"poland":"abroad"
 })));
 
 const monthFilter=document.getElementById("monthFilter");
