@@ -2704,7 +2704,7 @@ async function loadTripInterestCounts() {
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
 let juntigoNotificationsInFlight = false;
 
-async async function loadJuntigoNotifications() {
+async function loadJuntigoNotifications() {
     if (document.hidden || juntigoNotificationsInFlight) {
         return;
     }
