@@ -632,7 +632,7 @@
       <label>💗 Zainteresowania</label>
 
      <div class="profile-options" id="profile-interests-options">
-  <button type="button">🏔️ Góry</button>
+  <button type="button" aria-pressed="false">🏔️ Góry</button>
   <button type="button">🌊 Morze</button>
   <button type="button">🏛️ Historia i zabytki</button>
   <button type="button">🎨 Kultura i sztuka</button>
@@ -691,7 +691,7 @@
       </div>
     </div>
 
-    <div class="profile-save-message" id="profile-save-message">
+    <div class="profile-save-message" id="profile-save-message" role="status" aria-live="polite">
   ✓ Profil został zapisany
 </div>
 
@@ -956,9 +956,9 @@ profilePhotoInput.addEventListener("change", () => {
     return;
   }
 
-  if (!file.type || !file.type.startsWith("image/")) {
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
     profilePhotoInput.value = "";
-    alert("Wybierz plik graficzny.");
+    alert("Wybierz zdjęcie JPG, PNG lub WebP.");
     return;
   }
 
