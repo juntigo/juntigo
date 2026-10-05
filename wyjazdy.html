@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#071b33">
+<link rel="icon" type="image/png" href="juntigo-logo.png">
+<title>Wyjazdy — Juntigo</title>
+<meta name="description" content="Wyjazdy Juntigo — znajdź city break, jarmark, mecz lub wydarzenie i osoby, które też chcą tam pojechać.">
+<link rel="canonical" href="https://juntigo.pl/wyjazdy.html">
+<meta property="og:title" content="Wyjazdy — Juntigo">
+<meta property="og:description" content="Znajdź wyjazd, wydarzenie albo mecz i poznaj osoby, które też chcą tam pojechać.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://juntigo.pl/wyjazdy.html">
+<style>
+:root{--navy:#071b33;--navy-light:#0d2948;--orange:#ff7417;--orange-light:#ff8b3d;--cream:#fffaf4;--white:#fff;--text:#17283b;--muted:#667587;--border:#e7e1da;--soft:#f5f7fa}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--cream);line-height:1.6}
+a{text-decoration:none;color:inherit}
+.container{width:min(1280px,92%);margin:0 auto}
+nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-inner{height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo img{width:64px;height:64px;object-fit:contain;display:block}
+.nav-menu{display:flex;align-items:center;gap:28px}
+.nav-link{color:var(--navy);font-weight:700;font-size:15px}
+.nav-link:hover{color:var(--orange)}
+.nav-cta{color:#fff;background:var(--orange);font-weight:800;padding:12px 20px;border-radius:999px;white-space:nowrap}
+.nav-cta:hover{background:var(--navy)}
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;padding:78px 0 72px}
+.eyebrow{color:var(--orange-light);font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(42px,6vw,68px);line-height:1;letter-spacing:-2.5px;margin-bottom:18px}
+.hero p{max-width:720px;color:#dbe4ee;font-size:19px}
+.controls-wrap{padding:28px 0 8px}
+.controls{background:#fff;border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(7,27,51,.06)}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.filter label{display:block;color:var(--navy);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.filter select{width:100%;min-height:48px;padding:11px 14px;border:1px solid #d8dee6;border-radius:12px;background:#fff;color:var(--navy);font:inherit;font-weight:700;outline:none}
+.filter select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,116,23,.12)}
+.results-bar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:20px}
+.result-count{color:var(--navy);font-weight:900}
+.view-switch{display:flex;background:var(--soft);padding:4px;border-radius:999px}
+.view-switch button{border:0;background:transparent;color:var(--muted);padding:9px 16px;border-radius:999px;font:inherit;font-weight:800;cursor:pointer}
+.view-switch button.active{background:var(--navy);color:#fff}
+main{padding:32px 0 90px}
+.month-section{margin-bottom:54px}
+.month-heading{display:flex;align-items:baseline;gap:12px;margin-bottom:20px}
+.month-heading h2{color:var(--navy);font-size:34px;letter-spacing:-1px}
+.month-heading span{color:var(--muted);font-size:14px;font-weight:700}
+.trip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.trip-card{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:300px;box-shadow:0 8px 24px rgba(7,27,51,.05);transition:transform .2s ease,box-shadow .2s ease}
+.trip-card:hover{transform:translateY(-4px);box-shadow:0 15px 34px rgba(7,27,51,.1)}
+.trip-visual{height:145px;background:linear-gradient(135deg,#0d2948,#173e67);display:flex;align-items:center;justify-content:center;color:#fff;font-size:48px}
+.trip-card.poland .trip-visual{background:linear-gradient(135deg,#f1f3f6,#dfe5ec);color:var(--navy)}
+.trip-card.sport .trip-visual{background:linear-gradient(135deg,#071b33,#155b55)}
+.trip-content{padding:20px;display:flex;flex-direction:column;flex:1}
+.trip-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:#f2f4f7;color:var(--navy)}
+.badge.orange{background:#fff0e6;color:#c74d00}
+.trip-card h3{color:var(--navy);font-size:21px;line-height:1.2;margin-bottom:8px}
+.trip-location{color:var(--muted);font-size:14px;font-weight:700;margin-bottom:12px}
+.trip-description{color:#64748b;font-size:14px;line-height:1.55}
+.trip-date{margin-top:auto;padding-top:16px;color:var(--navy);font-size:14px;font-weight:900}
+.empty{padding:48px 24px;background:#fff;border:1px dashed #cfd6df;border-radius:20px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--navy);font-size:19px;margin-bottom:6px}
+.hidden{display:none!important}
+.year-note{margin:4px 0 30px;padding:18px 20px;background:#fff;border:1px solid var(--border);border-radius:16px;color:var(--muted)}
+.year-note strong{color:var(--navy)}
+footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;font-size:14px}
+@media(max-width:900px){.trip-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.nav-menu{gap:18px}}
+@media(max-width:650px){.nav-inner{height:76px}.nav-menu{display:none}.nav-cta{font-size:13px;padding:10px 14px}.hero{padding:56px 0}.hero p{font-size:17px}.filters{grid-template-columns:1fr}.results-bar{align-items:flex-start;flex-direction:column}.trip-grid{grid-template-columns:1fr}.month-heading h2{font-size:28px}}
+</style>
+</head>
+<body>
+<nav>
+<div class="container nav-inner">
+<a href="index.html" class="logo" aria-label="Juntigo — strona główna"><img src="juntigo-logo.png" alt="Juntigo"></a>
+<div class="nav-menu">
+<a href="index.html#jak-dziala" class="nav-link">Jak to działa?</a>
+<a href="wyjazdy.html" class="nav-link" aria-current="page">Wyjazdy</a>
+<a href="index.html" class="nav-link">Dodaj wyjazd</a>
+<a href="https://www.instagram.com/juntigo.pl/" class="nav-link" target="_blank" rel="noopener noreferrer">Instagram</a>
+</div>
+<a href="konto.html" class="nav-cta">Moje konto</a>
+</div>
+</nav>
+
+<header class="hero">
+<div class="container">
+<div class="eyebrow">Kalendarz Juntigo</div>
+<h1>Znajdź swój wyjazd.</h1>
+<p>Znajdź wyjazd, wydarzenie albo mecz i poznaj osoby, które też chcą tam pojechać.</p>
+</div>
+</header>
+
+<section class="controls-wrap">
+<div class="container">
+<div class="controls">
+<div class="filters">
+<div class="filter"><label for="monthFilter">Miesiąc</label><select id="monthFilter"><option value="all">Wszystkie</option></select></div>
+<div class="filter"><label for="typeFilter">Typ wyjazdu</label><select id="typeFilter"><option value="all">Wszystkie</option></select></div>
+<div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter"><option value="all">Wszystkie</option><option value="poland">🇵🇱 Polska</option><option value="abroad">🌍 Zagranica</option></select></div>
+</div>
+<div class="results-bar">
+<div class="result-count" id="resultCount">0 wyjazdów</div>
+<div class="view-switch" role="tablist" aria-label="Widok wyjazdów">
+<button type="button" class="active" data-view="calendar">Kalendarz</button>
+<button type="button" data-view="all">Wszystkie wyjazdy</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<main>
+<div class="container">
+<div id="calendarView"></div>
+<div id="allView" class="hidden"></div>
+</div>
+</main>
+
+<footer>Juntigo — łączymy podróżników</footer>
+
+<script>
+const TYPE_LABELS={
+  market:"🎄 Jarmarki i święta",
+  sport:"⚽ Mecze",
+  city:"🌍 City break",
+  event:"🎉 Wydarzenia",
+  music:"🎵 Festiwale i koncerty",
+  active:"🏔️ Aktywnie",
+  newyear:"🎆 Sylwester"
+};
+
+const TRIPS=[
+{id:"gdansk-market-2026",year:2026,month:11,type:"market",direction:"poland",destination:"Gdańsk",title:"Jarmark Bożonarodzeniowy w Gdańsku",date:"20 listopada – 23 grudnia 2026",description:"Baltic city break, świąteczne iluminacje i jeden z najbardziej rozpoznawalnych jarmarków w Polsce.",icon:"🎄"},
+{id:"wroclaw-market-2026",year:2026,month:11,type:"market",direction:"poland",destination:"Wrocław",title:"Jarmark Bożonarodzeniowy we Wrocławiu",date:"20 listopada 2026 – 7 stycznia 2027",description:"Rynek, świąteczne atrakcje i centrum miasta idealne na wspólny weekend.",icon:"🎄"},
+{id:"poznan-market-2026",year:2026,month:11,type:"market",direction:"poland",destination:"Poznań",title:"Betlejem Poznańskie",date:"20 listopada 2026 – 3 stycznia 2027",description:"Jarmark w centrum Poznania połączony ze zwiedzaniem miasta.",icon:"🎄"},
+{id:"warsaw-market-2026",year:2026,month:11,type:"market",direction:"poland",destination:"Warszawa",title:"Jarmark Bożonarodzeniowy w Warszawie",date:"20 listopada 2026 – 6 stycznia 2027",description:"Świąteczny Warszawa city break z jarmarkiem i wieczornym zwiedzaniem stolicy.",icon:"🎄"},
+{id:"krakow-market-2026",year:2026,month:11,type:"market",direction:"poland",destination:"Kraków",title:"Jarmark Bożonarodzeniowy w Krakowie",date:"27 listopada 2026 – 6 stycznia 2027",description:"Rynek Główny, świąteczna atmosfera i klasyczny weekend w Krakowie.",icon:"🎄"},
+{id:"vienna-market-2026",year:2026,month:11,type:"market",direction:"abroad",destination:"Wiedeń",title:"Christkindlmarkt na Rathausplatz",date:"13 listopada – 26 grudnia 2026",description:"Klasyczny świąteczny city break w Wiedniu.",icon:"🎄"},
+{id:"berlin-market-2026",year:2026,month:11,type:"market",direction:"abroad",destination:"Berlin",title:"Świąteczny Berlin",date:"listopad – grudzień 2026",description:"Kilka różnych jarmarków w jednej europejskiej stolicy.",icon:"🎄"},
+{id:"dresden-market-2026",year:2026,month:11,type:"market",direction:"abroad",destination:"Drezno",title:"Striezelmarkt",date:"25 listopada – 24 grudnia 2026",description:"Jeden z najstarszych i najbardziej charakterystycznych jarmarków w Niemczech.",icon:"🎄"},
+{id:"prague-market-2026",year:2026,month:11,type:"market",direction:"abroad",destination:"Praga",title:"Jarmark na Rynku Staromiejskim",date:"28 listopada 2026 – 6 stycznia 2027",description:"Świąteczna Praga, Stare Miasto i jeden z najbardziej rozpoznawalnych jarmarków Europy.",icon:"🎄"},
+{id:"zagreb-advent-2026",year:2026,month:11,type:"market",direction:"abroad",destination:"Zagrzeb",title:"Advent Zagreb",date:"28 listopada 2026 – 7 stycznia 2027",description:"Adwentowe wydarzenia rozproszone po centrum Zagrzebia.",icon:"✨"},
+{id:"legia-rakow-2026",year:2026,month:11,type:"sport",direction:"poland",destination:"Warszawa",title:"Legia Warszawa – Raków Częstochowa",date:"7 listopada 2026",description:"Mecz Ekstraklasy i okazja na piłkarski wyjazd do Warszawy.",icon:"⚽"},
+{id:"gks-lech-2026",year:2026,month:11,type:"sport",direction:"poland",destination:"Katowice",title:"GKS Katowice – Lech Poznań",date:"21 listopada 2026",description:"Mecz Ekstraklasy w Katowicach.",icon:"⚽"},
+{id:"lech-pogon-2026",year:2026,month:11,type:"sport",direction:"poland",destination:"Poznań",title:"Lech Poznań – Pogoń Szczecin",date:"28 listopada 2026",description:"Mecz Ekstraklasy na stadionie Lecha.",icon:"⚽"},
+{id:"liverpool-mu-2026",year:2026,month:11,type:"sport",direction:"abroad",destination:"Liverpool",title:"Liverpool – Manchester United",date:"22 listopada 2026",description:"Premier League — klasyk angielskiego futbolu.",icon:"⚽"},
+{id:"arsenal-city-2026",year:2026,month:11,type:"sport",direction:"abroad",destination:"Londyn",title:"Arsenal – Manchester City",date:"29 listopada 2026",description:"Premier League na Emirates Stadium.",icon:"⚽"},
+{id:"barca-celta-2026",year:2026,month:12,type:"sport",direction:"abroad",destination:"Barcelona",title:"FC Barcelona – Celta Vigo",date:"6 grudnia 2026",description:"LaLiga na Spotify Camp Nou.",icon:"⚽"},
+{id:"barca-city-2026",year:2026,month:12,type:"sport",direction:"abroad",destination:"Barcelona",title:"FC Barcelona – Manchester City",date:"8 grudnia 2026",description:"Mecz fazy ligowej Ligi Mistrzów na Spotify Camp Nou.",icon:"⚽"},
+{id:"gks-legia-2026",year:2026,month:12,type:"sport",direction:"poland",destination:"Katowice",title:"GKS Katowice – Legia Warszawa",date:"5 grudnia 2026",description:"Mecz Ekstraklasy w Katowicach.",icon:"⚽"},
+{id:"legia-pogon-2026",year:2026,month:12,type:"sport",direction:"poland",destination:"Warszawa",title:"Legia Warszawa – Pogoń Szczecin",date:"12 grudnia 2026",description:"Mecz Ekstraklasy w Warszawie.",icon:"⚽"},
+{id:"gdansk-market-dec-2026",year:2026,month:12,type:"market",direction:"poland",destination:"Gdańsk",title:"Gdańsk — jarmark w grudniu",date:"1–23 grudnia 2026",description:"Grudniowy termin na świąteczny city break nad Bałtykiem.",icon:"🎄"},
+{id:"wroclaw-market-dec-2026",year:2026,month:12,type:"market",direction:"poland",destination:"Wrocław",title:"Wrocław — jarmark w grudniu",date:"1–23 grudnia 2026",description:"Świąteczny weekend we Wrocławiu.",icon:"🎄"},
+{id:"krakow-market-dec-2026",year:2026,month:12,type:"market",direction:"poland",destination:"Kraków",title:"Kraków — jarmark w grudniu",date:"1–31 grudnia 2026",description:"Świąteczny Kraków i Rynek Główny.",icon:"🎄"},
+{id:"vienna-market-dec-2026",year:2026,month:12,type:"market",direction:"abroad",destination:"Wiedeń",title:"Wiedeń — świąteczny city break",date:"1–26 grudnia 2026",description:"Jarmarki, iluminacje i centrum Wiednia.",icon:"🎄"},
+{id:"prague-market-dec-2026",year:2026,month:12,type:"market",direction:"abroad",destination:"Praga",title:"Praga — świąteczny city break",date:"1–31 grudnia 2026",description:"Stare Miasto i świąteczna atmosfera czeskiej stolicy.",icon:"🎄"},
+{id:"zagreb-advent-dec-2026",year:2026,month:12,type:"market",direction:"abroad",destination:"Zagrzeb",title:"Zagrzeb — Advent",date:"1–31 grudnia 2026",description:"Adwentowe atrakcje w centrum Zagrzebia.",icon:"✨"}
+];
+
+const MONTHS=[
+[2026,11,"Listopad 2026"],[2026,12,"Grudzień 2026"],
+[2027,1,"Styczeń 2027"],[2027,2,"Luty 2027"],[2027,3,"Marzec 2027"],[2027,4,"Kwiecień 2027"],[2027,5,"Maj 2027"],[2027,6,"Czerwiec 2027"],[2027,7,"Lipiec 2027"],[2027,8,"Sierpień 2027"],[2027,9,"Wrzesień 2027"],[2027,10,"Październik 2027"],[2027,11,"Listopad 2027"],[2027,12,"Grudzień 2027"]
+];
+
+const monthFilter=document.getElementById("monthFilter");
+const typeFilter=document.getElementById("typeFilter");
+const directionFilter=document.getElementById("directionFilter");
+const resultCount=document.getElementById("resultCount");
+const calendarView=document.getElementById("calendarView");
+const allView=document.getElementById("allView");
+
+MONTHS.forEach(([y,m,label])=>{const o=document.createElement("option");o.value=y+"-"+m;o.textContent=label;monthFilter.appendChild(o)});
+Object.entries(TYPE_LABELS).forEach(([key,label])=>{const o=document.createElement("option");o.value=key;o.textContent=label;typeFilter.appendChild(o)});
+
+function filteredTrips(){
+ const month=monthFilter.value,type=typeFilter.value,direction=directionFilter.value;
+ return TRIPS.filter(t=>(month==="all"||month===t.year+"-"+t.month)&&(type==="all"||type===t.type)&&(direction==="all"||direction===t.direction));
+}
+function card(t){
+ const c=document.createElement("article");
+ c.className="trip-card "+(t.direction==="poland"?"poland ":"")+(t.type==="sport"?"sport":"");
+ c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+(t.direction==="poland"?"🇵🇱 Polska":"🌍 Zagranica")+'</span></div><h3>'+escapeHtml(t.title)+'</h3><div class="trip-location">'+escapeHtml(t.destination)+'</div><p class="trip-description">'+escapeHtml(t.description)+'</p><div class="trip-date">'+escapeHtml(t.date)+'</div></div>';
+ return c;
+}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]))}
+function render(){
+ const trips=filteredTrips();
+ resultCount.textContent=trips.length+" "+(trips.length===1?"wyjazd":(trips.length<5?"wyjazdy":"wyjazdów"));
+ calendarView.replaceChildren();allView.replaceChildren();
+ const grouped=new Map();
+ MONTHS.forEach(([y,m,label])=>grouped.set(y+"-"+m,{year:y,month:m,label,trips:[]}));
+ trips.forEach(t=>{const key=t.year+"-"+t.month;if(!grouped.has(key))grouped.set(key,{year:t.year,month:t.month,label:key,trips:[]});grouped.get(key).trips.push(t)});
+ for(const group of grouped.values()){
+   if(!group.trips.length) continue;
+   const section=document.createElement("section");section.className="month-section";
+   section.innerHTML='<div class="month-heading"><h2>'+group.label+'</h2><span>'+group.trips.length+' '+(group.trips.length===1?"wyjazd":group.trips.length<5?"wyjazdy":"wyjazdów")+'</span></div>';
+   const grid=document.createElement("div");grid.className="trip-grid";group.trips.forEach(t=>grid.appendChild(card(t)));section.appendChild(grid);calendarView.appendChild(section);
+ }
+ if(!calendarView.children.length){
+   calendarView.innerHTML='<div class="empty"><strong>Nie znaleźliśmy jeszcze wyjazdów spełniających te kryteria.</strong>Spróbuj zmienić filtry.</div>';
+ }
+ if(trips.length){
+   const grid=document.createElement("div");grid.className="trip-grid";trips.forEach(t=>grid.appendChild(card(t)));allView.appendChild(grid);
+ }else{
+   allView.innerHTML='<div class="empty"><strong>Nie znaleźliśmy jeszcze wyjazdów spełniających te kryteria.</strong>Spróbuj zmienić filtry.</div>';
+ }
+}
+document.querySelectorAll(".view-switch button").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".view-switch button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+ const isCalendar=btn.dataset.view==="calendar";calendarView.classList.toggle("hidden",!isCalendar);allView.classList.toggle("hidden",isCalendar);
+}));
+[monthFilter,typeFilter,directionFilter].forEach(el=>el.addEventListener("change",render));
+render();
+</script>
+</body>
+</html>
