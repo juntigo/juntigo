@@ -90,7 +90,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 .country-section[open] .country-chevron{transform:rotate(180deg)}
 .city-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0 20px 20px}
 .city-card{border:1px solid #e6eaf0;border-radius:18px;background:#fbfcfd;overflow:hidden;display:flex;flex-direction:column;min-width:0}
-.city-icon{height:145px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d2948,#173e67);color:#fff;font-size:42px;overflow:hidden;position:relative}.city-photo{width:100%;height:100%;display:block;object-fit:cover;object-position:center}.city-photo.is-loaded+.city-photo-fallback{display:none}.city-photo-fallback{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d2948,#173e67);color:#fff;font-size:42px}
+.city-icon{height:145px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d2948,#173e67);color:#fff;font-size:42px;overflow:hidden;position:relative}
 .city-content{padding:17px;display:flex;flex-direction:column;flex:1}
 .city-meta{margin-bottom:9px}
 .city-card h3{color:var(--navy);font-size:20px;line-height:1.2;margin-bottom:5px}
@@ -2374,29 +2374,10 @@ return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.dir
 function cityCard(t){
 const card=document.createElement("article");card.className="city-card";
 const variantText=t.variant?'<div class="city-variant">'+escapeHtml(t.variant)+'</div>':"";
-card.innerHTML='<div class="city-icon"><img class="city-photo" data-city="'+escapeHtml(t.destination)+'" data-country="'+escapeHtml(t.country)+'" alt="Zdjęcie '+escapeHtml(t.destination)+'" loading="lazy"><div class="city-photo-fallback" aria-hidden="true">'+t.icon+'</div></div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ Wycieczka</span></div><h3>'+escapeHtml(t.destination)+'</h3>'+variantText+'<p>'+escapeHtml(t.description)+'</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
+card.innerHTML='<div class="city-icon" aria-hidden="true">'+t.icon+'</div><div class="city-content"><div class="city-meta"><span class="badge orange">✈️ Wycieczka</span></div><h3>'+escapeHtml(t.destination)+'</h3>'+variantText+'<p>'+escapeHtml(t.description)+'</p><div class="city-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
 return card;
 }
 
-async function loadCityPhoto(img){
-const city=img.dataset.city||"";
-const country=img.dataset.country||"";
-if(!city)return;
-try{
-const query=encodeURIComponent(city+" "+country+" city");
-const url="https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+query+"&gsrnamespace=6&gsrlimit=1&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&origin=*";
-const response=await fetch(url);
-if(!response.ok)throw new Error("image request failed");
-const data=await response.json();
-const pages=data&&data.query&&data.query.pages?Object.values(data.query.pages):[];
-const info=pages[0]&&pages[0].imageinfo&&pages[0].imageinfo[0];
-if(info&&info.thumburl){img.src=info.thumburl;img.classList.add("is-loaded");}
-}catch(error){console.debug("Nie udało się pobrać zdjęcia kierunku:",city,error);}
-}
-
-function loadVisibleCityPhotos(){
-document.querySelectorAll(".city-photo:not(.is-loaded)").forEach(img=>loadCityPhoto(img));
-}
 
 function renderCountryGroups(trips){
 cityBreakView.replaceChildren();
@@ -2410,7 +2391,6 @@ details.appendChild(summary);
 const grid=document.createElement("div");grid.className="city-grid";group.trips.forEach(t=>grid.appendChild(cityCard(t)));
 details.appendChild(grid);cityBreakView.appendChild(details);
 });
-loadVisibleCityPhotos();
 }
 
 function renderSportGroups(trips){
