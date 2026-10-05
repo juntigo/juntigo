@@ -52,6 +52,26 @@ function clearJuntigoSession() {
   juntigoSessionValidationToken = "";
 }
 
+window.addEventListener("storage", function(event) {
+  if (event.key !== JUNTIGO_AUTH_SESSION_KEY) {
+    return;
+  }
+
+  const currentToken = getJuntigoSessionToken();
+
+  if (event.newValue === currentToken) {
+    return;
+  }
+
+  clearJuntigoSession();
+
+  const path = window.location.pathname.toLowerCase();
+
+  if (path.endsWith("/profil.html") || path.endsWith("/konto.html")) {
+    window.location.reload();
+  }
+});
+
 let juntigoSessionValidationPromise = null;
 let juntigoSessionValidationToken = "";
 
