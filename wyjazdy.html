@@ -2293,7 +2293,7 @@ const EVENTS=[
 ["EVENT_MADRID_HOMENS_G_2026","Hombres G — koncert","Madryt","Hiszpania","es","🎤","2026-12-11","11–12 grudnia 2026"],
 ["EVENT_LISBON_TRIBECA_2026","Tribeca Festival Lisboa","Lizbona","Portugalia","pt","🎬","2026-12-09","9–13 grudnia 2026"],
 ["EVENT_AMSTERDAM_LIGHT_2026","Amsterdam Light Festival","Amsterdam","Holandia","nl","✨","2026-11-26","26 listopada – 31 grudnia 2026"]
-].map(x=>({tripId:x[0],destination:x[1],city:x[2],country:x[3],countryCode:x[4],icon:x[5],type:"event",dateStart:x[6],dateLabel:x[7]}));
+].map(x=>({tripId:x[0],destination:x[1],city:x[2],country:x[3],countryCode:x[4],icon:x[5],type:"event",direction:x[4]==="pl"?"poland":"abroad",dateStart:x[6],dateLabel:x[7]}));
 
 const CITY_TRIPS=COUNTRIES.flatMap(country=>country.items.map(item=>({
 tripId:"CITY_"+item[0],destination:item[1],icon:item[2],variant:item[3]||"",country:country.name,countryCode:country.code,type:"city",direction:country.code==="pl"?"poland":"abroad"
@@ -2313,8 +2313,8 @@ function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(
 
 function filteredTrips(){
 const type=typeFilter.value,direction=directionFilter.value,month=monthFilter.value;
-const source=type==="event"?EVENT_TRIPS:CITY_TRIPS;
-return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction));
+const source=type==="event"?EVENTS:(type==="city"?CITY_TRIPS:(month!=="all"?EVENTS:[...CITY_TRIPS,...EVENTS]));
+return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||t.type!=="event"||t.dateStart.slice(0,7)===month));
 }
 
 function cityCard(t){
