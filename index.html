@@ -1450,6 +1450,40 @@
   text-decoration: underline;
 }
 @media (max-width: 600px) {
+  .join-form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .team-modal-box {
+    max-height: calc(100vh - 24px);
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .team-results:has(.person-card) {
+    grid-template-columns: 1fr;
+  }
+
+  .person-profile-header {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .person-profile-avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 27px;
+  }
+
+  .person-profile-header h2 {
+    font-size: 25px;
+  }
+
+  .person-profile-modal-box {
+    max-height: calc(100vh - 24px);
+  }
+
   .report-overlay {
     padding: 12px;
   }
@@ -2754,6 +2788,7 @@ function toggleMobileMenu() {
 
         if (menu) {
             menu.classList.remove('mobile-open');
+            document.body.style.overflow = "";
         }
     });
 });
