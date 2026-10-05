@@ -631,7 +631,7 @@
 
     <div class="profile-form-group">
       <label>💗 Zainteresowania</label>
-      <small>Wybierz maksymalnie 7</small>
+      <small>Wybierz 1–7</small>
 
      <div class="profile-options" id="profile-interests-options">
   <button type="button" aria-pressed="false">🏔️ Góry</button>
@@ -654,7 +654,7 @@
 
     <div class="profile-form-group">
       <label>🧳 Styl podróżowania</label>
-      <small>Wybierz maksymalnie 6</small>
+      <small>Wybierz 1–6</small>
 
       <div class="profile-options" id="profile-style-options">
   <button type="button">🎒 Backpacking</button>
@@ -1196,6 +1196,14 @@ profilePhotoInput.addEventListener("change", () => {
     const selectedTravelStyle = Array.from(
       document.querySelectorAll("#profile-style-options button.selected")
     ).map(button => button.textContent.trim());
+
+    if (selectedInterests.length === 0 || selectedTravelStyle.length === 0) {
+      const saveMessage = document.getElementById("profile-save-message");
+      saveMessage.textContent =
+        "Wybierz co najmniej 1 zainteresowanie i 1 styl podróżowania.";
+      saveMessage.classList.add("show");
+      return;
+    }
 
     if (selectedInterests.length > 7 || selectedTravelStyle.length > 6) {
       const saveMessage = document.getElementById("profile-save-message");
