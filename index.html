@@ -2439,8 +2439,8 @@
 
         <div class="category">
           <div class="category-icon">✈️</div>
-          <h3>City breaki</h3>
-          <p>Krótki wyjazd do miasta, które chcesz odkryć.</p>
+          <h3>Wycieczki</h3>
+          <p>Wyjazdy do miejsc, które chcesz odkryć i poznać.</p>
         </div>
 
         
@@ -2731,14 +2731,65 @@ function showFeaturedTripTeam(trip, label, button) {
 }
 
 const HOME_TYPE_LABELS={
-  city:"City breaki",
+  city:"Wycieczki",
   sport:"Sport",
   event:"Wydarzenia",
   market:"Jarmarki i święta",
   newyear:"Sylwester"
 };
 
-const HOME_TRIPS=[];
+const HOME_TRIPS=[
+  {
+    tripId:"MEDIOLAN",
+    type:"city",
+    title:"Mediolan",
+    destination:"Włochy",
+    date:"Wyjazd do ustalenia",
+    icon:"🏙️",
+    direction:"abroad",
+    description:"Wspólne odkrywanie Mediolanu — centrum mody, sztuki, architektury i włoskiego stylu."
+  },
+  {
+    tripId:"OKTOBERFEST",
+    type:"event",
+    title:"Oktoberfest",
+    destination:"Monachium · Niemcy",
+    date:"Wrzesień 2026",
+    icon:"🍺",
+    direction:"abroad",
+    description:"Jedno z największych świąt piwa na świecie i wyjątkowa atmosfera Monachium."
+  },
+  {
+    tripId:"GKS_LECH_2026",
+    type:"sport",
+    title:"GKS Katowice – Lech Poznań",
+    destination:"Katowice · Polska",
+    date:"Mecz 2026",
+    icon:"⚽",
+    direction:"poland",
+    description:"Wyjazd na mecz dla osób, które chcą przeżyć piłkarskie emocje razem."
+  },
+  {
+    tripId:"WROCLAW_MARKET_2026",
+    type:"market",
+    title:"Jarmark Bożonarodzeniowy",
+    destination:"Wrocław · Polska",
+    date:"Listopad–grudzień 2026",
+    icon:"🎄",
+    direction:"poland",
+    description:"Świąteczny Wrocław, iluminacje, jarmark i zimowa atmosfera miasta."
+  },
+  {
+    tripId:"BARCA_CELTA_2026",
+    type:"sport",
+    title:"FC Barcelona – Celta Vigo",
+    destination:"Barcelona · Hiszpania",
+    date:"Mecz 2026",
+    icon:"⚽",
+    direction:"abroad",
+    description:"Piłkarski wyjazd do Barcelony połączony z możliwością poznania miasta."
+  }
+];
 
 function renderHomepageTrips(){
   const track=document.querySelector("[data-carousel-track]");
