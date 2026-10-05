@@ -529,7 +529,7 @@ function formatChatTime(timestamp) {
   });
 }
 
-async function loadChatMessages(silentRefresh = false) {
+async function loadChatMessagesInternal(silentRefresh = false) {
   const messagesBox = document.getElementById("chat-messages");
   const tokenAtStart = juntigoSessionToken;
   const matchIdAtStart = activeChatMatchId;
@@ -650,6 +650,29 @@ async function loadChatMessages(silentRefresh = false) {
   }
 }
 
+
+let chatMessagesInFlight = null;
+let chatMessagesInFlightKey = "";
+
+async function loadChatMessages(silentRefresh = false) {
+  const token = String(juntigoSessionToken || "").trim();
+  const matchId = String(activeChatMatchId || "").trim();
+  const requestKey = token + "\\x00" + matchId;
+
+  if (chatMessagesInFlight && chatMessagesInFlightKey === requestKey) {
+    return chatMessagesInFlight;
+  }
+
+  chatMessagesInFlightKey = requestKey;
+  chatMessagesInFlight = loadChatMessagesInternal(silentRefresh).finally(function() {
+    if (chatMessagesInFlightKey === requestKey) {
+      chatMessagesInFlight = null;
+      chatMessagesInFlightKey = "";
+    }
+  });
+
+  return chatMessagesInFlight;
+}
 
 async function markMatchAsRead(matchId) {
   if (!juntigoSessionToken || !matchId) return;
