@@ -1787,6 +1787,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 <div class="filter"><label for="typeFilter">Typ wyjazdu</label><select id="typeFilter">
 <option value="all">Wszystkie</option>
 <option value="city">✈️ Wycieczki</option>
+<option value="event">🎫 Wydarzenia</option>
 </select></div>
 <div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter">
 <option value="all">Wszystkie</option>
@@ -2228,7 +2229,7 @@ function showJoinSuccess(trip) {
 }
 </script>
 <script>
-const TYPE_LABELS={city:"✈️ Wycieczki"};
+const TYPE_LABELS={city:"✈️ Wycieczki",event:"🎫 Wydarzenia"};
 
 const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Warszawa","🏙️"],["KRAKOW","Kraków","🏙️"],["WROCLAW","Wrocław","🏙️"],["LODZ","Łódź","🏙️"],["POZNAN","Poznań","🏙️"],["GDANSK","Gdańsk","🏙️"],["KATOWICE","Katowice","🏙️"],["SZCZECIN","Szczecin","🏙️"],["TORUN","Toruń","🏙️"],["CZESTOCHOWA","Częstochowa","🏙️"],["BYDGOSZCZ","Bydgoszcz","🏙️"],["LUBLIN","Lublin","🏙️"],["BIALYSTOK","Białystok","🏙️"],["GDYNIA","Gdynia","🏙️"],["RZESZOW","Rzeszów","🏙️"]]},
 
@@ -2270,6 +2271,8 @@ const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Wa
 {name:"Włochy",code:"it",flag:"🇮🇹",items:[["RZYM","Rzym","🏙️"],["BARI","Bari","🏙️"],["PESCARA","Pescara","🏙️"],["REGGIO_DI_CALABRIA","Reggio di Calabria","🏙️"],["OLBIA_SARDYNIA","Olbia – Sardynia","🏝️"],["PERUGIA","Perugia","🏙️"],["LAMEZIA_TERME","Lamezia Terme","🏙️"],["ANKONA","Ankona","🏙️"],["GENUA","Genua","🏙️"],["ALGHERO_SARDYNIA","Alghero – Sardynia","🏝️"],["RIMINI","Rimini","🏙️"],["NEAPOL","Neapol","🏙️"],["CAGLIARI_SARDYNIA","Cagliari – Sardynia","🏝️"],["PIZA","Piza","🏙️"],["FLORENCJA","Florencja","🏙️"],["BOLONIA","Bolonia","🏙️"],["PALERMO_SYCYLIA","Palermo – Sycylia","🏝️"],["KATANIA_SYCYLIA","Katania – Sycylia","🏝️"],["TRAPANI_SYCYLIA","Trapani – Sycylia","🏝️"],["MEDIOLAN","Mediolan","🏙️"],["WENECJA","Wenecja","🏙️"],["BRINDISI","Brindisi","🏙️"],["TURYN","Turyn","🏙️"],["TRIEST","Triest","🏙️"]]}
 ];
 
+const EVENT_TRIPS=[];
+
 const CITY_TRIPS=COUNTRIES.flatMap(country=>country.items.map(item=>({
 tripId:"CITY_"+item[0],destination:item[1],icon:item[2],variant:item[3]||"",country:country.name,countryCode:country.code,type:"city",direction:country.code==="pl"?"poland":"abroad"
 })));
@@ -2288,7 +2291,8 @@ function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(
 
 function filteredTrips(){
 const type=typeFilter.value,direction=directionFilter.value;
-return CITY_TRIPS.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction));
+const source=type==="event"?EVENT_TRIPS:CITY_TRIPS;
+return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction));
 }
 
 function cityCard(t){
