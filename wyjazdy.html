@@ -98,7 +98,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 .city-card p{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:14px}
 .city-actions{margin-top:auto;display:flex;flex-direction:column;gap:8px}
 .city-actions .trip-team-action,.city-actions .trip-action{margin-top:0}
-@media(max-width:1000px){.city-grid{grid-template-columns:repeat(2,1fr)}}
+.sport-groups{display:flex;flex-direction:column;gap:24px}.sport-team-section{background:#fff;border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:0 8px 24px rgba(7,27,51,.05)}.sport-team-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}.sport-team-heading>div{display:flex;align-items:center;gap:14px}.sport-team-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:#f1f4f7;font-size:28px}.sport-team-heading h2{color:var(--navy);font-size:24px;line-height:1.2}.sport-team-heading p{color:var(--muted);font-size:13px;font-weight:700;margin-top:3px}.sport-match-count{color:var(--muted);font-size:13px;font-weight:800}.sport-team-section .trip-grid{grid-template-columns:repeat(3,1fr)}.trip-event-date{display:flex;align-items:center;gap:7px;margin:4px 0 10px;color:var(--navy);font-size:13px;font-weight:900}.event-calendar-icon{font-size:15px}@media(max-width:1000px){.sport-team-section .trip-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.sport-team-section{padding:16px}.sport-team-heading{align-items:flex-start}.sport-team-heading h2{font-size:20px}.sport-team-section .trip-grid{grid-template-columns:1fr}}@media(max-width:1000px){.city-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.citybreak-intro{padding:22px}.citybreak-intro h2{font-size:25px}.country-section summary{padding:17px 18px}.country-title{font-size:19px}.country-count{font-size:12px}.city-grid{grid-template-columns:1fr;padding:0 14px 14px}}
 
 @media(max-width:900px){.trip-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.nav-menu{gap:18px}}
@@ -1789,6 +1789,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 <option value="all">Wszystkie</option>
 <option value="city">✈️ Wycieczki</option>
 <option value="event">🎫 Wydarzenia</option>
+<option value="sport">⚽ Sport</option>
 </select></div>
 <div class="filter"><label for="directionFilter">Kierunek</label><select id="directionFilter">
 <option value="all">Wszystkie</option>
@@ -2230,7 +2231,7 @@ function showJoinSuccess(trip) {
 }
 </script>
 <script>
-const TYPE_LABELS={city:"✈️ Wycieczki",event:"🎫 Wydarzenia"};
+const TYPE_LABELS={city:"✈️ Wycieczki",event:"🎫 Wydarzenia",sport:"⚽ Sport"};
 
 const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Warszawa","🏙️"],["KRAKOW","Kraków","🏙️"],["WROCLAW","Wrocław","🏙️"],["LODZ","Łódź","🏙️"],["POZNAN","Poznań","🏙️"],["GDANSK","Gdańsk","🏙️"],["KATOWICE","Katowice","🏙️"],["SZCZECIN","Szczecin","🏙️"],["TORUN","Toruń","🏙️"],["CZESTOCHOWA","Częstochowa","🏙️"],["BYDGOSZCZ","Bydgoszcz","🏙️"],["LUBLIN","Lublin","🏙️"],["BIALYSTOK","Białystok","🏙️"],["GDYNIA","Gdynia","🏙️"],["RZESZOW","Rzeszów","🏙️"]]},
 
@@ -2296,6 +2297,56 @@ const EVENTS=[
 ["EVENT_AMSTERDAM_LIGHT_2026","Amsterdam Light Festival","Amsterdam","Holandia","nl","✨","2026-11-26","26 listopada – 31 grudnia 2026","Zimowy festiwal sztuki światła, podczas którego kanały i przestrzenie Amsterdamu wypełniają instalacje artystyczne."]
 ].map(x=>({tripId:x[0],destination:x[1],city:x[2],country:x[3],countryCode:x[4],icon:x[5],type:"event",direction:x[4]==="pl"?"poland":"abroad",dateStart:x[6],dateLabel:x[7],description:x[8]}));
 
+const SPORT_TEAMS=[
+{teamId:"REAL_MADRID",team:"Real Madryt",city:"Madryt",country:"Hiszpania",countryCode:"es",icon:"⚽",matches:[
+["REAL_MADRID_ROMA_2026-10-14","Real Madryt – AS Roma","2026-10-14","14 października 2026","Champions League","Rzym / Madryt"],
+["REAL_MADRID_LEIPZIG_2026-10-21","Real Madryt – RB Leipzig","2026-10-21","21 października 2026","Champions League","Madryt"],
+["REAL_MADRID_PSV_2026-11-24","Real Madryt – PSV Eindhoven","2026-11-24","24 listopada 2026","Champions League","Madryt"],
+["REAL_MADRID_ARSENAL_2026-12-09","Arsenal – Real Madryt","2026-12-09","9 grudnia 2026","Champions League","Londyn"]
+]},
+{teamId:"FC_BARCELONA",team:"FC Barcelona",city:"Barcelona",country:"Hiszpania",countryCode:"es",icon:"⚽",matches:[
+["BARCA_REAL_2026-10-25","FC Barcelona – Real Madryt","2026-10-25","25 października 2026","La Liga","Barcelona"],
+["BARCA_ATLETICO_2026-11-08","Atlético Madryt – FC Barcelona","2026-11-08","8 listopada 2026","La Liga","Madryt"],
+["BARCA_MAN_CITY_2026-12-08","FC Barcelona – Manchester City","2026-12-08","8 grudnia 2026","Champions League","Barcelona"]
+]},
+{teamId:"LIVERPOOL",team:"Liverpool FC",city:"Liverpool",country:"Anglia",countryCode:"gb-eng",icon:"⚽",matches:[
+["LIVERPOOL_MAN_CITY_2026-10-11","Liverpool – Manchester City","2026-10-11","11 października 2026","Premier League","Liverpool"],
+["LIVERPOOL_ARSENAL_2026-11-01","Liverpool – Arsenal","2026-11-01","1 listopada 2026","Premier League","Liverpool"],
+["LIVERPOOL_MAN_UTD_2026-11-22","Liverpool – Manchester United","2026-11-22","22 listopada 2026","Premier League","Liverpool"],
+["LIVERPOOL_PORTO_2026-12-09","Liverpool – FC Porto","2026-12-09","9 grudnia 2026","Champions League","Liverpool"]
+]},
+{teamId:"MAN_UTD",team:"Manchester United",city:"Manchester",country:"Anglia",countryCode:"gb-eng",icon:"⚽",matches:[
+["MAN_UTD_CHELSEA_2026-10-31","Chelsea – Manchester United","2026-10-31","31 października 2026","Premier League","Londyn"],
+["MAN_UTD_LIVERPOOL_2026-11-22","Liverpool – Manchester United","2026-11-22","22 listopada 2026","Premier League","Liverpool"],
+["MAN_UTD_ARSENAL_2026-12-19","Manchester United – Arsenal","2026-12-19","19 grudnia 2026","Premier League","Manchester"],
+["MAN_UTD_FOREST_2026-12-27","Manchester United – Nottingham Forest","2026-12-27","27 grudnia 2026","Premier League","Manchester"]
+]},
+{teamId:"ARSENAL",team:"Arsenal FC",city:"Londyn",country:"Anglia",countryCode:"gb-eng",icon:"⚽",matches:[
+["ARSENAL_LILLE_2026-10-13","Arsenal – Lille","2026-10-13","13 października 2026","Champions League","Londyn"],
+["ARSENAL_DORTMUND_2026-11-24","Arsenal – Borussia Dortmund","2026-11-24","24 listopada 2026","Champions League","Londyn"],
+["ARSENAL_MAN_CITY_2026-11-29","Arsenal – Manchester City","2026-11-29","29 listopada 2026","Premier League","Londyn"],
+["ARSENAL_REAL_2026-12-09","Arsenal – Real Madryt","2026-12-09","9 grudnia 2026","Champions League","Londyn"]
+]},
+{teamId:"LEGIA_WARSZAWA",team:"Legia Warszawa",city:"Warszawa",country:"Polska",countryCode:"pl",icon:"⚽",matches:[
+["LEGIA_WISLA_2026-10-11","Legia Warszawa – Wisła Kraków","2026-10-11","11 października 2026","Ekstraklasa","Warszawa"],
+["LEGIA_LECH_2026-10-25","Legia Warszawa – Lech Poznań","2026-10-25","25 października 2026","Ekstraklasa","Warszawa"],
+["LEGIA_RAKOW_2026-11-07","Legia Warszawa – Raków Częstochowa","2026-11-07","7 listopada 2026","Ekstraklasa","Warszawa"],
+["LEGIA_POGON_2026-12-12","Legia Warszawa – Pogoń Szczecin","2026-12-12","12 grudnia 2026","Ekstraklasa","Warszawa"]
+]},
+{teamId:"LECH_POZNAN",team:"Lech Poznań",city:"Poznań",country:"Polska",countryCode:"pl",icon:"⚽",matches:[
+["LECH_BAYER_2026-10-15","Lech Poznań – Bayer Leverkusen","2026-10-15","15 października 2026","Europa / europejskie rozgrywki","Poznań"],
+["LECH_SUNDERLAND_2026-10-22","Lech Poznań – Sunderland","2026-10-22","22 października 2026","Europa / europejskie rozgrywki","Poznań"],
+["LECH_BENFICA_2026-11-05","Benfica – Lech Poznań","2026-11-05","5 listopada 2026","Europa / europejskie rozgrywki","Lizbona"],
+["LECH_POGON_2026-11-28","Lech Poznań – Pogoń Szczecin","2026-11-28","28 listopada 2026","Ekstraklasa","Poznań"]
+]}
+];
+
+const SPORTS=SPORT_TEAMS.flatMap(team=>team.matches.map(match=>({
+tripId:match[0],destination:match[1],city:match[5],country:team.country,countryCode:team.countryCode,
+icon:team.icon,type:"sport",direction:team.countryCode==="pl"?"poland":"abroad",dateStart:match[2],dateLabel:match[3],
+competition:match[4],teamId:team.teamId,teamName:team.team
+})));
+
 const CITY_DIRECTION_DESCRIPTIONS={"WARSZAWA":"Stolica pełna historii, muzeów, nowoczesnej architektury i życia nad Wisłą.","KRAKOW":"Królewskie miasto z Wawelem, zabytkowym Starym Miastem, Kazimierzem i wyjątkową atmosferą.","WROCLAW":"Kolorowe miasto mostów i krasnali, pełne zabytków, restauracji i życia nad Odrą.","LODZ":"Industrialne dziedzictwo, ulica Piotrkowska, sztuka i nowoczesne miejskie przestrzenie.","POZNAN":"Historyczny rynek, koziołki, lokalna kuchnia i dynamiczne centrum Wielkopolski.","GDANSK":"Nadmorskie miasto z pięknym Starym Miastem, Motławą, portową historią i dostępem do Bałtyku.","KATOWICE":"Nowoczesne centrum Śląska łączące industrialne dziedzictwo, kulturę i miejskie życie.","SZCZECIN":"Portowe miasto z Wałami Chrobrego, dużą ilością zieleni i bliskością Bałtyku.","TORUN":"Gotyckie Stare Miasto, pierniki i ślady Mikołaja Kopernika nad Wisłą.","CZESTOCHOWA":"Miasto pielgrzymkowe z Jasną Górą, klasztorem i słynnym obrazem Czarnej Madonny.","BYDGOSZCZ":"Miasto nad Brdą i Kanałem Bydgoskim z Wyspą Młyńską, spichlerzami i ciekawą architekturą.","LUBLIN":"Historyczna brama na Wschód z klimatycznym Starym Miastem, zamkiem i bogatą kulturą.","BIALYSTOK":"Zielona stolica Podlasia z Pałacem Branickich i bliskością przyrody oraz Puszczy Białowieskiej.","GDYNIA":"Nowoczesne nadmorskie miasto z portem, plażami, klifami i morskim klimatem.","RZESZOW":"Dynamiczna stolica Podkarpacia z rynkiem, zamkiem, bulwarami i dostępem do regionu Bieszczad.","TIRANA":"Tętniąca życiem stolica Albanii łącząca kolorowe centrum, historię, kuchnię i górskie widoki.","WIEDEN":"Cesarska stolica pełna pałaców, muzeów, kawiarni i monumentalnej architektury.","BRUKSELA":"Europejska stolica z Grand Place, secesyjną architekturą, czekoladą i belgijskim klimatem.","SOFIA":"Bułgarska stolica z zabytkami wielu epok, górą Witosza i charakterystyczną bałkańską atmosferą.","BURGAS":"Nadmorski kurort nad Morzem Czarnym z plażami, parkiem nadmorskim i spokojnym centrum.","WARNA":"Duże bułgarskie miasto nad Morzem Czarnym z plażami, promenadą i zabytkami.","ZAGRZEB":"Kameralna stolica Chorwacji z historycznym Górnym Miastem, targiem Dolac i kawiarniami.","DUBROWNIK":"Kamienne Stare Miasto otoczone murami, Adriatyk i spektakularne widoki na wybrzeże.","ZADAR":"Nadmorskie miasto słynące z Morskich Organów, Pozdrowienia Słońca i zachodów nad Adriatykiem.","SPLIT":"Starożytny Pałac Dioklecjana w sercu miasta, promenada Riva i dalmatyńska atmosfera.","RIJEKA":"Portowe miasto nad Kvarnerem z nadmorską promenadą, wzgórzem Trsat i miejskim klimatem.","PODGORICA":"Spokojna stolica Czarnogóry będąca dobrym punktem wypadowym nad Adriatyk i w góry.","PRAGA":"Jedna z najbardziej klimatycznych europejskich stolic z Mostem Karola, zamkiem i Starym Miastem.","LARNAKA":"Nadmorskie miasto z promenadą Finikoudes, plażami, zabytkami i spokojnym śródziemnomorskim rytmem.","PAFOS":"Nadmorski kierunek z antycznymi zabytkami, portem i plażami na południowo-zachodnim Cyprze.","KOPENHAGA":"Skandynawska stolica z Nyhavn, królewskimi pałacami, rowerowym klimatem i nowoczesnym designem.","TALLINN":"Średniowieczne Stare Miasto, baśniowe uliczki i nowoczesna estońska atmosfera nad Bałtykiem.","TURKU":"Najstarsze miasto Finlandii z zamkiem, katedrą i położeniem nad archipelagiem.","HELSINKI":"Nadmorska stolica z fińskim designem, wyspami, architekturą i spokojnym skandynawskim stylem.","PARYZ":"Światowa stolica sztuki, mody i gastronomii z Wieżą Eiffla, Luwrem i klimatycznymi dzielnicami.","NICEA":"Lazurowe Wybrzeże, Promenade des Anglais, plaże i stare miasto z południowofrancuskim klimatem.","MARSYLIA":"Portowe miasto nad Morzem Śródziemnym z Vieux-Port, bazyliką Notre-Dame i śródziemnomorską kuchnią.","ATENY":"Kolebka europejskiej cywilizacji z Akropolem, starożytnymi zabytkami i tętniącymi dzielnicami.","KRETA":"Wyspa łącząca plaże, góry, antyczne zabytki, lokalną kuchnię i charakterystyczne kreteńskie miasteczka.","SALONIKI":"Drugie największe miasto Grecji z nadmorską promenadą, zabytkami i życiem nocnym.","KORFU":"Zielona wyspa z wenecką starówką, malowniczym wybrzeżem i śródziemnomorską atmosferą.","RODOS":"Wyspa z imponującym średniowiecznym Starym Miastem, plażami i śladami wielu kultur.","ZAKINTOS":"Wyspa słynąca z turkusowych zatok, wapiennych klifów i charakterystycznej plaży Navagio.","KOS":"Niewielka grecka wyspa z plażami, zabytkami, rowerowymi trasami i spokojnym kurortowym klimatem.","KUTAISI":"Gruzińskie miasto z katedrą Bagrati, jaskiniami i łatwym dostępem do atrakcji zachodniej Gruzji.","TBILISI":"Kolorowa stolica Gruzji z zabytkową starówką, łaźniami, wzgórzami i wyjątkową kuchnią.","EINDHOVEN":"Nowoczesne miasto designu i technologii z industrialnym dziedzictwem Philipsa.","AMSTERDAM":"Kanały, rowery, muzea i charakterystyczne kamienice tworzą jeden z najbardziej rozpoznawalnych kierunków Europy.","MADRYT":"Hiszpańska stolica z muzeami, parkami, pałacem królewskim, tapas i intensywnym życiem miejskim.","BARCELONA":"Architektura Gaudiego, plaża, gotyckie uliczki i śródziemnomorski charakter tworzą wyjątkowy miejski miks.","SEVILLA":"Andaluzyjska stolica pełna flamenco, tapas, pałaców, dziedzińców i zabytków.","MALAGA":"Nadmorskie miasto Andaluzji z plażami, muzeami, Alcazabą i atmosferą Costa del Sol.","ALICANTE":"Słoneczne miasto Costa Blanca z zamkiem Santa Bárbara, plażą Postiguet i nadmorską promenadą.","PALMA_DE_MALLORCA":"Stolica Majorki z gotycką katedrą, starówką, portem i dostępem do wyspiarskich plaż.","GIRONA":"Historyczne miasto z kolorowymi kamienicami nad rzeką, murami obronnymi i klimatyczną starówką.","WALENCJA":"Połączenie historycznego centrum, plaż, paelli i futurystycznego kompleksu Ciudad de las Artes.","BILBAO":"Baskijskie miasto sztuki i gastronomii z Muzeum Guggenheima i charakterystyczną zabudową nad rzeką.","MINORKA":"Spokojniejsza balearska wyspa z zatoczkami, turkusową wodą i kameralnymi miasteczkami.","TENERYFA":"Wyspa kontrastów z wulkanem Teide, oceanem, plażami i różnorodnymi krajobrazami.","LAS_PALMAS_DE_GRAN_CANARIA":"Kanaryjska stolica z plażą Las Canteras, historyczną dzielnicą Vegueta i oceanicznym klimatem.","FUERTEVENTURA":"Wyspa szerokich plaż, wydm i silnych wiatrów, szczególnie popularna wśród miłośników sportów wodnych.","LANZAROTE":"Wulkaniczna wyspa z księżycowymi krajobrazami, czarnymi plażami i architekturą inspirowaną naturą.","SHANNON":"Dobry punkt startowy do odkrywania zachodniej Irlandii, klifów, zamków i zielonych krajobrazów.","DUBLIN":"Irlandzka stolica z Temple Bar, Trinity College, literacką historią i charakterystyczną pubową atmosferą.","LONDYN":"Wielka europejska metropolia pełna zabytków, muzeów, dzielnic, parków i wydarzeń.","LIVERPOOL":"Miasto Beatlesów, piłki nożnej, portowego dziedzictwa i tętniącej muzyką atmosfery.","NEWCASTLE_UPON_TYNE":"Północnoangielskie miasto z charakterystycznymi mostami, nabrzeżem i energicznym życiem nocnym.","BIRMINGHAM":"Duże centrum Anglii z kanałami, kulturą, zakupami i ciekawą sceną gastronomiczną.","MANCHESTER":"Miasto futbolu, muzyki i przemysłowej historii z charakterystyczną miejską energią.","BRISTOL":"Kreatywne miasto z portem, street artem, mostem Clifton Suspension Bridge i niezależną kulturą.","LEEDS":"Dynamiczne miasto północnej Anglii z zabytkowymi pasażami, kulturą i rozbudowaną sceną gastronomiczną.","NOTTINGHAM":"Miasto kojarzone z legendą Robin Hooda, zamkiem, jaskiniami i tętniącym centrum.","BOURNEMOUTH":"Nadmorski kierunek z długą piaszczystą plażą, klifami i typowo brytyjskim kurortowym klimatem.","EDYNBURG":"Szkocka stolica z zamkiem, średniowieczną starówką, wzgórzami i niezwykłą atmosferą.","GLASGOW":"Największe miasto Szkocji słynące z muzyki, sztuki, architektury i pubowej atmosfery.","ABERDEEN":"Granite City nad Morzem Północnym z plażą, portem i charakterystyczną szkocką architekturą.","BELFAST":"Stolica Irlandii Północnej z Titanic Belfast, portem, murami historii i ciekawą sceną gastronomiczną.","REYKJAVIK":"Niewielka, kolorowa stolica Islandii będąca bazą do odkrywania gejzerów, wodospadów i wulkanów.","WILNO":"Klimatyczna stolica Litwy z barokową starówką, Ostrą Bramą i bogatym dziedzictwem historycznym.","RYGA":"Łotewska stolica z piękną secesją, zabytkową starówką i położeniem nad Dźwiną.","VALLETTA":"Warowna stolica Malty z kamienną zabudową, historią joannitów i widokami na Morze Śródziemne.","RABAT":"Marokańska stolica z kasbą, oceanem, zabytkami i spokojniejszą atmosferą niż większe miasta kraju.","MARRAKESZ":"Pełne kolorów miasto medyny, suków, pałaców i placu Dżamaa al-Fina.","AGADIR":"Nadmorski kurort z szeroką plażą, promenadą, oceanem i łatwym dostępem do południowego Maroka.","KISZYNIÓW":"Kameralna stolica Mołdawii z parkami, lokalną kuchnią i możliwością poznania mało oczywistego kierunku Europy.","DUSSELDORF":"Nadrenia w miejskim wydaniu – elegancka promenada nad Renem, sztuka, zakupy i Stare Miasto.","HAMBURG":"Portowa metropolia z HafenCity, Speicherstadt, Łabą i jedną z najciekawszych scen muzycznych Niemiec.","MEMMINGEN":"Kameralne bawarskie miasto będące dobrym punktem wypadowym do południowych Niemiec i Alp.","DORTMUND":"Miasto Zagłębia Ruhry łączące futbol, industrialne dziedzictwo i nowoczesne przestrzenie miejskie.","STUTTGART":"Stolica Badenii-Wirtembergii z muzeami motoryzacji, winnicami i wzgórzami otaczającymi centrum.","MONACHIUM":"Bawarska stolica z Marienplatz, pałacami, muzeami, ogrodami piwnymi i bliskością Alp.","BERLIN":"Pełna kontrastów stolica Niemiec z historią, muzeami, sztuką współczesną i wyjątkowym nocnym życiem.","OSLO":"Nowoczesna stolica nad fiordem łącząca miejską architekturę, muzea i łatwy dostęp do natury.","LIZBONA":"Pagórkowata stolica Portugalii z tramwajami, azulejos, punktami widokowymi i oceanicznym klimatem.","PORTO":"Miasto nad Douro słynące z kolorowej starówki, mostów, wina porto i nadrzecznej atmosfery.","FARO":"Brama do Algarve z historycznym centrum, lagunami Ria Formosa i dostępem do południowego wybrzeża.","BUKARESZT":"Duża rumuńska stolica z mieszanką architektury historycznej, monumentalnych budynków i nowoczesnego życia.","BRATYSLAWA":"Kameralna stolica nad Dunajem z zamkiem, starówką i dogodnym położeniem między Wiedniem a Budapesztem.","BAZYLEA":"Szwajcarskie miasto sztuki i muzeów położone nad Renem, blisko granic Francji i Niemiec.","SZTOKHOLM":"Skandynawska stolica rozłożona na wyspach, z Gamla Stan, muzeami i pięknym nadmorskim położeniem.","ANTALYA":"Popularny kierunek tureckiego wybrzeża z plażami, starówką Kaleici i górami Taurus w tle.","IZMIR":"Duże miasto nad Zatoką Izmirską z promenadą, bazarami i dostępem do egejskiego wybrzeża.","BUDAPESZT":"Monumentalna stolica nad Dunajem z parlamentem, termami, mostami i ruin barami.","RZYM":"Wieczne Miasto łączące Koloseum, Watykan, antyczne ruiny, place i włoską kuchnię.","BARI":"Nadmorskie miasto Apulii z labiryntem starego miasta, bazyliką św. Mikołaja i portową atmosferą.","PESCARA":"Nadmorski kierunek Adriatyku z plażami, promenadą i swobodnym włoskim klimatem.","REGGIO_DI_CALABRIA":"Południowowłoskie miasto nad Cieśniną Mesyńską z promenadą i widokiem na Sycylię.","OLBIA_SARDYNIA":"Brama do północnej Sardynii, blisko zatok, plaż Costa Smeralda i wyspiarskich krajobrazów.","PERUGIA":"Urokliwe umbryjskie miasto na wzgórzu z historycznym centrum, zaułkami i lokalną kuchnią.","LAMEZIA_TERME":"Południowowłoski kierunek będący dobrym punktem wypadowym na wybrzeża Kalabrii.","ANKONA":"Portowe miasto Adriatyku z historycznym centrum, wzgórzami i dostępem do plaż Marche.","GENUA":"Historyczny port Ligurii z ogromnym akwarium, zaułkami starego miasta i bliskością włoskiej riwiery.","ALGHERO_SARDYNIA":"Sardyńskie miasto z katalońskimi wpływami, murami nad morzem i pięknymi plażami w okolicy.","RIMINI":"Popularny nadmorski kurort Adriatyku z szerokimi plażami, promenadą i historycznym centrum.","NEAPOL":"Chaotyczna i pełna charakteru stolica Kampanii, słynąca z pizzy, Wezuwiusza i zabytkowych uliczek.","CAGLIARI_SARDYNIA":"Stolica Sardynii z historyczną dzielnicą Castello, plażą Poetto i śródziemnomorskim klimatem.","PIZA":"Miasto słynnej Krzywej Wieży, Piazza dei Miracoli i dogodnego położenia w Toskanii.","FLORENCJA":"Kolebka renesansu z Duomo, Galerią Uffizi, Ponte Vecchio i niezwykłym dziedzictwem artystycznym.","BOLONIA":"Czerwone miasto pod arkadami, słynące z najstarszego uniwersytetu i jednej z najlepszych kuchni Włoch.","PALERMO_SYCYLIA":"Sycylii nie da się poznać bez Palermo – targi, pałace, street food i wielokulturowa historia.","KATANIA_SYCYLIA":"Tętniące miasto u stóp Etny z barokowym centrum, targami i charakterystyczną sycylijską kuchnią.","TRAPANI_SYCYLIA":"Zachodnia Sycylia z historycznym centrum, słonymi lagunami i bliskością Erice oraz wysp Egadzkich.","MEDIOLAN":"Włoska stolica mody i designu z Duomo, galerią Vittorio Emanuele II i nowoczesnym centrum.","WENECJA":"Unikatowe miasto kanałów, gondoli, placu św. Marka i niezwykłej architektury.","BRINDISI":"Portowe miasto Apulii z nadmorską promenadą, rzymską historią i dogodnym dostępem do Salento.","TURYN":"Eleganckie miasto Piemontu z pałacami, muzeum egipskim, kawą i tradycją motoryzacyjną.","TRIEST":"Miasto nad Adriatykiem z habsburską architekturą, kawiarniami i wyjątkowym połączeniem kultur."};
 
 const CITY_TRIPS=COUNTRIES.flatMap(country=>country.items.map(item=>({
@@ -2316,7 +2367,7 @@ function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(
 
 function filteredTrips(){
 const type=typeFilter.value,direction=directionFilter.value,month=monthFilter.value;
-const source=type==="event"?EVENTS:(type==="city"?CITY_TRIPS:(month!=="all"?EVENTS:[...CITY_TRIPS,...EVENTS]));
+const source=type==="event"?EVENTS:(type==="sport"?SPORTS:(type==="city"?CITY_TRIPS:(month!=="all"?[...EVENTS,...SPORTS]:[...CITY_TRIPS,...EVENTS,...SPORTS])));
 return source.filter(t=>(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||t.type!=="event"||t.dateStart.slice(0,7)===month));
 }
 
@@ -2339,6 +2390,26 @@ details.appendChild(summary);
 const grid=document.createElement("div");grid.className="city-grid";group.trips.forEach(t=>grid.appendChild(cityCard(t)));
 details.appendChild(grid);cityBreakView.appendChild(details);
 });
+}
+
+function renderSportGroups(trips){
+allView.replaceChildren();
+if(!trips.length){allView.innerHTML='<div class="empty"><strong>Brak meczów.</strong>Spróbuj zmienić filtry.</div>';return;}
+const groups=new Map();
+trips.forEach(t=>{if(!groups.has(t.teamId))groups.set(t.teamId,{team:t.teamName,city:t.city,country:t.country,code:t.countryCode,matches:[]});groups.get(t.teamId).matches.push(t);});
+const wrap=document.createElement("div");wrap.className="sport-groups";
+[...groups.values()].forEach(group=>{
+const section=document.createElement("section");section.className="sport-team-section";
+section.innerHTML='<div class="sport-team-heading"><div><span class="sport-team-icon">⚽</span><div><h2>'+escapeHtml(group.team)+'</h2><p>'+escapeHtml(group.city)+', '+escapeHtml(group.country)+'</p></div></div><span class="sport-match-count">'+group.matches.length+' '+(group.matches.length===1?"mecz":"mecze")+'</span></div>';
+const grid=document.createElement("div");grid.className="trip-grid";
+group.matches.forEach(t=>{
+const c=document.createElement("article");c.className="trip-card sport";
+c.innerHTML='<div class="trip-visual" aria-hidden="true">⚽</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">⚽ Sport</span><span class="badge">'+escapeHtml(t.competition)+'</span></div><h3>'+escapeHtml(t.destination)+'</h3><div class="country-line">'+flagImg(t.countryCode,t.country)+'<span>'+escapeHtml(t.city)+'</span></div><div class="trip-event-date"><span class="event-calendar-icon" aria-hidden="true">📅</span><span>'+escapeHtml(t.dateLabel)+'</span></div><p class="trip-description">Wyjazd na mecz dla kibiców, którzy chcą połączyć sportowe emocje ze wspólnym wyjazdem.</p><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
+grid.appendChild(c);
+});
+section.appendChild(grid);wrap.appendChild(section);
+});
+allView.appendChild(wrap);
 }
 
 function renderAllTrips(trips){
@@ -2364,9 +2435,10 @@ chip.querySelector("button").onclick=()=>{select.value="all";render()};activeFil
 });
 const clear=document.createElement("button");clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";clear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render()};activeFilters.appendChild(clear);
 const cityMode=typeFilter.value==="city";
+const sportMode=typeFilter.value==="sport";
 cityBreakView.classList.toggle("hidden",!cityMode);
 allView.classList.toggle("hidden",cityMode);
-if(cityMode)renderCountryGroups(trips);else renderAllTrips(trips);
+if(cityMode)renderCountryGroups(trips);else if(sportMode)renderSportGroups(trips);else renderAllTrips(trips);
 }
 
 [monthFilter,typeFilter,directionFilter].forEach(el=>el.addEventListener("change",render));
@@ -2374,7 +2446,7 @@ document.querySelectorAll(".view-switch button").forEach(btn=>btn.addEventListen
 document.querySelectorAll(".view-switch button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
 const all=btn.dataset.view==="all";
 cityBreakView.classList.toggle("hidden",all);allView.classList.toggle("hidden",!all);
-if(all)renderAllTrips(filteredTrips());else renderCountryGroups(filteredTrips());
+if(all)renderAllTrips(filteredTrips());else if(typeFilter.value==="sport")renderSportGroups(filteredTrips());else renderCountryGroups(filteredTrips());
 }));
 
 document.addEventListener("click",event=>{const teamButton=event.target.closest(".trip-team-action");if(teamButton)loadTripTeam(teamButton);});
