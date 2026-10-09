@@ -59,7 +59,7 @@ main{padding:32px 0 90px}
 .trip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .trip-card{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:300px;box-shadow:0 8px 24px rgba(7,27,51,.05);transition:transform .2s ease,box-shadow .2s ease}
 .trip-card:hover{transform:translateY(-4px);box-shadow:0 15px 34px rgba(7,27,51,.1)}
-.trip-visual{height:145px;background:linear-gradient(135deg,#0d2948,#173e67);display:flex;align-items:center;justify-content:center;color:#fff;font-size:48px}
+.trip-visual{height:145px;background:linear-gradient(135deg,#0d2948,#173e67);display:flex;align-items:center;justify-content:center;color:#fff;font-size:48px}.trip-visual-image{overflow:hidden;padding:0}.trip-visual-image img{width:100%;height:100%;display:block;object-fit:cover}
 .trip-card.poland .trip-visual{background:linear-gradient(135deg,#f1f3f6,#dfe5ec);color:var(--navy)}
 .trip-card.sport .trip-visual{background:linear-gradient(135deg,#071b33,#155b55)}
 .trip-content{padding:20px;display:flex;flex-direction:column;flex:1}
@@ -2420,7 +2420,10 @@ if(!trips.length){allView.innerHTML='<div class="empty"><strong>Brak wyjazdów.<
 const grid=document.createElement("div");grid.className="trip-grid";
 trips.forEach(t=>{
 const c=document.createElement("article");c.className="trip-card";
-c.innerHTML='<div class="trip-visual" aria-hidden="true">'+t.icon+'</div><div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+escapeHtml(t.city||t.country)+'</span></div><h3>'+escapeHtml(t.destination)+'</h3><div class="country-line">'+flagImg(t.countryCode,t.country)+'<span>'+escapeHtml(t.country)+'</span></div>'+(t.type==="event"&&t.dateLabel?'<div class="trip-event-date"><span class="event-calendar-icon" aria-hidden="true">📅</span><span>'+escapeHtml(t.dateLabel)+'</span></div>':'')+'<p class="trip-description">'+escapeHtml(t.description||"Poznaj najważniejsze miejsca i charakter tego kierunku.")+'</p><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
+const visual=t.type==="city"&&t.image
+  ? '<div class="trip-visual trip-visual-image"><img src="'+escapeHtml(t.image)+'" alt="'+escapeHtml(t.destination)+'" loading="lazy"></div>'
+  : '<div class="trip-visual" aria-hidden="true">'+t.icon+'</div>';
+c.innerHTML=visual+'<div class="trip-content"><div class="trip-meta"><span class="badge orange">'+TYPE_LABELS[t.type]+'</span><span class="badge">'+escapeHtml(t.city||t.country)+'</span></div><h3>'+escapeHtml(t.destination)+'</h3><div class="country-line">'+flagImg(t.countryCode,t.country)+'<span>'+escapeHtml(t.country)+'</span></div>'+(t.type==="event"&&t.dateLabel?'<div class="trip-event-date"><span class="event-calendar-icon" aria-hidden="true">📅</span><span>'+escapeHtml(t.dateLabel)+'</span></div>':'')+'<p class="trip-description">'+escapeHtml(t.description||"Poznaj najważniejsze miejsca i charakter tego kierunku.")+'</p><div class="trip-actions"><button type="button" class="trip-team-action" data-trip="'+escapeHtml(t.tripId)+'">Zobacz ekipę</button><button type="button" class="trip-action" data-join-trip="'+escapeHtml(t.tripId)+'">Jestem zainteresowany</button></div></div>';
 grid.appendChild(c);
 });
 allView.appendChild(grid);
