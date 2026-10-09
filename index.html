@@ -503,7 +503,7 @@
     .trip-featured-visual{height:250px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,#0d2948 0%,#173e67 100%)}
     .trip-featured-visual--poland{background:linear-gradient(135deg,#f1f3f6 0%,#dfe5ec 100%)}
     .trip-featured-visual--sport{background:linear-gradient(135deg,#071b33 0%,#155b55 100%)}
-    .trip-featured-visual span{filter:drop-shadow(0 8px 12px rgba(7,27,51,.18))}
+    .trip-featured-visual span{filter:drop-shadow(0 8px 12px rgba(7,27,51,.18))}.trip-featured-visual img{width:100%;height:100%;display:block;object-fit:cover}
     .trip-carousel-arrow{position:absolute;top:50%;z-index:5;width:54px;height:54px;border:0;border-radius:50%;background:white;color:var(--navy);box-shadow:0 8px 24px rgba(7,27,51,.20);display:flex;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);font-size:26px;font-weight:700;transition:transform .2s ease,opacity .2s ease,box-shadow .2s ease}
     .trip-carousel-arrow:hover:not(:disabled){transform:translateY(-50%) scale(1.05);box-shadow:0 12px 28px rgba(7,27,51,.26)}
     .trip-carousel-arrow:disabled{opacity:.35;cursor:default}
@@ -2744,6 +2744,7 @@ const HOME_TRIPS=[
     destination:"Włochy",
     date:"Termin do ustalenia",
     icon:"🏙️",
+    image:"https://images.pexels.com/photos/15939547/pexels-photo-15939547.jpeg",
     direction:"abroad",
     description:"Włoska stolica mody i designu — Duomo, Galeria Vittorio Emanuele II, Navigli i atmosfera północnych Włoch."
   },
@@ -2754,6 +2755,7 @@ const HOME_TRIPS=[
     destination:"Hiszpania",
     date:"Termin do ustalenia",
     icon:"🏙️",
+    image:"https://images.pexels.com/photos/27348502/pexels-photo-27348502.jpeg",
     direction:"abroad",
     description:"Gaudí, plaża, La Rambla i wyjątkowa atmosfera miasta, które łączy zwiedzanie z wypoczynkiem."
   },
@@ -2764,6 +2766,7 @@ const HOME_TRIPS=[
     destination:"Francja",
     date:"Termin do ustalenia",
     icon:"🏙️",
+    image:"https://images.pexels.com/photos/34773160/pexels-photo-34773160.jpeg",
     direction:"abroad",
     description:"Klasyczne zabytki, sztuka, kuchnia i spacery nad Sekwaną w jednym z najbardziej charakterystycznych miast Europy."
   },
@@ -2774,6 +2777,7 @@ const HOME_TRIPS=[
     destination:"Czechy",
     date:"Termin do ustalenia",
     icon:"🏙️",
+    image:"https://images.pexels.com/photos/4615060/pexels-photo-4615060.jpeg",
     direction:"abroad",
     description:"Stare Miasto, Most Karola, Hradczany i wyjątkowa atmosfera czeskiej stolicy idealnej na krótki wyjazd."
   },
@@ -2915,7 +2919,7 @@ function renderHomepageTrips(){
 
     slide.innerHTML=`
       <article class="trip featured-trip">
-        <div class="${visualClass}" aria-hidden="true"><span>${t.icon}</span></div>
+        <div class="${visualClass}" aria-hidden="true">${t.image?`<img src="${escapeHtml(t.image)}" alt="${escapeHtml(t.title)}" loading="lazy">`:`<span>${t.icon}</span>`}</div>
         <div class="trip-content">
           <div class="trip-tag">${escapeHtml(HOME_TYPE_LABELS[t.type]||"Wyjazd")}</div>
           <h3>${escapeHtml(t.title)}</h3>
