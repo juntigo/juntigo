@@ -2339,8 +2339,7 @@ const SPORT_TEAMS=[
 ["LECH_BENFICA_2026-11-05","Benfica – Lech Poznań","2026-11-05","5 listopada 2026","Europa / europejskie rozgrywki","Lizbona"],
 ["LECH_POGON_2026-11-28","Lech Poznań – Pogoń Szczecin","2026-11-28","28 listopada 2026","Ekstraklasa","Poznań"]
 ]}
-];
-
+,
 {teamId:"JUVENTUS",team:"Juventus",city:"Turyn",country:"Włochy",countryCode:"it",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/3/3e/Juventus_FC_2017_logo.svg",matches:[
 ["JUVENTUS_NAPOLI_2026-11-01","Juventus – Napoli","2026-11-01","1 listopada 2026","Serie A","Turyn"],
 ["FIORENTINA_JUVENTUS_2026-11-08","Fiorentina – Juventus","2026-11-08","8 listopada 2026","Serie A","Florencja"],
@@ -2369,7 +2368,9 @@ const SPORT_TEAMS=[
 ["PARMA_ROMA_2026-11-21","Parma – Roma","2026-11-21","21 listopada 2026","Serie A","Parma"],
 ["ROMA_MONZA_2026-11-29","Roma – Monza","2026-11-29","29 listopada 2026","Serie A","Rzym"],
 ["LAZIO_ROMA_2026-12-13","Lazio – Roma","2026-12-13","13 grudnia 2026","Serie A","Rzym"]
-]},
+]}
+];
+
 const SPORTS=SPORT_TEAMS.flatMap(team=>team.matches.map(match=>({
 tripId:match[0],destination:match[1],city:match[5],country:team.country,countryCode:team.countryCode,
 icon:team.icon,type:"sport",direction:team.countryCode==="pl"?"poland":"abroad",dateStart:match[2],dateLabel:match[3],
