@@ -2313,6 +2313,31 @@
 
   @media (max-width:1100px){.trip-carousel-track{grid-auto-columns:calc((100% - 32px)/2);gap:32px}}
 @media (max-width:700px){.trip-carousel-track{grid-auto-columns:86%;gap:16px;padding-left:2px;padding-right:2px}.trip-carousel-arrow{width:46px;height:46px;font-size:22px}.trip-carousel-arrow--prev{left:8px}.trip-carousel-arrow--next{right:8px}.trip-featured-visual{height:210px}.featured-trip .trip-content{padding-bottom:175px}}
+
+    /* TRAVEL PLANS */
+    .travel-service{background:#fffaf4;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .travel-service-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:start}
+    .travel-service-eyebrow{color:var(--orange);font-size:13px;font-weight:900;letter-spacing:2px;margin-bottom:14px}
+    .travel-service h2{font-size:clamp(36px,5vw,54px);line-height:1.03;letter-spacing:-2px;color:var(--navy);margin-bottom:18px}
+    .travel-service-lead{color:var(--muted);font-size:18px;line-height:1.6;max-width:620px}
+    .travel-service-options{display:grid;gap:16px}
+    .travel-service-option{display:flex;gap:18px;background:#fff;border:1px solid #e6e0d8;border-radius:20px;padding:24px;box-shadow:0 8px 24px rgba(7,27,51,.05)}
+    .travel-service-icon{width:48px;height:48px;flex:0 0 48px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:#fff0e6;font-size:25px}
+    .travel-service-option h3{color:var(--navy);font-size:21px;margin-bottom:7px}
+    .travel-service-option p{color:var(--muted);font-size:15px;line-height:1.55}
+    .travel-service-bottom{margin-top:28px;padding:24px 28px;border-radius:20px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .travel-service-bottom strong{display:block;font-size:20px;margin-bottom:4px}
+    .travel-service-bottom span{display:block;color:#bac9d9;font-size:14px}
+    .travel-service-bottom .button{white-space:nowrap}
+    @media(max-width:800px){
+      .travel-service-grid{grid-template-columns:1fr;gap:32px}
+      .travel-service-bottom{align-items:flex-start;flex-direction:column}
+    }
+    @media(max-width:600px){
+      .travel-service-option{padding:20px}
+      .travel-service-bottom{padding:22px}
+      .travel-service-bottom .button{width:100%;text-align:center}
+    }
 </style>
 </head>
 
@@ -2328,6 +2353,7 @@
         <div class="nav-menu">
             <a href="#jak-dziala" class="nav-link">Jak to działa?</a>
             <a href="wyjazdy.html" class="nav-link">Wyjazdy</a>
+            <a href="plany-podrozy.html" class="nav-link">Plany podróży</a>
             <button type="button" class="nav-link proposal-nav-trigger" onclick="openProposalForm()">Dodaj wyjazd</button>
             <a href="https://www.instagram.com/juntigo.pl/" class="nav-link" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
@@ -2386,6 +2412,10 @@
         Jak to działa?
     </a>
 
+    <a href="plany-podrozy.html" class="button button-outline">
+        Znajdź swój wyjazd
+    </a>
+
     <a href="https://www.instagram.com/juntigo.pl/" class="button button-outline" target="_blank" rel="noopener noreferrer">
         Instagram Juntigo
     </a>
@@ -2421,6 +2451,55 @@
 
       <div class="trips-all-link">
         <a href="wyjazdy.html">Zobacz wszystkie wyjazdy <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="travel-service">
+    <div class="container">
+      <div class="travel-service-grid">
+        <div>
+          <div class="travel-service-eyebrow">PLANY PODRÓŻY JUNTIGO</div>
+          <h2>Masz kierunek czy dopiero pomysł?</h2>
+          <p class="travel-service-lead">
+            W obu przypadkach pomożemy Ci znaleźć wyjazd dopasowany do Twojego budżetu,
+            terminu i oczekiwań.
+          </p>
+        </div>
+
+        <div class="travel-service-options">
+          <div class="travel-service-option">
+            <div class="travel-service-icon">🌍</div>
+            <div>
+              <h3>Masz konkretny kierunek</h3>
+              <p>
+                Wybierz kierunek dostępny na Juntigo. To wyselekcjonowane miejsca,
+                dla których szczególnie dobrze możemy szukać atrakcyjnych cenowo
+                lotów i noclegów.
+              </p>
+            </div>
+          </div>
+
+          <div class="travel-service-option">
+            <div class="travel-service-icon">🔎</div>
+            <div>
+              <h3>Nie wiesz, dokąd jechać</h3>
+              <p>
+                Podaj termin, budżet, miejsce wylotu, liczbę osób i swoje oczekiwania.
+                Poszukamy również poza kierunkami dostępnymi na stronie.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="travel-service-bottom">
+        <div>
+          <strong>Ty określasz możliwości. My szukamy wyjazdu.</strong>
+          <span>Lot + nocleg, konkretne propozycje i najważniejsze informacje przed rezerwacją.</span>
+        </div>
+        <a href="plany-podrozy.html" class="button">Sprawdź plany podróży</a>
       </div>
     </div>
   </section>
@@ -2534,6 +2613,8 @@
         © 2026 Juntigo. Łączymy podróżników.
       </p>
 <p class="footer-links">
+  <a href="plany-podrozy.html">Plany podróży</a>
+  <span> · </span>
   <a href="polityka-prywatnosci.html">Polityka prywatności</a>
   <span> · </span>
   <a href="regulamin.html">Regulamin</a>
