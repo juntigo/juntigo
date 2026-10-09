@@ -2341,6 +2341,36 @@ const SPORT_TEAMS=[
 ]}
 ];
 
+{teamId:"JUVENTUS",team:"Juventus",city:"Turyn",country:"Włochy",countryCode:"it",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/3/3e/Juventus_FC_2017_logo.svg",matches:[
+["JUVENTUS_NAPOLI_2026-11-01","Juventus – Napoli","2026-11-01","1 listopada 2026","Serie A","Turyn"],
+["FIORENTINA_JUVENTUS_2026-11-08","Fiorentina – Juventus","2026-11-08","8 listopada 2026","Serie A","Florencja"],
+["JUVENTUS_VENEZIA_2026-11-22","Juventus – Venezia","2026-11-22","22 listopada 2026","Serie A","Turyn"],
+["COMO_JUVENTUS_2026-11-29","Como – Juventus","2026-11-29","29 listopada 2026","Serie A","Como"]
+]},
+{teamId:"AC_MILAN",team:"AC Milan",city:"Mediolan",country:"Włochy",countryCode:"it",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg",matches:[
+["MILAN_INTER_2026-10-31","AC Milan – Inter Mediolan","2026-10-31","31 października 2026","Serie A","Mediolan"],
+["GENOA_MILAN_2026-11-08","Genoa – AC Milan","2026-11-08","8 listopada 2026","Serie A","Genua"],
+["MILAN_FROSINONE_2026-11-22","AC Milan – Frosinone","2026-11-22","22 listopada 2026","Serie A","Mediolan"],
+["CAGLIARI_MILAN_2026-11-30","Cagliari – AC Milan","2026-11-30","30 listopada 2026","Serie A","Cagliari"]
+]},
+{teamId:"INTER_MILAN",team:"Inter Mediolan",city:"Mediolan",country:"Włochy",countryCode:"it",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/commons/0/05/Inter_Milan_2021_logo.svg",matches:[
+["MILAN_INTER_2026-10-31","AC Milan – Inter Mediolan","2026-10-31","31 października 2026","Serie A","Mediolan"],
+["INTER_COMO_2026-11-08","Inter Mediolan – Como","2026-11-08","8 listopada 2026","Serie A","Mediolan"],
+["ATALANTA_INTER_2026-11-22","Atalanta – Inter Mediolan","2026-11-22","22 listopada 2026","Serie A","Bergamo"],
+["INTER_GENOA_2026-11-28","Inter Mediolan – Genoa","2026-11-28","28 listopada 2026","Serie A","Mediolan"]
+]},
+{teamId:"NAPOLI",team:"SSC Napoli",city:"Neapol",country:"Włochy",countryCode:"it",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Napoli_2024_%28logo%29.svg",matches:[
+["JUVENTUS_NAPOLI_2026-11-01","Juventus – Napoli","2026-11-01","1 listopada 2026","Serie A","Turyn"],
+["NAPOLI_LAZIO_2026-11-08","Napoli – Lazio","2026-11-08","8 listopada 2026","Serie A","Neapol"],
+["NAPOLI_TORINO_2026-11-21","Napoli – Torino","2026-11-21","21 listopada 2026","Serie A","Neapol"],
+["SASSUOLO_NAPOLI_2026-11-29","Sassuolo – Napoli","2026-11-29","29 listopada 2026","Serie A","Reggio Emilia"]
+]},
+{teamId:"AS_ROMA",team:"AS Roma",city:"Rzym",country:"Włochy",countryCode:"it",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/commons/f/f7/AS_Roma_logo_%282017%29.svg",matches:[
+["ROMA_SASSUOLO_2026-11-07","Roma – Sassuolo","2026-11-07","7 listopada 2026","Serie A","Rzym"],
+["PARMA_ROMA_2026-11-21","Parma – Roma","2026-11-21","21 listopada 2026","Serie A","Parma"],
+["ROMA_MONZA_2026-11-29","Roma – Monza","2026-11-29","29 listopada 2026","Serie A","Rzym"],
+["LAZIO_ROMA_2026-12-13","Lazio – Roma","2026-12-13","13 grudnia 2026","Serie A","Rzym"]
+]},
 const SPORTS=SPORT_TEAMS.flatMap(team=>team.matches.map(match=>({
 tripId:match[0],destination:match[1],city:match[5],country:team.country,countryCode:team.countryCode,
 icon:team.icon,type:"sport",direction:team.countryCode==="pl"?"poland":"abroad",dateStart:match[2],dateLabel:match[3],
