@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#071b33">
+<link rel="icon" type="image/png" href="juntigo-logo.png">
+<title>Plany podróży — Juntigo</title>
+<meta name="description" content="Masz kierunek czy dopiero pomysł? Juntigo pomoże znaleźć lot i nocleg dopasowane do Twojego budżetu i oczekiwań.">
+<style>
+:root{--navy:#071b33;--navy-light:#0d2948;--orange:#ff7417;--orange-light:#ff8b3d;--cream:#fffaf4;--white:#fff;--text:#17283b;--muted:#667587;--border:#e7e1da}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--cream);line-height:1.6}
+a{text-decoration:none;color:inherit}
+.container{width:min(1180px,92%);margin:0 auto}
+nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-inner{height:88px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+.logo img{width:64px;height:64px;object-fit:contain;display:block}
+.nav-menu{display:flex;align-items:center;gap:28px}
+.nav-link{color:var(--navy);font-weight:700;font-size:15px}
+.nav-link:hover{color:var(--orange)}
+.hero{background:linear-gradient(135deg,#071b33 0%,#0d2948 100%);color:#fff;padding:92px 0 100px}
+.hero-inner{max-width:900px;text-align:center;margin:0 auto}
+.eyebrow{color:var(--orange-light);font-size:13px;font-weight:900;letter-spacing:2px;margin-bottom:18px}
+h1{font-size:clamp(42px,6vw,70px);line-height:1;letter-spacing:-3px;margin-bottom:22px}
+.hero p{max-width:760px;margin:0 auto;color:#dbe4ee;font-size:19px;line-height:1.65}
+.hero-buttons{display:flex;justify-content:center;gap:12px;margin-top:32px;flex-wrap:wrap}
+.button{display:inline-flex;align-items:center;justify-content:center;padding:14px 25px;border-radius:999px;background:var(--orange);border:2px solid var(--orange);color:#fff;font-weight:900}
+.button:hover{background:var(--orange-light)}
+.button-outline{background:transparent;border-color:#fff}
+.button-outline:hover{background:#fff;color:var(--navy)}
+section{padding:78px 0}
+.section-heading{max-width:760px;margin-bottom:40px}
+.section-heading h2{font-size:clamp(32px,5vw,48px);line-height:1.05;letter-spacing:-2px;color:var(--navy);margin-bottom:14px}
+.section-heading p{color:var(--muted);font-size:18px}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.choice{background:#fff;border:1px solid var(--border);border-radius:24px;padding:32px;box-shadow:0 10px 30px rgba(7,27,51,.06)}
+.choice-number{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:22px}
+.choice h3{font-size:25px;color:var(--navy);margin-bottom:12px}
+.choice p{color:var(--muted);font-size:15px;line-height:1.65;margin-bottom:18px}
+.choice ul{list-style:none;display:grid;gap:9px;color:var(--text);font-size:14px}
+.choice li::before{content:"✓";color:var(--orange);font-weight:900;margin-right:9px}
+.note{margin-top:28px;padding:22px 24px;background:#fff0e6;border:1px solid #ffd6bd;border-radius:18px;color:var(--navy)}
+.note strong{display:block;margin-bottom:4px}
+.pricing{background:#fff}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.price-card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:28px;position:relative;display:flex;flex-direction:column;min-height:390px}
+.price-card.featured{border:2px solid var(--orange);box-shadow:0 14px 35px rgba(255,116,23,.12)}
+.price-badge{display:inline-flex;align-self:flex-start;padding:5px 10px;border-radius:999px;background:#fff0e6;color:#c74d00;font-size:11px;font-weight:900;margin-bottom:15px}
+.price-card h3{font-size:22px;color:var(--navy);margin-bottom:7px}
+.price{font-size:36px;font-weight:900;color:var(--navy);margin:10px 0 20px}
+.price small{font-size:13px;color:var(--muted);font-weight:700}
+.price-card ul{list-style:none;display:grid;gap:10px;margin-bottom:24px;color:var(--muted);font-size:14px}
+.price-card li::before{content:"✓";color:var(--orange);font-weight:900;margin-right:8px}
+.price-card .button{margin-top:auto}
+.disclaimer{font-size:13px;color:var(--muted);margin-top:18px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{background:#fff;border:1px solid var(--border);border-radius:20px;padding:25px;min-height:190px}
+.step span{display:block;color:var(--orange);font-weight:900;font-size:13px;margin-bottom:15px}
+.step h3{font-size:19px;color:var(--navy);margin-bottom:9px}
+.step p{color:var(--muted);font-size:14px}
+.example{background:var(--navy);color:#fff}
+.example .section-heading h2{color:#fff}
+.example .section-heading p{color:#bac9d9}
+.example-box{background:#fff;color:var(--text);border-radius:24px;padding:32px;max-width:900px}
+.example-box h3{color:var(--navy);font-size:25px;margin-bottom:18px}
+.example-request{padding:18px;background:#f5f7fa;border-radius:14px;margin-bottom:22px;color:var(--muted)}
+.example-results{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.result{border:1px solid var(--border);border-radius:16px;padding:18px}
+.result strong{display:block;color:var(--navy);font-size:18px;margin-bottom:5px}
+.result span{color:var(--muted);font-size:13px}
+.final-cta{text-align:center}
+.final-cta p{max-width:720px;margin:0 auto 26px;color:var(--muted);font-size:18px}
+footer{background:#fff;border-top:1px solid var(--border);padding:28px 0;color:var(--muted);font-size:13px}
+.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.nav-menu{gap:15px}.choice-grid{grid-template-columns:1fr}.example-results{grid-template-columns:1fr}.footer-inner{flex-direction:column;align-items:flex-start}}
+@media(max-width:600px){.nav-inner{height:76px}.nav-menu .nav-link:not(:first-child){display:none}.hero{padding:70px 0 78px}h1{letter-spacing:-2px}.choice,.price-card{padding:24px}.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+<div class="container nav-inner">
+<a href="index.html" class="logo"><img src="juntigo-logo.png" alt="Juntigo"></a>
+<div class="nav-menu">
+<a href="index.html" class="nav-link">Strona główna</a>
+<a href="wyjazdy.html" class="nav-link">Wyjazdy</a>
+<a href="plany-podrozy.html" class="nav-link">Plany podróży</a>
+</div>
+</div>
+</nav>
+
+<header class="hero">
+<div class="container hero-inner">
+<div class="eyebrow">PLANY PODRÓŻY JUNTIGO</div>
+<h1>Masz kierunek czy dopiero pomysł?</h1>
+<p>Podaj nam budżet, termin i swoje oczekiwania. Możesz wskazać konkretny kierunek z Juntigo albo zostawić nam wybór. Poszukamy najlepszych możliwości wyjazdu, które możesz zarezerwować samodzielnie.</p>
+<div class="hero-buttons">
+<a href="#cennik" class="button">Zobacz ceny</a>
+<a href="#jak-dziala" class="button button-outline">Jak to działa?</a>
+</div>
+</div>
+</header>
+
+<section>
+<div class="container">
+<div class="section-heading">
+<h2>Dwie możliwości. Jeden cel.</h2>
+<p>Chcesz odwiedzić konkretne miejsce albo po prostu wyrwać się na kilka dni? W obu przypadkach zaczynamy od Twoich potrzeb.</p>
+</div>
+<div class="choice-grid">
+<div class="choice">
+<div class="choice-number">01</div>
+<h3>Mam konkretny kierunek</h3>
+<p>Wybierz kierunek dostępny na Juntigo i podaj nam termin, budżet oraz swoje wymagania.</p>
+<ul>
+<li>korzystasz z wyselekcjonowanych kierunków Juntigo</li>
+<li>szukamy korzystnych połączeń i noclegów</li>
+<li>dopasowujemy propozycję do Twojego budżetu</li>
+</ul>
+</div>
+<div class="choice">
+<div class="choice-number">02</div>
+<h3>Nie wiem, dokąd chcę jechać</h3>
+<p>Nie musisz mieć konkretnego pomysłu. Wystarczy, że określisz swoje możliwości i oczekiwania.</p>
+<ul>
+<li>podajesz termin i miejsce wylotu</li>
+<li>podajesz budżet i liczbę osób</li>
+<li>opisujesz, czego oczekujesz od wyjazdu</li>
+<li>szukamy również poza kierunkami Juntigo</li>
+</ul>
+</div>
+</div>
+<div class="note"><strong>Dlaczego warto zacząć od kierunków Juntigo?</strong>To miejsca, które wybraliśmy m.in. pod kątem możliwości znalezienia atrakcyjnych cenowo połączeń i noclegów. Nie oznacza to jednak, że ograniczamy się tylko do nich.</div>
+</div>
+</section>
+
+<section class="pricing" id="cennik">
+<div class="container">
+<div class="section-heading">
+<h2>Wybierz zakres planu</h2>
+<p>Cena dotyczy przygotowania propozycji wyjazdu. Rezerwacji lotu, noclegu i pozostałych usług dokonujesz samodzielnie.</p>
+</div>
+<div class="pricing-grid">
+<div class="price-card">
+<span class="price-badge">KONKRETNY KIERUNEK</span>
+<h3>Plan podstawowy</h3>
+<div class="price">39 zł <small>/ plan</small></div>
+<ul>
+<li>analiza podanego terminu i budżetu</li>
+<li>propozycja lotu</li>
+<li>propozycja noclegu</li>
+<li>łączny koszt wyjazdu</li>
+<li>podstawowe informacje o kierunku</li>
+</ul>
+<a href="#zamow" class="button">Zamów plan</a>
+</div>
+<div class="price-card featured">
+<span class="price-badge">NAJCZĘŚCIEJ WYBIERANY</span>
+<h3>Plan rozszerzony</h3>
+<div class="price">69 zł <small>/ plan</small></div>
+<ul>
+<li>wszystko z planu podstawowego</li>
+<li>kilka wariantów lotu i noclegu</li>
+<li>porównanie dostępnych opcji</li>
+<li>propozycje atrakcji</li>
+<li>orientacyjny budżet pobytu</li>
+</ul>
+<a href="#zamow" class="button">Zamów plan</a>
+</div>
+<div class="price-card">
+<span class="price-badge">SZUKAMY ZA CIEBIE</span>
+<h3>Plan indywidualny</h3>
+<div class="price">99 zł <small>/ plan</small></div>
+<ul>
+<li>szukanie kierunku według Twoich wytycznych</li>
+<li>porównanie różnych terminów i miejsc</li>
+<li>propozycje lotów i noclegów</li>
+<li>atrakcje dopasowane do wyjazdu</li>
+<li>rekomendacja najlepszej opcji</li>
+</ul>
+<a href="#zamow" class="button">Zamów plan</a>
+</div>
+</div>
+<p class="disclaimer">Ceny mają charakter informacyjny i mogą zostać zmienione wraz z rozwojem usługi. Cena planu nie obejmuje kosztu lotów, noclegów ani biletów.</p>
+</div>
+</section>
+
+<section id="jak-dziala">
+<div class="container">
+<div class="section-heading">
+<h2>Jak to działa?</h2>
+<p>Ty określasz możliwości. My szukamy wyjazdu.</p>
+</div>
+<div class="steps">
+<div class="step"><span>01</span><h3>Podajesz wytyczne</h3><p>Termin, budżet, miejsce wylotu, liczbę osób i swoje oczekiwania.</p></div>
+<div class="step"><span>02</span><h3>Przeszukujemy opcje</h3><p>Sprawdzamy kierunki, loty, noclegi i dostępne warianty.</p></div>
+<div class="step"><span>03</span><h3>Otrzymujesz propozycje</h3><p>Dostajesz konkretne informacje, ceny i rekomendację najlepszego wariantu.</p></div>
+<div class="step"><span>04</span><h3>Rezerwujesz samodzielnie</h3><p>Decyzja należy do Ciebie. Rezerwujesz bezpośrednio u wybranego dostawcy.</p></div>
+</div>
+</div>
+</section>
+
+<section class="example">
+<div class="container">
+<div class="section-heading">
+<h2>Nie musisz wiedzieć, dokąd lecieć.</h2>
+<p>Wystarczy określić, czego potrzebujesz. Resztą zajmuje się Juntigo.</p>
+</div>
+<div class="example-box">
+<h3>Przykład</h3>
+<div class="example-request">„Chcemy z partnerką wyjechać w listopadzie na 3–4 noce. Mamy około 1000 zł na osobę. Chcemy trochę słońca i nie chcemy przepalić budżetu.”</div>
+<div class="example-results">
+<div class="result"><strong>🇬🇷 Ateny</strong><span>ok. 522 zł/os. · lot + nocleg</span></div>
+<div class="result"><strong>🇲🇹 Malta</strong><span>ok. 565 zł/os. · lot + nocleg</span></div>
+<div class="result"><strong>🇮🇹 Bari</strong><span>ok. 594 zł/os. · lot + nocleg</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="final-cta" id="zamow">
+<div class="container">
+<div class="section-heading" style="margin:0 auto 28px">
+<h2>Opowiedz nam o swoim wyjeździe</h2>
+<p>Na tym etapie zamówienie realizujemy indywidualnie. Skontaktuj się z Juntigo z wybranym wariantem oraz swoimi wymaganiami.</p>
+</div>
+<a href="https://www.instagram.com/juntigo.pl/" class="button" target="_blank" rel="noopener noreferrer">Napisz do Juntigo na Instagramie</a>
+</div>
+</section>
+
+<footer>
+<div class="container footer-inner">
+<span>© 2026 Juntigo. Łączymy podróżników.</span>
+<span><a href="index.html">Strona główna</a> · <a href="wyjazdy.html">Wyjazdy</a> · <a href="polityka-prywatnosci.html">Polityka prywatności</a> · <a href="regulamin.html">Regulamin</a></span>
+</div>
+</footer>
+</body>
+</html>
