@@ -2338,6 +2338,21 @@
       .travel-service-bottom{padding:22px}
       .travel-service-bottom .button{width:100%;text-align:center}
     }
+    /* JUNTIGO OPTIONS */
+    .juntigo-options{background:#fff}
+    .juntigo-options-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .juntigo-option{position:relative;background:#fff;border:1px solid #e6e0d8;border-radius:24px;padding:30px;min-height:360px;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(7,27,51,.05);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+    .juntigo-option:hover{transform:translateY(-5px);box-shadow:0 16px 35px rgba(7,27,51,.11);border-color:var(--orange)}
+    .juntigo-option-icon{font-size:32px;margin-bottom:18px}
+    .juntigo-option-number{position:absolute;top:28px;right:28px;color:#c9d1da;font-size:12px;font-weight:900;letter-spacing:1px}
+    .juntigo-option h3{color:var(--navy);font-size:25px;line-height:1.15;margin-bottom:12px}
+    .juntigo-option p{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:24px}
+    .juntigo-option a{margin-top:auto;color:var(--orange);font-weight:900;font-size:15px}
+    .juntigo-option a:hover{color:var(--navy)}
+    .juntigo-core-message{margin-top:28px;padding:22px 26px;border-radius:20px;background:var(--navy);color:#fff;text-align:center}
+    .juntigo-core-message strong{display:block;font-size:19px;letter-spacing:.5px;margin-bottom:5px}
+    .juntigo-core-message span{display:block;color:#bac9d9;font-size:14px}
+    @media(max-width:900px){.juntigo-options-grid{grid-template-columns:1fr}.juntigo-option{min-height:0}}
 </style>
 </head>
 
@@ -2398,22 +2413,18 @@
 </h1>
 
         <p class="hero-text">
-  Chcesz pojechać na wycieczkę, mecz albo wydarzenie, ale nie masz z kim?
-  Juntigo łączy Cię z ludźmi, którzy chcą jechać w to samo miejsce.
+  Juntigo pomaga Ci znaleźć wyjazd i ludzi, z którymi możesz na niego pojechać.
+  Wybierz wyjazd, znajdź ekipę albo pozwól nam znaleźć propozycję dopasowaną do Twojego budżetu.
 </p>
 
        <div class="hero-buttons">
 
-    <button type="button" class="button proposal-trigger" onclick="openProposalForm()">
-        Zaproponuj wyjazd
-    </button>
+    <a href="#juntigo-mozliwosci" class="button">
+        Zobacz, co możesz zrobić
+    </a>
 
     <a href="#jak-dziala" class="button button-outline">
         Jak to działa?
-    </a>
-
-    <a href="plany-podrozy.html" class="button button-outline">
-        Znajdź swój wyjazd
     </a>
 
 </div>
@@ -2424,6 +2435,58 @@
     </div>
   </header>
 
+
+  <section class="juntigo-options" id="juntigo-mozliwosci">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Co możesz zrobić na Juntigo?</h2>
+        <p>
+          Juntigo łączy wyszukiwanie wyjazdów z poznawaniem ludzi, którzy chcą pojechać w to samo miejsce.
+          A jeśli nie masz jeszcze pomysłu — pomożemy znaleźć wyjazd dopasowany do Twoich możliwości.
+        </p>
+      </div>
+
+      <div class="juntigo-options-grid">
+        <article class="juntigo-option">
+          <div class="juntigo-option-icon">👥</div>
+          <div class="juntigo-option-number">01</div>
+          <h3>Znajdź ludzi</h3>
+          <p>
+            Masz wyjazd, ale nie masz z kim jechać? Znajdź osoby zainteresowane tym samym
+            kierunkiem, meczem lub wydarzeniem i połączcie się na Juntigo.
+          </p>
+          <a href="wyjazdy.html">Znajdź ekipę <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="juntigo-option">
+          <div class="juntigo-option-icon">🌍</div>
+          <div class="juntigo-option-number">02</div>
+          <h3>Znajdź wyjazd</h3>
+          <p>
+            Przeglądaj wycieczki, mecze i wydarzenia dostępne na Juntigo.
+            Wybierz coś, co Cię interesuje, i zobacz, kto również chce tam pojechać.
+          </p>
+          <a href="wyjazdy.html">Przeglądaj wyjazdy <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="juntigo-option">
+          <div class="juntigo-option-icon">✈️</div>
+          <div class="juntigo-option-number">03</div>
+          <h3>Znajdź swój wyjazd</h3>
+          <p>
+            Masz budżet i oczekiwania, ale nie masz konkretnego kierunku?
+            Podaj nam swoje wytyczne, a poszukamy najlepszego rozwiązania.
+          </p>
+          <a href="plany-podrozy.html">Poznaj usługę <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+
+      <div class="juntigo-core-message">
+        <strong>WYJAZD → LUDZIE → POŁĄCZENIE → WSPÓLNY WYJAZD</strong>
+        <span>To jest główna idea Juntigo. Planowanie wyjazdu to dodatkowa usługa, która pomaga Ci znaleźć odpowiedni kierunek.</span>
+      </div>
+    </div>
+  </section>
 
   <section class="trips" id="wyjazdy">
     <div class="container">
@@ -2543,8 +2606,8 @@
       <div class="section-heading">
         <h2>Jak działa Juntigo?</h2>
         <p>
-          Ty wybierasz kierunek lub wydarzenie. My pomagamy znaleźć ludzi,
-          którzy chcą jechać razem z Tobą.
+          Możesz znaleźć wyjazd i ekipę albo skorzystać z naszej usługi planowania,
+          jeśli dopiero szukasz najlepszego kierunku dla siebie.
         </p>
       </div>
 
@@ -2552,26 +2615,26 @@
 
         <div class="step">
           <div class="step-number">01</div>
-          <h3>Wybierz</h3>
-          <p>Znajdź wyjazd lub wydarzenie, które Cię interesuje.</p>
+          <h3>Wybierz wyjazd</h3>
+          <p>Znajdź wycieczkę, mecz lub wydarzenie, które Cię interesuje.</p>
         </div>
 
         <div class="step">
           <div class="step-number">02</div>
-          <h3>Zgłoś się</h3>
-          <p>Powiedz nam, że chcesz jechać.</p>
+          <h3>Znajdź ekipę</h3>
+          <p>Sprawdź osoby zainteresowane tym samym wyjazdem i nawiąż kontakt.</p>
         </div>
 
         <div class="step">
           <div class="step-number">03</div>
-          <h3>Poznaj ekipę</h3>
-          <p>Jeśli inni wybiorą ten sam wyjazd, połączymy Was ze sobą.</p>
+          <h3>Połączcie się</h3>
+          <p>Jeśli zainteresowanie jest wzajemne, możecie ustalić szczegóły wspólnego wyjazdu.</p>
         </div>
 
         <div class="step">
           <div class="step-number">04</div>
-          <h3>Jedźcie razem</h3>
-          <p>Dogadujecie szczegóły i ruszacie razem w drogę.</p>
+          <h3>Nie masz kierunku?</h3>
+          <p>Skorzystaj z Juntigo także wtedy, gdy chcesz, abyśmy znaleźli wyjazd według Twoich wytycznych.</p>
         </div>
 
       </div>
