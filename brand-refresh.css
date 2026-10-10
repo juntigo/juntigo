@@ -49,6 +49,8 @@ nav,.top,header.site-header{
   backdrop-filter:blur(14px);
 }
 .logo img,.footer-brand img,.legal-footer-brand img{filter:drop-shadow(0 4px 8px rgba(7,27,51,.09))}
+.top .logo img,.logo-image img{width:68px;height:68px;object-fit:contain;display:block}
+.logo-image{display:inline-flex;align-items:center;justify-content:center;margin-bottom:36px}
 .nav-link:hover,.nav-links a:hover,.back-link:hover{color:var(--brand-blue)}
 .nav-cta,.button,.profile-action{background:linear-gradient(115deg,var(--brand-orange),#ff8a22);border-color:transparent}
 .nav-cta:hover,.button:hover,.profile-action:hover{background:linear-gradient(115deg,#f5660b,var(--brand-orange))}
