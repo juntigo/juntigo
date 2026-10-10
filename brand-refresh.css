@@ -1,0 +1,123 @@
+/* Juntigo visual identity refresh — shared across all pages */
+:root{
+  --brand-navy:#071b33;
+  --brand-blue:#087df1;
+  --brand-cyan:#12b9f4;
+  --brand-orange:#ff7417;
+  --brand-gold:#ffc247;
+  --brand-cream:#fffaf4;
+  --brand-ink:#10253d;
+  --brand-muted:#667b91;
+  --brand-border:#e4eaf0;
+  --navy:var(--brand-navy);
+  --navy-light:#12385d;
+  --orange:var(--brand-orange);
+  --orange-light:#ff9b45;
+  --cream:var(--brand-cream);
+  --white:#fff;
+  --text:var(--brand-ink);
+  --muted:var(--brand-muted);
+  --border:var(--brand-border);
+  --soft:#f3f8fc;
+  --brand-shadow:0 16px 42px rgba(7,27,51,.075);
+}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{
+  color:var(--brand-ink);
+  background:linear-gradient(180deg,#fff 0,#fffaf5 28rem,var(--brand-cream) 100%);
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(18,185,244,.22);color:var(--brand-navy)}
+a,button,input,select,textarea{accent-color:var(--brand-orange)}
+a{transition:color .18s ease}
+button,a.button,.button,button[type=submit],input[type=submit],.nav-cta,.profile-action{
+  transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease;
+}
+a.button,.button,.nav-cta,.profile-action{
+  box-shadow:0 7px 18px rgba(255,116,23,.14);
+}
+a.button:hover,.button:hover,.nav-cta:hover,.profile-action:hover{
+  transform:translateY(-2px);
+  box-shadow:0 11px 25px rgba(255,116,23,.22);
+}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid rgba(18,185,244,.5);outline-offset:3px;
+}
+nav,.top,header.site-header{
+  background:rgba(255,255,255,.94);
+  border-bottom:1px solid rgba(228,234,240,.95);
+  backdrop-filter:blur(14px);
+}
+.logo img,.footer-brand img,.legal-footer-brand img{filter:drop-shadow(0 4px 8px rgba(7,27,51,.09))}
+.nav-link:hover,.nav-links a:hover,.back-link:hover{color:var(--brand-blue)}
+.nav-cta,.button,.profile-action{background:linear-gradient(115deg,var(--brand-orange),#ff8a22);border-color:transparent}
+.nav-cta:hover,.button:hover,.profile-action:hover{background:linear-gradient(115deg,#f5660b,var(--brand-orange))}
+.hero{
+  background:
+    radial-gradient(ellipse at 85% 5%,rgba(18,185,244,.24),transparent 35%),
+    radial-gradient(ellipse at 12% 100%,rgba(255,194,71,.14),transparent 30%),
+    linear-gradient(130deg,#061a32 0%,#0b2b4c 62%,#104b72 100%);
+}
+.hero .eyebrow,.eyebrow{color:var(--brand-orange)}
+.hero .eyebrow{color:#ffc16b}
+.hero h1,.hero h2{letter-spacing:-.035em}
+.controls,.login-section,.account-header,.section,.trip-card,.city-card,.price-card,.choice,.step,.example-box,.dashboard-card,.profile-card,.profile-view-card,.profile-form-card,.modal-content,.modal-box,.form-card,.notice{
+  box-shadow:var(--brand-shadow);
+}
+.controls,.login-section,.account-header,.section,.trip-card,.city-card,.price-card,.choice,.step,.dashboard-card,.profile-card,.profile-view-card,.profile-form-card,.form-card{
+  border-color:var(--brand-border);
+}
+.trip-card,.city-card,.price-card,.choice,.step,.dashboard-card{
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.trip-card:hover,.city-card:hover,.price-card:hover,.choice:hover,.step:hover,.dashboard-card:hover{
+  border-color:rgba(18,185,244,.42);
+  box-shadow:0 18px 44px rgba(7,27,51,.105);
+}
+.price-card.featured,.price-card.featured:hover{
+  border-color:var(--brand-orange);
+  box-shadow:0 16px 38px rgba(255,116,23,.14);
+}
+.price-badge,.badge,.trip-badge,.tag{
+  background:#fff0e5;
+  color:#b84d08;
+}
+.filter-input:focus,.filter select:focus,input:focus,textarea:focus,select:focus{
+  border-color:var(--brand-cyan);
+  box-shadow:0 0 0 3px rgba(18,185,244,.13);
+}
+.view-switch button.active,.interest-chat-button,.chat-send,.primary-button{
+  background:var(--brand-navy);
+}
+.view-switch button.active:hover,.interest-chat-button:hover,.chat-send:hover,.primary-button:hover{
+  background:#12385d;
+}
+.card-icon,.dashboard-card .card-icon{
+  background:linear-gradient(145deg,rgba(255,116,23,.13),rgba(255,194,71,.22));
+  color:var(--brand-orange);
+}
+.avatar,.match-avatar,.profile-avatar,.avatar-placeholder{
+  background:linear-gradient(145deg,var(--brand-navy),#124d78);
+}
+.verified,.profile-complete,.success,.status-success{color:#16834b}
+hr,.divider{border-color:var(--brand-border)}
+footer{
+  border-top-color:var(--brand-border);
+  background:rgba(255,255,255,.9);
+}
+.final-cta{
+  background:
+    radial-gradient(ellipse at 10% 100%,rgba(255,194,71,.12),transparent 32%),
+    radial-gradient(ellipse at 90% 0%,rgba(18,185,244,.12),transparent 35%);
+}
+.final-cta .button{min-width:min(100%,280px)}
+/* Legal pages use the same brand accents without changing document layout. */
+.top .logo,.logo{color:var(--brand-navy)}
+.logo span{color:var(--brand-orange)}
+@media(max-width:700px){
+  html{scroll-padding-top:76px}
+  .button,.nav-cta{max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
