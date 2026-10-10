@@ -79,7 +79,7 @@
 <nav><div class="nav-inner"><a href="index.html" class="logo" aria-label="Juntigo"><img src="juntigo-logo.png" alt="Juntigo"></a><div class="nav-links"><a href="profil.html" class="back-link">Mój profil</a><a href="index.html" class="back-link">Wróć do Juntigo</a></div></div></nav>
 <main>
 <div class="eyebrow">Juntigo</div><h1>Moje konto</h1><p class="intro">Zarządzaj swoim profilem, wyjazdami i dopasowaniami w jednym miejscu.</p>
-<section class="login-section"><h2>Zaloguj się do Juntigo</h2><p>Wybierz sposób logowania. Po zalogowaniu otworzy się Twoje konto Juntigo.</p><div class="login-buttons"><div id="google-login-button"></div><button type="button" class="facebook-login-button" id="facebook-login-button" onclick="startFacebookLogin()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v1.8H7v3.1h2.7v8h3.7z"/></svg>Zaloguj przez Facebook</button></div><div id="account-login-status"></div><div id="account-error"></div></section>
+<section class="login-section"><h2>Zaloguj się do Juntigo</h2><p>Wybierz sposób logowania. Po zalogowaniu otworzy się Twoje konto Juntigo.</p><div class="login-buttons"><div id="google-login-button"></div><button type="button" class="facebook-login-button" id="facebook-login-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v1.8H7v3.1h2.7v8h3.7z"/></svg>Zaloguj przez Facebook</button></div><div id="account-login-status"></div><div id="account-error"></div></section>
 <section class="account-header"><div class="avatar" id="account-avatar">J</div><div><h2 id="account-name">Twój profil</h2><p id="account-city">Zaloguj się przez Google, aby wczytać profil.</p><div class="verified" id="account-status">Konto Juntigo</div></div></section>
 <section class="dashboard-grid" aria-label="Nawigacja konta">
 <a href="profil.html" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path></svg></div><div><h3>Mój profil</h3><p>Edytuj zdjęcie, opis, zainteresowania i styl podróżowania.</p></div><span class="arrow">›</span></a>
@@ -1176,6 +1176,8 @@ window.startFacebookLogin=async function(){
     button.disabled=false;
   }
 };
+const facebookLoginButton=document.getElementById("facebook-login-button");
+if(facebookLoginButton)facebookLoginButton.addEventListener("click",window.startFacebookLogin);
 function initializeFacebookLogin(){
   if(!FACEBOOK_APP_ID||FACEBOOK_APP_ID==="WSTAW_META_APP_ID")return;
   window.fbAsyncInit=function(){
