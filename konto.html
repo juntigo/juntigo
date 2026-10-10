@@ -106,9 +106,9 @@
       if(!FB||!FB.login){showError("Facebook nie jest jeszcze gotowy. Odśwież stronę i spróbuj ponownie.");return;}
       const box=document.getElementById("account-error");
       if(box){box.textContent="";box.style.display="none";}
-      button.disabled=true;
       try{
         FB.login(function(response){
+          button.disabled=true;
           (async function(){
             try{
               const token=response&&response.authResponse&&response.authResponse.accessToken;
