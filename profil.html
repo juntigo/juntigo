@@ -1313,7 +1313,7 @@ fetch(JUNTIGO_API, {
 
     return data;
   })
-  .then(data => {
+  .then(async data => {
     console.log("Profil wysłany:", data);
 
     const saveMessage = document.getElementById("profile-save-message");
@@ -1339,9 +1339,18 @@ fetch(JUNTIGO_API, {
       return;
     }
 
-    showProfile(profile);
+    // Nie pokazuj lokalnego obiektu jako zapisanego, dopóki nie odczytamy go ponownie z backendu.
+    const verifyResponse = await fetch(
+      JUNTIGO_API + "?action=profile&sessionToken=" + encodeURIComponent(juntigoSessionToken)
+    );
+    const verifyResult = await verifyResponse.json();
+    if (!verifyResult.success || !verifyResult.profile) {
+      throw new Error("Serwer przyjął zapis, ale nie można ponownie odczytać profilu. Sprawdź wdrożenie Apps Script.");
+    }
 
-    saveMessage.textContent = "✓ Profil został zapisany";
+    showProfile(verifyResult.profile);
+
+    saveMessage.textContent = "✓ Profil został zapisany i zweryfikowany";
     saveMessage.classList.add("show");
 
     setTimeout(() => {
