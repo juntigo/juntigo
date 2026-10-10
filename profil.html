@@ -292,6 +292,14 @@
   flex-direction: column;
   gap: 10px;
 }
+.profile-trip-picker input[type="search"]{width:100%;border:1px solid #d8dde3;border-radius:12px;padding:12px 14px;font:inherit;color:var(--text);background:#fff;outline:none}
+.profile-trip-picker input[type="search"]:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,116,23,.1)}
+.profile-trip-picker small{color:var(--muted);font-size:12px}
+.profile-trip-option{padding:10px 12px}
+.trip-picker-status{padding:12px;color:var(--muted);font-size:14px}
+.profile-trip-selected{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.profile-trip-chip{border:1px solid #d8dde3;border-radius:999px;padding:6px 10px;background:#f7f8fa;color:var(--navy);font-size:12px;display:inline-flex;gap:7px;align-items:center}
+.profile-trip-chip button{border:0;background:none;color:#a33;font-weight:800;cursor:pointer}
 
 .profile-trip-option {
   display: flex;
@@ -675,116 +683,11 @@
 
     <div class="profile-form-group">
       <label>Wyjazdy, które Cię interesują</label>
-      <div class="profile-trips">
-        <label class="profile-trip-option">
-          <input type="checkbox" value="Mediolan">
-          <span>Mediolan</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="Oktoberfest 2026">
-          <span>Oktoberfest 2026</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="Malaga CF – Espanyol">
-          <span>Málaga CF – Espanyol</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="GDANSK_MARKET_2026">
-          <span>🎄 Gdańsk — Jarmark</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="WROCLAW_MARKET_2026">
-          <span>🎄 Wrocław — Jarmark</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="POZNAN_MARKET_2026">
-          <span>🎄 Poznań — Betlejem Poznańskie</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="WARSAW_MARKET_2026">
-          <span>🎄 Warszawa — Jarmark</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="KRAKOW_MARKET_2026">
-          <span>🎄 Kraków — Jarmark</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="VIENNA_MARKET_2026">
-          <span>🎄 Wiedeń — Christkindlmarkt</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="BERLIN_MARKET_2026">
-          <span>🎄 Berlin — jarmarki</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="DRESDEN_MARKET_2026">
-          <span>🎄 Drezno — Striezelmarkt</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="PRAGUE_MARKET_2026">
-          <span>🎄 Praga — jarmark</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="ZAGREB_ADVENT_2026">
-          <span>✨ Zagrzeb — Advent</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="LEGIA_RAKOW_2026">
-          <span>⚽ Legia — Raków</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="GKS_LECH_2026">
-          <span>⚽ GKS Katowice — Lech</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="LECH_POGON_2026">
-          <span>⚽ Lech — Pogoń</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="LIVERPOOL_MAN_UTD_2026">
-          <span>⚽ Liverpool — Manchester United</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="ARSENAL_MAN_CITY_2026">
-          <span>⚽ Arsenal — Manchester City</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="BARCA_CELTA_2026">
-          <span>⚽ Barcelona — Celta</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="BARCA_MAN_CITY_2026">
-          <span>⚽ Barcelona — Manchester City</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="GKS_LEGIA_2026">
-          <span>⚽ GKS Katowice — Legia</span>
-        </label>
-
-        <label class="profile-trip-option">
-          <input type="checkbox" value="LEGIA_POGON_2026">
-          <span>⚽ Legia — Pogoń</span>
-        </label>
+      <div class="profile-trip-picker">
+        <input id="profile-trip-search" type="search" placeholder="Szukaj wyjazdu, miasta lub wydarzenia..." autocomplete="off" aria-label="Szukaj wyjazdu">
+        <small id="profile-trip-help">Wpisz nazwę i wybierz interesujące Cię pozycje. Pokazujemy maksymalnie 8 wyników naraz.</small>
+        <div class="profile-trips" id="profile-trip-results" aria-live="polite"><p class="trip-picker-status">Wczytywanie aktualnej listy wyjazdów…</p></div>
+        <div class="profile-trip-selected" id="profile-trip-selected"></div>
       </div>
     </div>
 
@@ -876,6 +779,49 @@ const profileStyleAliases = {
   "Chill": "😎 Na luzie",
   "Imprezy": "🎉 Imprezowo"
 };
+
+const profileTripCatalog = new Map();
+const selectedProfileTrips = new Map();
+let profileTripCatalogReady = false;
+let profileTripCatalogLoading = false;
+function renderProfileTripPicker(){
+  const results=document.getElementById("profile-trip-results");
+  const search=document.getElementById("profile-trip-search");
+  const selected=document.getElementById("profile-trip-selected");
+  if(!results||!search||!selected)return;
+  const query=search.value.trim().toLocaleLowerCase("pl");
+  const chosen=Array.from(selectedProfileTrips.values());
+  const matches=Array.from(profileTripCatalog.values()).filter(t=>!query||(t.label+" "+t.id).toLocaleLowerCase("pl").includes(query)).slice(0,8);
+  results.replaceChildren();
+  if(!profileTripCatalogReady){results.innerHTML='<p class="trip-picker-status">Wczytywanie aktualnej listy wyjazdów…</p>';}
+  else if(!matches.length){results.innerHTML='<p class="trip-picker-status">'+(query?'Brak wyników. Spróbuj innej nazwy.':'Wpisz nazwę, aby wyszukać wyjazd.')+'</p>';}
+  else matches.forEach(t=>{
+    const label=document.createElement("label");label.className="profile-trip-option";
+    const input=document.createElement("input");input.type="checkbox";input.value=t.id;input.checked=selectedProfileTrips.has(t.id);
+    input.addEventListener("change",()=>{if(input.checked)selectedProfileTrips.set(t.id,t);else selectedProfileTrips.delete(t.id);renderProfileTripPicker();});
+    const span=document.createElement("span");span.textContent=t.label;label.append(input,span);results.append(label);
+  });
+  selected.replaceChildren();
+  if(chosen.length){const heading=document.createElement("small");heading.textContent="Wybrane wyjazdy ("+chosen.length+")";selected.append(heading);
+    chosen.forEach(t=>{const chip=document.createElement("span");chip.className="profile-trip-chip";const txt=document.createElement("span");txt.textContent=t.label;
+      const remove=document.createElement("button");remove.type="button";remove.textContent="×";remove.setAttribute("aria-label","Usuń "+t.label);remove.addEventListener("click",()=>{selectedProfileTrips.delete(t.id);renderProfileTripPicker();});chip.append(txt,remove);selected.append(chip);});
+  }
+}
+function loadProfileTripCatalog(){
+  if(profileTripCatalogLoading)return;profileTripCatalogLoading=true;
+  const frame=document.createElement("iframe");frame.title="Aktualna lista wyjazdów Juntigo";frame.setAttribute("aria-hidden","true");frame.tabIndex=-1;
+  frame.style.cssText="position:absolute;width:1px;height:1px;left:-10000px;top:-10000px;border:0;visibility:hidden";frame.src="wyjazdy.html?profileTripCatalog=1";
+  let done=false;const finish=(error)=>{if(done)return;done=true;profileTripCatalogLoading=false;
+    try{const doc=frame.contentDocument;if(!error&&doc){doc.querySelectorAll(".trip-card,.city-card").forEach(card=>{
+      const action=card.querySelector("[data-join-trip]");const id=action&&action.getAttribute("data-join-trip");const title=card.querySelector("h3");
+      if(id&&title){const label=title.textContent.trim();if(label&&!profileTripCatalog.has(id))profileTripCatalog.set(id,{id,label});}
+    });}}catch(e){console.warn("Nie udało się odczytać katalogu wyjazdów.",e);}
+    frame.remove();profileTripCatalogReady=true;selectedProfileTrips.forEach((trip,id)=>{if(!profileTripCatalog.has(id))profileTripCatalog.set(id,trip);});renderProfileTripPicker();
+  };
+  frame.addEventListener("load",()=>finish(false),{once:true});frame.addEventListener("error",()=>finish(true),{once:true});document.body.append(frame);setTimeout(()=>finish(true),12000);
+}
+document.getElementById("profile-trip-search").addEventListener("input",renderProfileTripPicker);
+loadProfileTripCatalog();
 
 function loadProfileFromBackend(sessionToken, existingProfile = null) {
   const profileRequest = existingProfile
@@ -978,16 +924,12 @@ document.querySelectorAll(
       .map(item => item.trim())
       .filter(Boolean);
 
-      document.querySelectorAll(".profile-trip-option input").forEach(input => {
-  input.checked = trips.includes(input.value);
-});
+      selectedProfileTrips.clear();
+      trips.forEach(id=>{const known=profileTripCatalog.get(id);selectedProfileTrips.set(id,known||{id,label:id});});
+      renderProfileTripPicker();
 
 const requestedTrip = new URLSearchParams(window.location.search).get("trip");
-if (requestedTrip) {
-  const requestedInput = Array.from(document.querySelectorAll(".profile-trip-option input"))
-    .find(input => input.value === requestedTrip);
-  if (requestedInput) requestedInput.checked = true;
-}
+if(requestedTrip){const found=profileTripCatalog.get(requestedTrip);selectedProfileTrips.set(requestedTrip,found||{id:requestedTrip,label:requestedTrip});renderProfileTripPicker();}
 
       showProfile(profile);
     })
