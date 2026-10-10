@@ -2499,19 +2499,34 @@ if(all)renderAllTrips(filteredTrips());else if(typeFilter.value==="sport")render
 
 document.addEventListener("click",event=>{const teamButton=event.target.closest(".trip-team-action");if(teamButton)loadTripTeam(teamButton);});
 
+function closeTripTeamModal(){
+const modal=document.getElementById("team-modal");
+if(modal)modal.remove();
+document.body.style.overflow="";
+}
 async function loadTripTeam(button){
-const trip=button.dataset.trip,card=button.closest(".city-card,.trip-card");if(!card)return;
-let box=card.querySelector(".team-results");
-if(box){box.remove();button.textContent="Zobacz ekipę";return;}
-box=document.createElement("div");box.className="team-results";box.innerHTML='<div class="team-empty">Szukamy ekipy...</div>';
-(card.querySelector(".city-content")||card.querySelector(".trip-content")).appendChild(box);button.textContent="Ukryj ekipę";
+const trip=button.dataset.trip;if(!trip)return;
+const previous=document.getElementById("team-modal");if(previous)previous.remove();
+const card=button.closest(".city-card,.trip-card");
+const tripLabel=card&&card.querySelector("h3")?card.querySelector("h3").textContent.trim():trip;
+const modal=document.createElement("div");modal.id="team-modal";
+modal.innerHTML='<div class="team-modal-overlay" aria-hidden="true"></div><section class="team-modal-box" role="dialog" aria-modal="true" aria-label="Ekipa na wyjazd"><button type="button" class="team-modal-close" aria-label="Zamknij">×</button><div class="team-modal-tag">JUNTIGO</div><h2>Ekipa na wyjazd</h2><p class="team-modal-trip-name"></p><div class="team-modal-content"><div class="team-results"><div class="team-empty">Szukamy ekipy...</div></div></div></section>';
+modal.querySelector(".team-modal-trip-name").textContent=tripLabel;
+modal.querySelector(".team-modal-overlay").addEventListener("click",closeTripTeamModal);
+modal.querySelector(".team-modal-close").addEventListener("click",closeTripTeamModal);
+document.addEventListener("keydown",function esc(event){if(event.key==="Escape"&&document.getElementById("team-modal")===modal){closeTripTeamModal();document.removeEventListener("keydown",esc);}});
+document.body.appendChild(modal);document.body.style.overflow="hidden";
+const results=modal.querySelector(".team-results");
 try{
 const session=await validateJuntigoSession();const token=session.authenticated?getJuntigoSessionToken():"";
-const response=await fetch(JUNTIGO_API+"?trip="+encodeURIComponent(trip)+(token?"&sessionToken="+encodeURIComponent(token):""));const data=await response.json();
-if(!data.success){box.innerHTML='<div class="team-empty">Nie udało się pobrać ekipy.</div>';return;}
-if(!Array.isArray(data.people)||!data.people.length){box.innerHTML='<div class="team-empty"><strong>Na razie nikogo tu nie ma.</strong><br>Bądź pierwszą osobą zainteresowaną tym kierunkiem.</div>';return;}
-box.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+data.count+'</span></div>'+data.people.slice(0,6).map(p=>'<div class="person-mini"><div><strong>'+escapeHtml(p.name||"Użytkownik")+'</strong><span>'+(p.age?escapeHtml(p.age+" lat"):"")+(p.city?" · "+escapeHtml(p.city):"")+'</span></div></div>').join("");
-}catch(error){console.error(error);box.innerHTML='<div class="team-empty">Wystąpił błąd podczas pobierania ekipy.</div>';}
+const response=await fetch(JUNTIGO_API+"?trip="+encodeURIComponent(trip)+(token?"&sessionToken="+encodeURIComponent(token):""));
+const data=await response.json();
+if(document.getElementById("team-modal")!==modal)return;
+if(!data.success){results.innerHTML='<div class="team-empty">Nie udało się pobrać danych ekipy. Spróbuj ponownie.</div>';return;}
+const people=Array.isArray(data.people)?data.people.filter(p=>p&&typeof p==="object"):[];
+if(!people.length){results.innerHTML='<div class="team-empty"><strong>Na razie nikogo tu nie ma.</strong><span>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</span></div>';return;}
+results.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+escapeHtml(String(Number(data.count)||people.length))+'</span></div>'+people.map(p=>'<article class="person-card"><h4>'+escapeHtml(p.name||"Użytkownik Juntigo")+'</h4><div class="person-meta">'+(p.age?escapeHtml(String(p.age))+' lat':'')+(p.city?' · '+escapeHtml(p.city):'')+'</div>'+(p.verified?'<div class="person-profile-verified">✓ Profil uzupełniony</div>':'')+(p.interests?'<div class="person-interests">'+escapeHtml(p.interests)+'</div>':'')+(p.travelStyle?'<div class="person-interests">Styl: '+escapeHtml(p.travelStyle)+'</div>':'')+(p.about?'<p class="person-about">„'+escapeHtml(p.about)+'”</p>':'')+'</article>').join("");
+}catch(error){if(document.getElementById("team-modal")===modal){console.error(error);results.innerHTML='<div class="team-empty">Wystąpił błąd podczas pobierania ekipy.</div>';}}
 }
 
 render();</script>
