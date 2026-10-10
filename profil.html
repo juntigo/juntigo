@@ -161,6 +161,11 @@
   flex-direction: column;
   gap: 24px;
 }
+.profile-card.is-loading .google-login-section,
+.profile-card.is-loading .profile-form,
+.profile-card.is-loading .profile-view {display:none!important}
+.profile-loading{padding:24px;border-radius:16px;background:#f7f8fa;color:var(--muted);font-weight:600}
+.profile-card:not(.is-loading) .profile-loading{display:none}
 
 .profile-photo-section {
   display: flex;
@@ -566,7 +571,7 @@
         </p>
       </div>
 
-     <div class="profile-card">
+     <div class="profile-card is-loading">\n  <div id="profile-loading" class="profile-loading" role="status">Wczytywanie profilu…</div>
 
   <div class="google-login-section">
     <h2>Zaloguj się przez Google</h2>
@@ -838,6 +843,11 @@ function loadProfileFromBackend(sessionToken, existingProfile = null) {
 profileRequest
     .then(data => {
       if (!data.success || !data.profile) {
+        const card = document.querySelector(".profile-card");
+        if (card) card.classList.remove("is-loading");
+        const loginSection = document.querySelector(".google-login-section");
+        if (loginSection) loginSection.style.display = "none";
+        document.querySelector(".profile-form").style.display = "flex";
         return;
       }
 
@@ -936,6 +946,10 @@ if(requestedTrip){const found=profileTripCatalog.get(requestedTrip);selectedProf
     })
     .catch(error => {
       console.error("Błąd ładowania profilu:", error);
+      const card = document.querySelector(".profile-card");
+      if (card) card.classList.remove("is-loading");
+      const loginSection = document.querySelector(".google-login-section");
+      if (loginSection) loginSection.style.display = "none";
       const saveMessage = document.getElementById("profile-save-message");
       saveMessage.textContent =
         "Nie udało się wczytać profilu. Odśwież stronę i spróbuj ponownie.";
@@ -1395,6 +1409,10 @@ fetch(JUNTIGO_API, {
     .filter(Boolean);
 }
 function showProfile(profile) {
+  const card = document.querySelector(".profile-card");
+  if (card) card.classList.remove("is-loading");
+  const loginSection = document.querySelector(".google-login-section");
+  if (loginSection) loginSection.style.display = "none";
   document.querySelector(".profile-form").style.display = "none";
 
   const profileView = document.getElementById("profile-view");
