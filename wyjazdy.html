@@ -1831,7 +1831,8 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 </footer>
 <script src="auth.js"></script>
 <script>
-function openJoinForm(trip) {
+function openJoinForm(trip, tripLabel) {
+    const displayTrip = String(tripLabel || trip || "").trim();
     const existingModal = document.getElementById("join-modal");
 
     if (existingModal) {
@@ -1855,7 +1856,7 @@ function openJoinForm(trip) {
 
                 <h2>Dołącz do wyjazdu</h2>
 
-                <p class="join-trip-name">${escapeHtml(trip)}</p>
+                <p class="join-trip-name">${escapeHtml(displayTrip)}</p>
 
                 <p class="join-description">
                     Zostaw swoje dane, a znajdziemy osoby zainteresowane tym samym wyjazdem.
@@ -2054,7 +2055,7 @@ formData.append(
         const data = await response.json();
 
        if (data.success) {
-    showJoinSuccess(trip);
+    showJoinSuccess(trip, displayTrip);
 } else {
     console.error(data.error);
     status.textContent = "Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.";
@@ -2077,7 +2078,10 @@ document.addEventListener("click", function(event) {
   const button = event.target.closest("[data-join-trip]");
   if (!button) return;
   event.preventDefault();
-  openJoinForm(button.getAttribute("data-join-trip") || "");
+  const tripId = button.getAttribute("data-join-trip") || "";
+    const card = button.closest(".city-card, .trip-card");
+    const heading = card && card.querySelector("h3");
+    openJoinForm(tripId, heading ? heading.textContent.trim() : tripId);
 });
 function closeJoinForm() {
     const modal = document.getElementById("join-modal");
@@ -2182,7 +2186,8 @@ async function saveInterest(event, trip, toUserId, toName) {
 }
 
 
-function showJoinSuccess(trip) {
+function showJoinSuccess(trip, tripLabel) {
+    const displayTrip = String(tripLabel || trip || "").trim();
     const modal = document.getElementById("join-modal");
 
     if (!modal) {
@@ -2208,7 +2213,7 @@ function showJoinSuccess(trip) {
     <h2>Zgłoszenie wysłane</h2>
 
     <p class="join-trip-name">
-        ${escapeHtml(trip)}
+        ${escapeHtml(displayTrip)}
     </p>
 
     <p>
