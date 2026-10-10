@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="icon" type="image/png" href="juntigo-logo.png">
+  <link rel="dns-prefetch" href="//connect.facebook.net">
+  <link rel="dns-prefetch" href="//www.facebook.com">
+  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+  <link rel="preconnect" href="https://www.facebook.com" crossorigin>
   <title>Moje konto — Juntigo</title>
   <meta name="description" content="Panel konta użytkownika Juntigo.">
   <meta name="robots" content="noindex, nofollow">
@@ -93,11 +97,13 @@
   window.fbAsyncInit=function(){
     window.FB.init({appId:appId,cookie:true,xfbml:false,version:"v23.0"});
     window.juntigoFacebookSDKReady=true;
+    if(button){button.disabled=false;button.removeAttribute("aria-busy");button.textContent="Zaloguj przez Facebook";}
   };
+  if(button){button.disabled=true;button.setAttribute("aria-busy","true");button.textContent="Ładowanie Facebooka…";}
   const sdk=document.createElement("script");
   sdk.async=true;sdk.defer=true;sdk.crossOrigin="anonymous";
   sdk.src="https://connect.facebook.net/pl_PL/sdk.js";
-  sdk.onerror=function(){showError("Nie udało się załadować Facebooka. Sprawdź blokowanie skryptów w przeglądarce.");};
+  sdk.onerror=function(){if(button){button.disabled=false;button.removeAttribute("aria-busy");button.textContent="Zaloguj przez Facebook";}showError("Nie udało się załadować Facebooka. Sprawdź połączenie i blokowanie skryptów w przeglądarce.");};
   document.head.appendChild(sdk);
   if(button){
     button.addEventListener("click",function(){
