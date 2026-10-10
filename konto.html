@@ -80,6 +80,50 @@
 <main>
 <div class="eyebrow">Juntigo</div><h1>Moje konto</h1><p class="intro">Zarządzaj swoim profilem, wyjazdami i dopasowaniami w jednym miejscu.</p>
 <section class="login-section"><h2>Zaloguj się do Juntigo</h2><p>Wybierz sposób logowania. Po zalogowaniu otworzy się Twoje konto Juntigo.</p><div class="login-buttons"><div id="google-login-button"></div><button type="button" class="facebook-login-button" id="facebook-login-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v1.8H7v3.1h2.7v8h3.7z"/></svg>Zaloguj przez Facebook</button></div><div id="account-login-status"></div><div id="account-error"></div></section>
+<script>
+(function(){
+  const appId="28416419968053118";
+  const api="https://script.google.com/macros/s/AKfycbz6nBiCff3kuKl4VN06tBxZMbeFICB8WV1S9x5cEQV8kOkwkFbstpYkVuHUtzpvENSu/exec";
+  const button=document.getElementById("facebook-login-button");
+  function showError(message){
+    const box=document.getElementById("account-error");
+    if(box){box.textContent=message;box.style.display="block";}
+    console.error("Juntigo Facebook login:",message);
+  }
+  window.fbAsyncInit=function(){
+    window.FB.init({appId:appId,cookie:true,xfbml:false,version:"v23.0"});
+    window.juntigoFacebookSDKReady=true;
+  };
+  const sdk=document.createElement("script");
+  sdk.async=true;sdk.defer=true;sdk.crossOrigin="anonymous";
+  sdk.src="https://connect.facebook.net/pl_PL/sdk.js";
+  sdk.onerror=function(){showError("Nie udało się załadować Facebooka. Sprawdź blokowanie skryptów w przeglądarce.");};
+  document.head.appendChild(sdk);
+  if(button){
+    button.addEventListener("click",function(){
+      if(button.disabled)return;
+      const FB=window.FB;
+      if(!FB||!FB.login){showError("Facebook nie jest jeszcze gotowy. Odśwież stronę i spróbuj ponownie.");return;}
+      const box=document.getElementById("account-error");
+      if(box){box.textContent="";box.style.display="none";}
+      button.disabled=true;
+      FB.login(async function(response){
+        try{
+          const token=response&&response.authResponse&&response.authResponse.accessToken;
+          if(!token)throw new Error("Logowanie zostało anulowane lub Facebook nie przyznał wymaganych uprawnień.");
+          const body=new URLSearchParams({type:"facebookSession",accessToken:token});
+          const resultResponse=await fetch(api,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),redirect:"follow",credentials:"omit"});
+          const result=await resultResponse.json();
+          if(!result.success||!result.sessionToken)throw new Error(result.error||"Backend Juntigo nie utworzył sesji.");
+          localStorage.setItem("juntigoSessionToken",result.sessionToken);
+          window.location.reload();
+        }catch(error){showError(error.message||"Nie udało się zalogować przez Facebooka.");}
+        finally{button.disabled=false;}
+      },{scope:"email,public_profile",return_scopes:true});
+    });
+  }
+})();
+</script>
 <section class="account-header"><div class="avatar" id="account-avatar">J</div><div><h2 id="account-name">Twój profil</h2><p id="account-city">Zaloguj się przez Google, aby wczytać profil.</p><div class="verified" id="account-status">Konto Juntigo</div></div></section>
 <section class="dashboard-grid" aria-label="Nawigacja konta">
 <a href="profil.html" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path></svg></div><div><h3>Mój profil</h3><p>Edytuj zdjęcie, opis, zainteresowania i styl podróżowania.</p></div><span class="arrow">›</span></a>
@@ -1138,62 +1182,7 @@ document.getElementById("chat-modal").addEventListener("click", function(event) 
 });
 async function handleGoogleCredential(response){const idToken=response.credential||"";if(!idToken)return;try{const responseSession=await fetch(JUNTIGO_API+"?action=session&idToken="+encodeURIComponent(idToken),{method:"GET"});const result=await responseSession.json();if(!result.success||!result.sessionToken){throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");}juntigoSessionToken=result.sessionToken;localStorage.setItem(JUNTIGO_AUTH_SESSION_KEY,juntigoSessionToken);await loadAccountProfile(juntigoSessionToken);}catch(error){console.error("Błąd logowania Juntigo:",error);setAccountError(error.message||"Nie udało się zalogować.");}}
 function initializeGoogleLogin(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initializeGoogleLogin,300);return;}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:true});google.accounts.id.renderButton(document.getElementById("google-login-button"),{theme:"outline",size:"large",text:"signin_with",shape:"rectangular"});}
-window.startFacebookLogin=async function(){
-  const button=document.getElementById("facebook-login-button");
-  if(!button)return;
-  setAccountError("");
-  if(!FACEBOOK_APP_ID||FACEBOOK_APP_ID==="WSTAW_META_APP_ID"){
-    setAccountError("Logowanie Facebook wymaga skonfigurowania App ID aplikacji Meta.");
-    return;
-  }
-  button.disabled=true;
-  try{
-    let attempts=0;
-    while((!window.FB||!window.FB.login)&&attempts<100){
-      await new Promise(resolve=>setTimeout(resolve,100));
-      attempts++;
-    }
-    if(!window.FB||!window.FB.login)throw new Error("Facebook nie załadował modułu logowania. Odśwież stronę i sprawdź, czy przeglądarka nie blokuje connect.facebook.net.");
-    window.FB.login(async function(response){
-      try{
-        const accessToken=response&&response.authResponse&&response.authResponse.accessToken;
-        if(!accessToken)throw new Error("Logowanie Facebook zostało anulowane lub nie przyznano wymaganych uprawnień.");
-        const body=new URLSearchParams({type:"facebookSession",accessToken:accessToken});
-        const responseSession=await fetch(JUNTIGO_API,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),redirect:"follow",credentials:"omit"});
-        const result=await responseSession.json();
-        if(!result.success||!result.sessionToken)throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");
-        juntigoSessionToken=result.sessionToken;
-        localStorage.setItem(JUNTIGO_AUTH_SESSION_KEY,juntigoSessionToken);
-        await loadAccountProfile(juntigoSessionToken);
-      }catch(error){
-        console.error("Błąd logowania Facebook Juntigo:",error);
-        setAccountError(error.message||"Nie udało się zalogować przez Facebooka.");
-      }finally{button.disabled=false;}
-    },{scope:"email,public_profile",return_scopes:true});
-  }catch(error){
-    console.error("Błąd inicjalizacji logowania Facebook Juntigo:",error);
-    setAccountError(error.message||"Nie udało się uruchomić logowania Facebook.");
-    button.disabled=false;
-  }
-};
-const facebookLoginButton=document.getElementById("facebook-login-button");
-if(facebookLoginButton)facebookLoginButton.addEventListener("click",window.startFacebookLogin);
-function initializeFacebookLogin(){
-  if(!FACEBOOK_APP_ID||FACEBOOK_APP_ID==="WSTAW_META_APP_ID")return;
-  window.fbAsyncInit=function(){
-    window.FB.init({appId:FACEBOOK_APP_ID,cookie:true,xfbml:false,version:"v23.0"});
-  };
-  if(!document.getElementById("facebook-jssdk")){
-    const sdk=document.createElement("script");
-    sdk.id="facebook-jssdk";
-    sdk.async=true;
-    sdk.defer=true;
-    sdk.crossOrigin="anonymous";
-    sdk.src="https://connect.facebook.net/pl_PL/sdk.js";
-    sdk.onerror=function(){setAccountError("Nie udało się pobrać Facebook SDK. Sprawdź blokowanie skryptów lub połączenie.");};
-    document.head.appendChild(sdk);
-  }
-}
+function initializeFacebookLogin(){}
 window.addEventListener("load",function(){initializeFacebookLogin();if(juntigoSessionToken){loadAccountProfile(juntigoSessionToken);}else{initializeGoogleLogin();}});
 function logoutJuntigo(){document.getElementById("logout-button").style.display="none";
   clearJuntigoSession();
