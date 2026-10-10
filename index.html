@@ -3577,14 +3577,7 @@ ${person.trips ? `
         });
       });
     results.querySelectorAll(".person-contact:not(.interest-sent)").forEach(button => {
-    button.addEventListener("click", event => {
-        saveInterest(
-            event,
-            button.dataset.trip,
-            button.dataset.userId,
-            button.dataset.userName
-        );
-    });
+    button.addEventListener("click", () => openInterestForm(button));
 });
     })
     .catch(error => {
@@ -4558,78 +4551,95 @@ function getInstagramUrl(value) {
   return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
 }
   
-async function saveInterest(event, trip, toUserId, toName) {
-    if (event) event.preventDefault();
+function closeInterestForm() {
+  const modal = document.getElementById("interest-form-modal");
+  if (modal) modal.remove();
+  document.body.style.overflow = "";
+}
 
-    const contactButton =
-        event && event.currentTarget ? event.currentTarget : null;
-
-    const sessionToken = getJuntigoSessionToken();
-
-    if (!sessionToken) {
-        window.location.href = "konto.html";
-        return;
+function openInterestForm(contactButton) {
+  const previous = document.getElementById("interest-form-modal");
+  if (previous) previous.remove();
+  const modal = document.createElement("div");
+  modal.id = "interest-form-modal";
+  modal.style.cssText = "position:fixed;inset:0;z-index:10050;background:rgba(7,27,51,.72);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto";
+  modal.innerHTML = `
+    <section role="dialog" aria-modal="true" aria-labelledby="interest-form-title" style="position:relative;width:min(100%,560px);background:#fff;border-radius:28px;padding:36px;box-shadow:0 24px 80px rgba(0,0,0,.22)">
+      <button type="button" aria-label="Zamknij" data-close-interest style="position:absolute;right:18px;top:18px;width:44px;height:44px;border:0;border-radius:50%;background:#f1f3f5;font-size:26px;cursor:pointer;color:#071b33">×</button>
+      <div style="font-size:14px;letter-spacing:3px;font-weight:800;color:#ff7417;margin-bottom:12px">JUNTIGO</div>
+      <h2 id="interest-form-title" style="font-size:30px;line-height:1.2;margin:0 48px 12px 0;color:#071b33">Jestem zainteresowany</h2>
+      <p style="font-size:17px;line-height:1.6;color:#536b84;margin:0 0 24px">Podaj swój Instagram, aby druga osoba mogła Cię rozpoznać. Zainteresowanie będzie wzajemne dopiero wtedy, gdy druga osoba również wyśle Ci zainteresowanie i poda swój Instagram.</p>
+      <form id="interest-form">
+        <label for="interest-instagram" style="display:block;font-weight:700;margin-bottom:8px;color:#071b33">Twój Instagram</label>
+        <input id="interest-instagram" name="instagram" type="text" maxlength="100" required placeholder="@twojprofil" autocomplete="off" style="box-sizing:border-box;width:100%;height:56px;border:1px solid #d2dce7;border-radius:14px;padding:0 16px;font:inherit;margin-bottom:18px">
+        <p id="interest-form-error" role="alert" style="display:none;color:#a33a2b;font-weight:700;margin:0 0 14px"></p>
+        <button type="submit" style="width:100%;min-height:58px;border:0;border-radius:999px;background:#ff7417;color:white;font-size:17px;font-weight:800;cursor:pointer">Wyślij zainteresowanie</button>
+      </form>
+    </section>`;
+  document.body.appendChild(modal);
+  document.body.style.overflow = "hidden";
+  modal.querySelector("[data-close-interest]").addEventListener("click", closeInterestForm);
+  modal.addEventListener("click", event => { if (event.target === modal) closeInterestForm(); });
+  modal.querySelector("#interest-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const input = modal.querySelector("#interest-instagram");
+    const instagram = input.value.trim().replace(/^@+/, "");
+    const error = modal.querySelector("#interest-form-error");
+    if (!/^[A-Za-z0-9._]{1,100}$/.test(instagram)) {
+      error.textContent = "Wpisz prawidłową nazwę użytkownika na Instagramie.";
+      error.style.display = "block";
+      return;
     }
+    const submit = modal.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    submit.textContent = "Wysyłanie…";
+    error.style.display = "none";
+    const sent = await saveInterest(contactButton.dataset.trip, contactButton.dataset.userId, instagram, contactButton);
+    if (sent) closeInterestForm();
+    else { submit.disabled = false; submit.textContent = "Wyślij zainteresowanie"; }
+  });
+}
 
-    const normalizedTrip = String(trip || "").trim();
-    const normalizedUserId = String(toUserId || "").trim();
-
-    if (!normalizedTrip || !normalizedUserId) {
-        console.error("Brak danych zainteresowania.", {
-            trip: normalizedTrip,
-            toUserId: normalizedUserId
-        });
-        return;
+async function saveInterest(trip, toUserId, instagram, contactButton) {
+  const sessionToken = getJuntigoSessionToken();
+  if (!sessionToken) {
+    const error = document.getElementById("interest-form-error");
+    if (error) {
+      error.innerHTML = 'Aby wysłać zainteresowanie, zaloguj się do Juntigo. <a href="konto.html" style="color:#ff7417;font-weight:700">Przejdź do logowania</a>.';
+      error.style.display = "block";
+    } else window.location.href = "konto.html";
+    return false;
+  }
+  const normalizedTrip = String(trip || "").trim();
+  const normalizedUserId = String(toUserId || "").trim();
+  const normalizedInstagram = String(instagram || "").trim().replace(/^@+/, "");
+  if (!normalizedTrip || !normalizedUserId) {
+    const error = document.getElementById("interest-form-error");
+    if (error) { error.textContent = "Nie udało się ustalić wyjazdu lub użytkownika. Zamknij okno i spróbuj ponownie."; error.style.display = "block"; }
+    return false;
+  }
+  if (contactButton) { contactButton.disabled = true; contactButton.textContent = "Wysyłamy…"; }
+  try {
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({type:"interest",sessionToken,trip:normalizedTrip,toUserId:normalizedUserId,instagram:normalizedInstagram})
+    });
+    const data = await response.json();
+    if (!data.success) throw new Error(data.error || "Nie udało się wysłać zainteresowania.");
+    if (contactButton) { contactButton.textContent = "Zainteresowanie wysłane"; contactButton.classList.add("interest-sent"); contactButton.disabled = true; }
+    return true;
+  } catch (error) {
+    console.error("Błąd wysyłania zainteresowania:", error);
+    const formError = document.getElementById("interest-form-error");
+    if (formError) {
+      formError.textContent = /sesj|zalog|token|uwierzyteln/i.test(error.message || "")
+        ? "Sesja Juntigo wygasła. Zaloguj się ponownie i spróbuj jeszcze raz."
+        : (error.message || "Nie udało się wysłać zainteresowania.");
+      formError.style.display = "block";
     }
-
-    if (contactButton) {
-        contactButton.disabled = true;
-        contactButton.textContent = "Wysyłamy...";
-    }
-
-    try {
-        const response = await fetch(JUNTIGO_API, {
-            method: "POST",
-            body: new URLSearchParams({
-                type: "interest",
-                sessionToken: sessionToken,
-                trip: normalizedTrip,
-                toUserId: normalizedUserId
-            })
-        });
-
-        const data = await response.json();
-
-        if (!data.success) {
-            const errorMessage =
-                data.error || "Nie udało się wysłać zainteresowania.";
-
-            if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
-                clearJuntigoSession();
-                window.location.href = "konto.html";
-                return;
-            }
-
-            throw new Error(errorMessage);
-        }
-
-        if (contactButton) {
-            contactButton.textContent = "Zainteresowanie wysłane";
-            contactButton.classList.add("interest-sent");
-        }
-    } catch (error) {
-        console.error("Błąd wysyłania zainteresowania:", error);
-
-        if (contactButton) {
-            contactButton.textContent = "Jestem zainteresowany";
-            contactButton.disabled = false;
-        }
-
-        if (/sesj|zalog|token|uwierzyteln/i.test(error.message || "")) {
-            clearJuntigoSession();
-            window.location.href = "konto.html";
-        }
-    }
+    if (contactButton) { contactButton.textContent = "Jestem zainteresowany"; contactButton.disabled = false; }
+    return false;
+  }
 }
 
 </script>
