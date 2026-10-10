@@ -4643,6 +4643,17 @@ async function saveInterest(trip, toUserId, instagram, contactButton) {
   }
 }
 
+
+// Otwórz formularz propozycji, jeśli użytkownik przeszedł z przycisku „Dodaj wyjazd”.
+(function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("openProposal") !== "1") return;
+    openProposalForm();
+    params.delete("openProposal");
+    const query = params.toString();
+    const cleanUrl = window.location.pathname + (query ? "?" + query : "") + window.location.hash;
+    window.history.replaceState({}, document.title, cleanUrl);
+})();
 </script>
   
 
