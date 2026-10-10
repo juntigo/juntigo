@@ -1751,6 +1751,12 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
   @media (max-width:1100px){.trip-carousel-track{grid-auto-columns:calc((100% - 32px)/2);gap:32px}}
 @media (max-width:700px){.trip-carousel-track{grid-auto-columns:86%;gap:16px;padding-left:2px;padding-right:2px}.trip-carousel-arrow{width:46px;height:46px;font-size:22px}.trip-carousel-arrow--prev{left:8px}.trip-carousel-arrow--next{right:8px}.trip-featured-visual{height:210px}.featured-trip .trip-content{padding-bottom:175px}}
 </style>
+<style>
+.site-footer{background:#041426;color:#aebdcd;padding:28px 0}
+.site-footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.site-footer-brand img{width:58px;height:58px;object-fit:contain;display:block}
+@media(max-width:600px){.site-footer-inner{flex-direction:column;text-align:center}.site-footer-brand img{width:54px;height:54px}}
+</style>
 </head>
 <body>
 <nav>
@@ -1814,7 +1820,14 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 <div id="allView" class="hidden"></div>
 </div>
 </main>
-<footer>Juntigo — łączymy podróżników</footer>
+<footer class="site-footer">
+  <div class="container site-footer-inner">
+    <a href="index.html" class="site-footer-brand" aria-label="Juntigo — strona główna">
+      <img src="juntigo-logo.png" alt="Juntigo">
+    </a>
+    <span>© 2026 Juntigo. Łączymy podróżników</span>
+  </div>
+</footer>
 <script src="auth.js"></script>
 <script>
 function openJoinForm(trip) {
