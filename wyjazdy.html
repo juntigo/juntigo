@@ -2499,6 +2499,18 @@ if(all)renderAllTrips(filteredTrips());else if(typeFilter.value==="sport")render
 
 document.addEventListener("click",event=>{const teamButton=event.target.closest(".trip-team-action");if(teamButton)loadTripTeam(teamButton);});
 
+function showTripPersonProfile(person){
+if(!person)return;
+const old=document.getElementById("trip-person-profile-modal");if(old)old.remove();
+const modal=document.createElement("div");modal.id="person-profile-modal";
+modal.innerHTML='<div class="team-modal-overlay"></div><section class="team-modal-box person-profile-modal-box" role="dialog" aria-modal="true" aria-label="Profil użytkownika"><button type="button" class="team-modal-close" aria-label="Zamknij">×</button><div class="team-modal-tag">JUNTIGO</div><h2></h2><div class="person-profile-details"></div></section>';
+modal.querySelector("h2").textContent=person.name||"Użytkownik Juntigo";
+const details=modal.querySelector(".person-profile-details");
+const lines=[person.age?(person.age+" lat"):"",person.city||"",person.verified?"✓ Profil uzupełniony":"",person.interests?("Zainteresowania: "+person.interests):"",person.travelStyle?("Styl podróżowania: "+person.travelStyle):"",person.instagram?("Instagram: "+person.instagram):"",person.about||""].filter(Boolean);
+details.textContent=lines.join("\\n");
+details.style.whiteSpace="pre-line";details.style.lineHeight="1.8";
+const close=()=>modal.remove();modal.querySelector(".team-modal-overlay").addEventListener("click",close);modal.querySelector(".team-modal-close").addEventListener("click",close);document.body.appendChild(modal);
+}
 function closeTripTeamModal(){
 const modal=document.getElementById("team-modal");
 if(modal)modal.remove();
@@ -2525,7 +2537,10 @@ if(document.getElementById("team-modal")!==modal)return;
 if(!data.success){results.innerHTML='<div class="team-empty">Nie udało się pobrać danych ekipy. Spróbuj ponownie.</div>';return;}
 const people=Array.isArray(data.people)?data.people.filter(p=>p&&typeof p==="object"):[];
 if(!people.length){results.innerHTML='<div class="team-empty"><strong>Na razie nikogo tu nie ma.</strong><span>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</span></div>';return;}
-results.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+escapeHtml(String(Number(data.count)||people.length))+'</span></div>'+people.map(p=>'<article class="person-card"><h4>'+escapeHtml(p.name||"Użytkownik Juntigo")+'</h4><div class="person-meta">'+(p.age?escapeHtml(String(p.age))+' lat':'')+(p.city?' · '+escapeHtml(p.city):'')+'</div>'+(p.verified?'<div class="person-profile-verified">✓ Profil uzupełniony</div>':'')+(p.interests?'<div class="person-interests">'+escapeHtml(p.interests)+'</div>':'')+(p.travelStyle?'<div class="person-interests">Styl: '+escapeHtml(p.travelStyle)+'</div>':'')+(p.about?'<p class="person-about">„'+escapeHtml(p.about)+'”</p>':'')+'</article>').join("");
+window.juntigoTeamPeople=people;
+results.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+escapeHtml(String(Number(data.count)||people.length))+'</span></div>'+people.map((p,index)=>'<article class="person-card"><h4>'+escapeHtml(p.name||"Użytkownik Juntigo")+'</h4><div class="person-meta">'+(p.age?escapeHtml(String(p.age))+' lat':'')+(p.city?' · '+escapeHtml(p.city):'')+'</div>'+(p.verified?'<div class="person-profile-verified">✓ Profil uzupełniony</div>':'')+(p.interests?'<div class="person-interests">'+escapeHtml(p.interests)+'</div>':'')+(p.travelStyle?'<div class="person-interests">Styl: '+escapeHtml(p.travelStyle)+'</div>':'')+(p.about?'<p class="person-about">„'+escapeHtml(p.about)+'”</p>':'')+(p.instagram?'<a class="person-instagram" target="_blank" rel="noopener noreferrer" href="'+getInstagramUrl(p.instagram)+'">'+escapeHtml(p.instagram)+'</a>':'')+(p.userId?'<div class="person-card-actions"><button type="button" class="person-profile-button" data-person-index="'+index+'">Zobacz profil</button><button type="button" class="person-contact" data-person-index="'+index+'" data-trip="'+escapeHtml(trip)+'" data-user-id="'+escapeHtml(p.userId)+'" data-user-name="'+escapeHtml(p.name||"Użytkownik Juntigo")+'" '+(p.alreadyInterested?'disabled':'')+'>'+(p.alreadyInterested?'Zainteresowanie wysłane':'Jestem zainteresowany')+'</button></div>':'')+'</article>').join("");
+results.querySelectorAll(".person-profile-button").forEach(b=>b.addEventListener("click",()=>showTripPersonProfile(window.juntigoTeamPeople[Number(b.dataset.personIndex)])));
+results.querySelectorAll(".person-contact").forEach(b=>b.addEventListener("click",event=>saveInterest(event,b.dataset.trip,b.dataset.userId,b.dataset.userName)));
 }catch(error){if(document.getElementById("team-modal")===modal){console.error(error);results.innerHTML='<div class="team-empty">Wystąpił błąd podczas pobierania ekipy.</div>';}}
 }
 
