@@ -1930,12 +1930,17 @@
       gap: 20px;
     }
 
-    footer .logo {
-      color: white;
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
     }
 
-    footer .logo span {
-      color: var(--orange);
+    .footer-brand img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      display: block;
     }
 
     footer p {
@@ -2935,9 +2940,9 @@
   <footer>
     <div class="container footer-inner">
 
-      <div class="logo">
-        JUNTI<span>GO</span>
-      </div>
+      <a href="index.html" class="footer-brand" aria-label="Juntigo — strona główna">
+        <img src="juntigo-logo.png" alt="Juntigo">
+      </a>
 
       <p>
         © 2026 Juntigo. Łączymy podróżników.
