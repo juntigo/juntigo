@@ -149,6 +149,10 @@
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+.mobile-socials {
+    display: none;
+}
+
 .nav-social-link:hover {
     transform: translateY(-1px);
 }
@@ -1966,6 +1970,30 @@
     font-size: 13px;
     white-space: nowrap;
 }
+
+.nav-inner .nav-cta {
+    display: none;
+}
+
+.nav-inner .mobile-socials {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.nav-inner .mobile-socials .nav-social-link {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-inner .mobile-socials .nav-social-link svg {
+    width: 18px;
+    height: 18px;
+}
   nav {
     width: 100%;
   }
@@ -2471,6 +2499,29 @@
   ></span>
 </div>
 
+
+<div class="mobile-socials" aria-label="Media społecznościowe Juntigo">
+  <a href="https://www.instagram.com/juntigo.pl/" class="nav-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram Juntigo" title="Instagram">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+      <circle cx="12" cy="12" r="4.2"></circle>
+      <circle cx="17.4" cy="6.7" r="1.1" fill="currentColor" stroke="none"></circle>
+    </svg>
+  </a>
+  <a href="https://www.tiktok.com/@juntigo.pl" class="nav-social-link nav-tiktok" target="_blank" rel="noopener noreferrer" aria-label="TikTok Juntigo" title="TikTok">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14.8 3.2v11.1a3.8 3.8 0 1 1-3.1-3.7"></path>
+      <path d="M14.8 3.2c.5 2.7 2.1 4.5 4.9 4.9"></path>
+      <path d="M13.8 4.2c.7 2.1 2.1 3.3 4.2 3.8"></path>
+    </svg>
+  </a>
+  <a href="https://www.facebook.com/share/1JoncSBZb3/?mibextid=wwXIfr" class="nav-social-link nav-facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook Juntigo" title="Facebook">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"></circle>
+      <path d="M13.4 20v-7h2.4l.4-2.8h-2.8V8.4c0-.8.2-1.4 1.4-1.4h1.5V4.5c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7v2.1H8.2V13h2.4v7h2.8z" fill="#fff" stroke="none"></path>
+    </svg>
+  </a>
+</div>
 <a href="#wyjazdy" class="nav-cta">Znajdź wyjazd</a>
 
     </div>
