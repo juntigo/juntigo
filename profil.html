@@ -1268,9 +1268,7 @@ photo: profilePhotoPreview.querySelector("img")
 
 travelStyle: selectedTravelStyle,
 
-trips: Array.from(
-  document.querySelectorAll(".profile-trip-option input:checked")
-).map(input => input.value)
+trips: Array.from(selectedProfileTrips.keys())
 };
     
 
