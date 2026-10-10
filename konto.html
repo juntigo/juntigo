@@ -261,6 +261,50 @@ function setLoginSectionState(state, identityText){
     if(status)status.textContent="";
   }
 }
+const juntigoAccountTripCatalog=new Map();
+let juntigoAccountTripCatalogReady=false;
+function renderAccountTripList(){
+  const trips=Array.isArray(window.juntigoAccountProfileTrips)?window.juntigoAccountProfileTrips:[];
+  const tripList=document.getElementById("trip-list");
+  if(!tripList)return;
+  if(!trips.length){tripList.innerHTML='<div class="empty">Brak wybranych wyjazdów.</div>';return;}
+  tripList.replaceChildren(...trips.map(function(trip){
+    const id=String(trip||"").trim();
+    const label=juntigoAccountTripCatalog.get(id)||({
+      "BARCA_REAL_2026-10-25":"FC Barcelona – Real Madryt",
+      "MEDIOLAN":"Mediolan",
+      "OKTOBERFEST":"Oktoberfest 2026",
+      "MALAGA_CF_ESPANYOL":"Málaga CF – Espanyol"
+    })[id]||id;
+    const item=document.createElement("div");item.className="trip-item";
+    const title=document.createElement("strong");title.textContent=label;
+    const status=document.createElement("span");status.textContent="Wybrany w profilu";
+    item.append(title,status);return item;
+  }));
+}
+function loadAccountTripCatalog(){
+  const frame=document.createElement("iframe");
+  frame.title="Aktualny katalog wyjazdów";frame.setAttribute("aria-hidden","true");frame.tabIndex=-1;
+  frame.style.cssText="position:absolute;width:1px;height:1px;left:-10000px;top:-10000px;border:0;visibility:hidden";
+  frame.src="wyjazdy.html?profileTripCatalog=1";
+  let done=false;
+  const finish=(failed)=>{
+    if(done)return;done=true;
+    try{
+      const doc=frame.contentDocument;
+      if(!failed&&doc)doc.querySelectorAll(".trip-card,.city-card").forEach(card=>{
+        const action=card.querySelector("[data-join-trip]");
+        const id=action&&action.getAttribute("data-join-trip");
+        const title=card.querySelector("h3");
+        if(id&&title&&title.textContent.trim()&&!juntigoAccountTripCatalog.has(id))juntigoAccountTripCatalog.set(id,title.textContent.trim());
+      });
+    }catch(error){console.warn("Nie udało się odczytać katalogu wyjazdów.",error);}
+    frame.remove();juntigoAccountTripCatalogReady=true;renderAccountTripList();
+  };
+  frame.addEventListener("load",()=>finish(false),{once:true});
+  frame.addEventListener("error",()=>finish(true),{once:true});
+  document.body.append(frame);setTimeout(()=>finish(true),12000);
+}
 async function loadAccountProfileInternal(sessionToken){if(!sessionToken)return;setAccountError("");document.getElementById("account-login-status").textContent="Wczytywanie konta…";try{const session=await validateJuntigoSession();if(getJuntigoSessionToken()!==sessionToken){return;}const result={success:!!session.authenticated,profile:session.profile||null,identity:session.identity||null};if(!result.success){clearJuntigoSession();juntigoSessionToken="";juntigoUserId="";activeChatMatchId="";activeChatPersonName="";activeChatTrip="";activeChatUserId="";setChatError("");setLoginSectionState("login");document.getElementById("account-login-status").textContent="Sesja wygasła. Zaloguj się ponownie.";document.getElementById("logout-button").style.display="none";document.getElementById("account-name").textContent="Twój profil";document.getElementById("account-city").textContent="Zaloguj się, aby wczytać profil.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("account-avatar").textContent="J";document.getElementById("trip-list").innerHTML='<div class="empty">Zaloguj się, aby wczytać wyjazdy.</div>';document.getElementById("interest-list").innerHTML='<div class="interest-empty">Zaloguj się, aby wczytać zainteresowania.</div>';document.getElementById("match-list").innerHTML='<div class="match-empty">Zaloguj się, aby wczytać dopasowania.</div>';initializeGoogleLogin();return;}const profile=result.profile;const identity=result.identity||{};if(getJuntigoSessionToken()!==sessionToken){return;}juntigoUserId=String(identity.userId||"").trim();setLoginSectionState("authenticated",identity.name||identity.email||"użytkownik");document.getElementById("logout-button").style.display="inline-flex";if(!profile){document.getElementById("account-name").textContent="Nie masz jeszcze profilu";document.getElementById("account-city").textContent=identity.email||"Utwórz profil Juntigo.";document.getElementById("account-status").textContent="Konto Juntigo";document.getElementById("trip-list").innerHTML='<div class="empty">Najpierw utwórz swój profil.</div><a href="profil.html" class="profile-action">Utwórz profil</a>';document.getElementById("interest-list").innerHTML='<div class="interest-empty">Utwórz profil, aby korzystać z zainteresowań.</div>';document.getElementById("match-list").innerHTML='<div class="match-empty">Utwórz profil, aby zobaczyć dopasowania.</div>';return;}const name=profile.name||identity.name||"Twój profil";document.getElementById("account-name").textContent=name;document.getElementById("account-city").textContent=profile.city||"Profil Juntigo";document.getElementById("account-status").textContent=profile.verified?"✓ Profil uzupełniony":"Profil Juntigo";const avatar=document.getElementById("account-avatar");if (
   profile.photo &&
   /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))
@@ -274,7 +318,7 @@ async function loadAccountProfileInternal(sessionToken){if(!sessionToken)return;
   avatar.appendChild(image);
 } else {
   avatar.textContent = name.charAt(0).toUpperCase();
-}const trips=Array.isArray(profile.trips)?profile.trips:[];const tripList=document.getElementById("trip-list");if(trips.length){tripList.innerHTML=trips.map(function(trip){return'<div class="trip-item"><strong>'+escapeHtml(trip)+'</strong><span>Wybrany w profilu</span></div>';}).join("");}else{tripList.innerHTML='<div class="empty">Brak wybranych wyjazdów.</div>';}await Promise.all([
+}window.juntigoAccountProfileTrips=Array.isArray(profile.trips)?profile.trips:[];renderAccountTripList();await Promise.all([
   loadAccountInterests(sessionToken),
   loadAccountMatches(sessionToken)
 ]);if(getJuntigoSessionToken()!==sessionToken){return;} }catch(error){console.error("Błąd Juntigo:",error);setLoginSectionState("login");document.getElementById("account-login-status").textContent="";setAccountError(error.message||"Nie udało się wczytać konta.");}}
@@ -1218,7 +1262,7 @@ document.getElementById("chat-modal").addEventListener("click", function(event) 
 async function handleGoogleCredential(response){const idToken=response.credential||"";if(!idToken)return;try{const responseSession=await fetch(JUNTIGO_API+"?action=session&idToken="+encodeURIComponent(idToken),{method:"GET"});const result=await responseSession.json();if(!result.success||!result.sessionToken){throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");}juntigoSessionToken=result.sessionToken;localStorage.setItem(JUNTIGO_AUTH_SESSION_KEY,juntigoSessionToken);await loadAccountProfile(juntigoSessionToken);}catch(error){console.error("Błąd logowania Juntigo:",error);setAccountError(error.message||"Nie udało się zalogować.");}}
 function initializeGoogleLogin(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initializeGoogleLogin,300);return;}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:true});google.accounts.id.renderButton(document.getElementById("google-login-button"),{theme:"outline",size:"large",text:"signin_with",shape:"rectangular"});}
 function initializeFacebookLogin(){}
-window.addEventListener("load",function(){initializeFacebookLogin();if(juntigoSessionToken){setLoginSectionState("checking");loadAccountProfile(juntigoSessionToken);}else{setLoginSectionState("login");initializeGoogleLogin();}});
+window.addEventListener("load",function(){initializeFacebookLogin();loadAccountTripCatalog();if(juntigoSessionToken){setLoginSectionState("checking");loadAccountProfile(juntigoSessionToken);}else{setLoginSectionState("login");initializeGoogleLogin();}});
 function logoutJuntigo(){document.getElementById("logout-button").style.display="none";
   clearJuntigoSession();
   juntigoSessionToken="";
