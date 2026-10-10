@@ -29,6 +29,11 @@
     .notice { background:white; border:1px solid var(--border); border-radius:16px; padding:20px; margin:24px 0; }
     footer { border-top:1px solid var(--border); padding:28px 0 40px; color:var(--muted); background:white; }
   </style>
+<style>
+.legal-footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.legal-footer-brand img{width:58px;height:58px;object-fit:contain;display:block}
+@media(max-width:600px){.legal-footer-inner{flex-direction:column;text-align:center}.legal-footer-brand img{width:54px;height:54px}}
+</style>
 </head>
 <body>
   <header class="top">
@@ -161,7 +166,12 @@
   </main>
 
   <footer>
-    <div class="container">© 2026 Juntigo. Łączymy podróżników.</div>
+    <div class="container legal-footer-inner">
+      <a href="index.html" class="legal-footer-brand" aria-label="Juntigo — strona główna">
+        <img src="juntigo-logo.png" alt="Juntigo">
+      </a>
+      <span>© 2026 Juntigo. Łączymy podróżników.</span>
+    </div>
   </footer>
 </body>
 </html>
