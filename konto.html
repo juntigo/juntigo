@@ -84,7 +84,7 @@
 <nav><div class="nav-inner"><a href="index.html" class="logo" aria-label="Juntigo"><img src="juntigo-logo.png" alt="Juntigo"></a><div class="nav-links"><a href="profil.html" class="back-link">Mój profil</a><a href="index.html" class="back-link">Wróć do Juntigo</a></div></div></nav>
 <main>
 <div class="eyebrow">Juntigo</div><h1>Moje konto</h1><p class="intro">Zarządzaj swoim profilem, wyjazdami i dopasowaniami w jednym miejscu.</p>
-<section class="login-section"><h2>Zaloguj się do Juntigo</h2><p>Wybierz sposób logowania. Po zalogowaniu otworzy się Twoje konto Juntigo.</p><div class="login-buttons"><div id="google-login-button"></div><button type="button" class="facebook-login-button" id="facebook-login-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v1.8H7v3.1h2.7v8h3.7z"/></svg>Zaloguj przez Facebook</button></div><div id="account-login-status"></div><div id="account-error"></div></section>
+<section class="login-section"><h2>Zaloguj się do Juntigo</h2><p>Wybierz sposób logowania. Po zalogowaniu otworzy się Twoje konto Juntigo.</p><div class="login-buttons"><div id="google-login-button"></div><button type="button" class="facebook-login-button" id="facebook-login-button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="display:block;flex:0 0 19px;width:19px;height:19px;fill:currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.019 4.388 11.017 10.125 11.927v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.49 0-1.956.931-1.956 1.887v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.09 24 18.092 24 12.073Z"/></svg><span id="facebook-login-label">Zaloguj przez Facebook</span></button></div><div id="account-login-status"></div><div id="account-error"></div></section>
 <script>
 (function(){
   const appId="28416419968053118";
@@ -98,13 +98,13 @@
   window.fbAsyncInit=function(){
     window.FB.init({appId:appId,cookie:true,xfbml:false,version:"v23.0"});
     window.juntigoFacebookSDKReady=true;
-    if(button){button.disabled=false;button.removeAttribute("aria-busy");button.textContent="Zaloguj przez Facebook";}
+    if(button){button.disabled=false;button.removeAttribute("aria-busy");document.getElementById("facebook-login-label").textContent="Zaloguj przez Facebook";}
   };
-  if(button){button.disabled=true;button.setAttribute("aria-busy","true");button.textContent="Ładowanie Facebooka…";}
+  if(button){button.disabled=true;button.setAttribute("aria-busy","true");document.getElementById("facebook-login-label").textContent="Ładowanie Facebooka…";}
   const sdk=document.createElement("script");
   sdk.async=true;sdk.defer=true;sdk.crossOrigin="anonymous";
   sdk.src="https://connect.facebook.net/pl_PL/sdk.js";
-  sdk.onerror=function(){if(button){button.disabled=false;button.removeAttribute("aria-busy");button.textContent="Zaloguj przez Facebook";}showError("Nie udało się załadować Facebooka. Sprawdź połączenie i blokowanie skryptów w przeglądarce.");};
+  sdk.onerror=function(){if(button){button.disabled=false;button.removeAttribute("aria-busy");document.getElementById("facebook-login-label").textContent="Zaloguj przez Facebook";}showError("Nie udało się załadować Facebooka. Sprawdź połączenie i blokowanie skryptów w przeglądarce.");};
   document.head.appendChild(sdk);
   if(button){
     button.addEventListener("click",function(){
