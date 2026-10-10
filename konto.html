@@ -112,7 +112,7 @@
           (async function(){
             try{
               const token=response&&response.authResponse&&response.authResponse.accessToken;
-              if(!token)throw new Error("Logowanie zostało anulowane lub Facebook nie przyznał wymaganych uprawnień.");
+              if(!token){const status=response&&response.status?String(response.status):"brak statusu";const denied=response&&response.authResponse&&response.authResponse.grantedScopes?String(response.authResponse.grantedScopes):"";throw new Error(status==="not_authorized"?"Facebook nie przyznał aplikacji wymaganych uprawnień. Kliknij ponownie i zaakceptuj dostęp do profilu oraz e-maila.":status==="unknown"?"Facebook nie zwrócił autoryzacji. Sprawdź, czy w oknie Facebooka kliknięto „Kontynuuj” zamiast „Anuluj”, i spróbuj ponownie.":"Nie otrzymano tokena Facebooka (status: "+status+"). Zamknij okno logowania, odśwież stronę i spróbuj ponownie.");}
               const body=new URLSearchParams({type:"facebookSession",accessToken:token});
               const resultResponse=await fetch(api,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),redirect:"follow",credentials:"omit"});
               const result=await resultResponse.json();
@@ -122,7 +122,7 @@
             }catch(error){showError(error.message||"Nie udało się zalogować przez Facebooka.");}
             finally{button.disabled=false;}
           })();
-        },{scope:"email,public_profile",return_scopes:true});
+        },{scope:"email,public_profile",return_scopes:true,auth_type:"rerequest"});
       }catch(error){
         button.disabled=false;
         showError(error.message||"Nie udało się uruchomić logowania przez Facebooka.");
