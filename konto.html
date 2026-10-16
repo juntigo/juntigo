@@ -58,8 +58,16 @@
 .chat-message-text{white-space:pre-wrap;overflow-wrap:anywhere}
 .chat-message-time{font-size:11px;opacity:.65;margin-top:4px}
 .chat-empty{color:var(--muted);text-align:center;margin:auto}
-.chat-form{display:flex;gap:10px;padding:16px;border-top:1px solid var(--border);background:var(--white)}
+.chat-form{display:flex;align-items:flex-end;gap:10px;padding:16px;border-top:1px solid var(--border);background:var(--white);position:relative}
+.chat-composer{display:flex;align-items:flex-end;gap:8px;flex:1;min-width:0}
 .chat-input{flex:1;min-width:0;min-height:46px;max-height:120px;resize:vertical;padding:11px 14px;border:1px solid var(--border);border-radius:14px;font:inherit;color:var(--text);outline:none}
+.chat-emoji-wrap{position:relative;flex-shrink:0}
+.chat-emoji-toggle{width:44px;height:46px;border:1px solid var(--border);border-radius:14px;background:#f7f9fc;color:var(--text);font-size:22px;cursor:pointer;display:grid;place-items:center}
+.chat-emoji-toggle:hover{border-color:var(--orange);background:#fff6ef}
+.chat-emoji-picker{position:absolute;bottom:54px;left:0;width:min(280px,calc(100vw - 48px));padding:10px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 36px rgba(7,27,51,.2);display:grid;grid-template-columns:repeat(7,1fr);gap:4px;z-index:10010}
+.chat-emoji-picker[hidden]{display:none}
+.chat-emoji{border:0;background:transparent;border-radius:8px;min-width:32px;min-height:34px;font-size:22px;cursor:pointer}
+.chat-emoji:hover,.chat-emoji:focus{background:#fff0e5;outline:none}
 .chat-input:focus{border-color:rgba(255,116,23,.7)}
 .chat-send{min-height:46px;padding:0 20px;border:0;border-radius:999px;background:var(--orange);color:#fff;font:inherit;font-weight:800;cursor:pointer}
 .chat-send:disabled{opacity:.6;cursor:default}
@@ -213,19 +221,22 @@
     <div class="chat-error" id="chat-error"></div>
 
     <form class="chat-form" id="chat-form">
-      <textarea
-        class="chat-input"
-        id="chat-input"
-        placeholder="Napisz wiadomość…"
-        rows="1"
-        maxlength="2000"
-      ></textarea>
-
-      <button
-        type="submit"
-        class="chat-send"
-        id="chat-send"
-      >Wyślij</button>
+      <div class="chat-composer">
+        <div class="chat-emoji-wrap">
+          <button type="button" class="chat-emoji-toggle" id="chat-emoji-toggle" aria-label="Wstaw emotkę" aria-expanded="false" title="Wstaw emotkę">☺</button>
+          <div class="chat-emoji-picker" id="chat-emoji-picker" role="group" aria-label="Wybierz emotkę" hidden>
+            <button type="button" class="chat-emoji" data-emoji="😀" aria-label="Wstaw 😀">😀</button><button type="button" class="chat-emoji" data-emoji="😃" aria-label="Wstaw 😃">😃</button><button type="button" class="chat-emoji" data-emoji="😄" aria-label="Wstaw 😄">😄</button><button type="button" class="chat-emoji" data-emoji="😁" aria-label="Wstaw 😁">😁</button><button type="button" class="chat-emoji" data-emoji="😆" aria-label="Wstaw 😆">😆</button><button type="button" class="chat-emoji" data-emoji="😅" aria-label="Wstaw 😅">😅</button><button type="button" class="chat-emoji" data-emoji="😂" aria-label="Wstaw 😂">😂</button><button type="button" class="chat-emoji" data-emoji="🙂" aria-label="Wstaw 🙂">🙂</button><button type="button" class="chat-emoji" data-emoji="😉" aria-label="Wstaw 😉">😉</button><button type="button" class="chat-emoji" data-emoji="😊" aria-label="Wstaw 😊">😊</button><button type="button" class="chat-emoji" data-emoji="😍" aria-label="Wstaw 😍">😍</button><button type="button" class="chat-emoji" data-emoji="🥰" aria-label="Wstaw 🥰">🥰</button><button type="button" class="chat-emoji" data-emoji="😘" aria-label="Wstaw 😘">😘</button><button type="button" class="chat-emoji" data-emoji="😎" aria-label="Wstaw 😎">😎</button><button type="button" class="chat-emoji" data-emoji="🤩" aria-label="Wstaw 🤩">🤩</button><button type="button" class="chat-emoji" data-emoji="🤔" aria-label="Wstaw 🤔">🤔</button><button type="button" class="chat-emoji" data-emoji="🤗" aria-label="Wstaw 🤗">🤗</button><button type="button" class="chat-emoji" data-emoji="🙃" aria-label="Wstaw 🙃">🙃</button><button type="button" class="chat-emoji" data-emoji="😭" aria-label="Wstaw 😭">😭</button><button type="button" class="chat-emoji" data-emoji="😢" aria-label="Wstaw 😢">😢</button><button type="button" class="chat-emoji" data-emoji="😡" aria-label="Wstaw 😡">😡</button><button type="button" class="chat-emoji" data-emoji="👍" aria-label="Wstaw 👍">👍</button><button type="button" class="chat-emoji" data-emoji="👎" aria-label="Wstaw 👎">👎</button><button type="button" class="chat-emoji" data-emoji="👏" aria-label="Wstaw 👏">👏</button><button type="button" class="chat-emoji" data-emoji="🙏" aria-label="Wstaw 🙏">🙏</button><button type="button" class="chat-emoji" data-emoji="💪" aria-label="Wstaw 💪">💪</button><button type="button" class="chat-emoji" data-emoji="❤️" aria-label="Wstaw ❤️">❤️</button><button type="button" class="chat-emoji" data-emoji="🧡" aria-label="Wstaw 🧡">🧡</button><button type="button" class="chat-emoji" data-emoji="💛" aria-label="Wstaw 💛">💛</button><button type="button" class="chat-emoji" data-emoji="💚" aria-label="Wstaw 💚">💚</button><button type="button" class="chat-emoji" data-emoji="💙" aria-label="Wstaw 💙">💙</button><button type="button" class="chat-emoji" data-emoji="🔥" aria-label="Wstaw 🔥">🔥</button><button type="button" class="chat-emoji" data-emoji="🎉" aria-label="Wstaw 🎉">🎉</button><button type="button" class="chat-emoji" data-emoji="✈️" aria-label="Wstaw ✈️">✈️</button><button type="button" class="chat-emoji" data-emoji="🌍" aria-label="Wstaw 🌍">🌍</button><button type="button" class="chat-emoji" data-emoji="🏖️" aria-label="Wstaw 🏖️">🏖️</button><button type="button" class="chat-emoji" data-emoji="⚽" aria-label="Wstaw ⚽">⚽</button><button type="button" class="chat-emoji" data-emoji="🍻" aria-label="Wstaw 🍻">🍻</button><button type="button" class="chat-emoji" data-emoji="🤝" aria-label="Wstaw 🤝">🤝</button><button type="button" class="chat-emoji" data-emoji="💸" aria-label="Wstaw 💸">💸</button><button type="button" class="chat-emoji" data-emoji="💯" aria-label="Wstaw 💯">💯</button><button type="button" class="chat-emoji" data-emoji="🤣" aria-label="Wstaw 🤣">🤣</button>
+          </div>
+        </div>
+        <textarea
+          class="chat-input"
+          id="chat-input"
+          placeholder="Napisz wiadomość…"
+          rows="1"
+          maxlength="2000"
+        ></textarea>
+      </div>
+      <button type="submit" class="chat-send" id="chat-send">Wyślij</button>
     </form>
   </div>
 </div>
@@ -1390,6 +1401,40 @@ function logoutJuntigo(){document.getElementById("logout-button").style.display=
 
   window.location.href="index.html";
 }
+</script>
+<script>
+(function setupChatEmojiPicker(){
+  const toggle=document.getElementById("chat-emoji-toggle");
+  const picker=document.getElementById("chat-emoji-picker");
+  const input=document.getElementById("chat-input");
+  if(!toggle||!picker||!input)return;
+  const close=()=>{picker.hidden=true;toggle.setAttribute("aria-expanded","false");};
+  toggle.addEventListener("click",event=>{
+    event.preventDefault();
+    const opening=picker.hidden;
+    picker.hidden=!opening;
+    toggle.setAttribute("aria-expanded",String(opening));
+  });
+  picker.addEventListener("click",event=>{
+    const button=event.target.closest("[data-emoji]");
+    if(!button)return;
+    const emoji=button.dataset.emoji||"";
+    const start=input.selectionStart??input.value.length;
+    const end=input.selectionEnd??start;
+    const next=input.value.slice(0,start)+emoji+input.value.slice(end);
+    if(next.length>2000)return;
+    input.value=next;
+    const caret=start+emoji.length;
+    input.focus({preventScroll:true});
+    input.setSelectionRange(caret,caret);
+    input.dispatchEvent(new Event("input",{bubbles:true}));
+    close();
+  });
+  document.addEventListener("click",event=>{
+    if(!picker.contains(event.target)&&!toggle.contains(event.target))close();
+  });
+  document.addEventListener("keydown",event=>{if(event.key==="Escape")close();});
+})();
 </script>
 </body>
 </html>
