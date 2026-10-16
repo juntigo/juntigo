@@ -2409,11 +2409,11 @@ const SPORT_TEAMS=[
 ]}
 ];
 
-const SPORTS=SPORT_TEAMS.flatMap(team=>team.matches.map(match=>({
+const SPORTS=Array.from(new Map(SPORT_TEAMS.flatMap(team=>team.matches.map(match=>({
 tripId:match[0],destination:match[1],city:match[5],country:team.country,countryCode:team.countryCode,
 icon:team.icon,type:"sport",direction:team.countryCode==="pl"?"poland":"abroad",dateStart:match[2],dateEnd:match[2],dateLabel:match[3],
 competition:match[4],teamId:team.teamId,teamName:team.team,crest:team.crest
-})));
+}))).map(match=>[String(match.dateStart)+"|"+String(match.destination).split(" – ").map(name=>name.trim().toLocaleLowerCase("pl")).sort().join("|"),match])).values());
 
 function populateMonthFilter(){
 const select=document.getElementById("monthFilter");
