@@ -483,6 +483,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   const session = await validateJuntigoSession();
 
+  const notificationWrapper = document.getElementById("juntigo-notification-wrapper");
+  if (notificationWrapper) {
+    notificationWrapper.style.display = session.authenticated ? "inline-flex" : "none";
+  }
+
   profileButton.dataset.authenticated = session.authenticated ? "true" : "false";
   profileButton.setAttribute(
     "aria-label",
