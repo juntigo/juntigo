@@ -77,6 +77,29 @@
   .chat-header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}.chat-safety-button{min-height:38px;padding:0 12px;border:1px solid #d7dee8;border-radius:999px;background:#fff;color:var(--muted);font:inherit;font-size:12px;font-weight:800;cursor:pointer}.chat-safety-button:hover{border-color:var(--orange);color:var(--orange)}.chat-safety-button--danger:hover{border-color:#b42318;color:#b42318}
 .chat-report-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(7,27,51,.68)}.chat-report-box{width:100%;max-width:520px;background:#fff;border-radius:22px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.25)}.chat-report-box h3{color:var(--navy);font-size:25px;margin-bottom:8px}.chat-report-box p{color:var(--muted);font-size:14px;margin-bottom:20px}.chat-report-box label{display:flex;flex-direction:column;gap:7px;color:var(--navy);font-size:14px;font-weight:700;margin-bottom:15px}.chat-report-box select,.chat-report-box textarea{width:100%;padding:12px 14px;border:1px solid #d7dee8;border-radius:11px;background:#fff;color:var(--navy);font:inherit}.chat-report-box textarea{resize:vertical;min-height:100px}.chat-report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}.chat-report-cancel,.chat-report-submit{min-height:44px;padding:0 18px;border-radius:999px;font:inherit;font-weight:800;cursor:pointer}.chat-report-cancel{border:1px solid #d7dee8;background:#fff;color:var(--navy)}.chat-report-submit{border:0;background:var(--orange);color:#fff}.chat-report-submit:disabled{opacity:.7;cursor:wait}.chat-report-status{display:none;padding:11px 13px;border-radius:10px;font-size:13px;margin-bottom:14px}.chat-report-status.is-visible{display:block}.chat-report-status.error{background:#fff1f1;border:1px solid #f3c2c2;color:#9f1d1d}.chat-report-status.success{background:#edf8f1;border:1px solid #b9e2c8;color:#176b3a}
 @media(max-width:600px){.chat-header-actions{gap:5px}.chat-safety-button{padding:0 9px;font-size:11px}.chat-header{padding:16px}.chat-report-actions{flex-direction:column}.chat-report-cancel,.chat-report-submit{width:100%}}
+
+.juntigo-confirm-modal{position:fixed;inset:0;z-index:12000;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(7,27,51,.68);backdrop-filter:blur(5px);animation:juntigoConfirmFade .16s ease-out}
+.juntigo-confirm-box{box-sizing:border-box;width:min(100%,480px);padding:30px;border:1px solid rgba(215,222,232,.8);border-radius:26px;background:#fff;box-shadow:0 28px 90px rgba(7,27,51,.28);text-align:left;animation:juntigoConfirmRise .18s ease-out}
+.juntigo-confirm-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin-bottom:18px;border-radius:16px;background:#fff3e8;color:var(--orange);font-size:25px;font-weight:900}
+.juntigo-confirm-icon.is-danger{background:#fff0ef;color:#b42318}
+.juntigo-confirm-box h2{margin:0 0 10px;color:var(--navy);font-size:25px;line-height:1.2;font-weight:850}
+.juntigo-confirm-box p{margin:0;color:var(--muted);font-size:15px;line-height:1.65;overflow-wrap:anywhere}
+.juntigo-confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:26px}
+.juntigo-confirm-actions button{min-height:46px;padding:0 18px;border-radius:999px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:transform .15s ease,background .15s ease,border-color .15s ease}
+.juntigo-confirm-cancel{border:1px solid #d7dee8;background:#fff;color:var(--navy)}
+.juntigo-confirm-cancel:hover{background:#f4f7fa}
+.juntigo-confirm-accept{border:0;background:var(--navy);color:#fff}
+.juntigo-confirm-accept:hover{transform:translateY(-1px);background:#12345a}
+.juntigo-confirm-accept.is-danger{background:#b42318}
+.juntigo-confirm-accept.is-danger:hover{background:#921c14}
+.juntigo-confirm-actions button:focus-visible{outline:3px solid rgba(255,116,23,.45);outline-offset:3px}
+.juntigo-notice{position:fixed;right:22px;bottom:22px;z-index:12001;max-width:min(420px,calc(100vw - 44px));padding:15px 20px;border-radius:16px;box-shadow:0 16px 45px rgba(7,27,51,.2);font-size:14px;font-weight:750;line-height:1.5;animation:juntigoConfirmRise .18s ease-out}
+.juntigo-notice.is-success{background:#edf8f1;border:1px solid #b9e2c8;color:#176b3a}
+.juntigo-notice.is-error{background:#fff1f1;border:1px solid #f3c2c2;color:#9f1d1d}
+@keyframes juntigoConfirmFade{from{opacity:0}to{opacity:1}}
+@keyframes juntigoConfirmRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:520px){.juntigo-confirm-box{padding:24px 20px;border-radius:22px}.juntigo-confirm-box h2{font-size:22px}.juntigo-confirm-actions{flex-direction:column-reverse}.juntigo-confirm-actions button{width:100%}.juntigo-notice{right:14px;bottom:14px;max-width:calc(100vw - 28px)}}
+
 </style>
   <link rel="stylesheet" href="brand-refresh.css?v=2">
 </head>
@@ -1196,14 +1219,70 @@ async function openChatReportForm() {
   });
 }
 
+
+function showJuntigoConfirm({title, message, confirmText = "Potwierdź", danger = false}) {
+  return new Promise(resolve => {
+    const previous = document.getElementById("juntigo-confirm-modal");
+    if (previous) previous.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "juntigo-confirm-modal";
+    modal.className = "juntigo-confirm-modal";
+    modal.innerHTML = `
+      <section class="juntigo-confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="juntigo-confirm-title" aria-describedby="juntigo-confirm-message">
+        <div class="juntigo-confirm-icon ${danger ? "is-danger" : ""}" aria-hidden="true">${danger ? "!" : "?"}</div>
+        <h2 id="juntigo-confirm-title">${escapeHtml(title)}</h2>
+        <p id="juntigo-confirm-message">${escapeHtml(message)}</p>
+        <div class="juntigo-confirm-actions">
+          <button type="button" class="juntigo-confirm-cancel">Anuluj</button>
+          <button type="button" class="juntigo-confirm-accept ${danger ? "is-danger" : ""}">${escapeHtml(confirmText)}</button>
+        </div>
+      </section>`;
+    document.body.appendChild(modal);
+    document.body.style.overflow = "hidden";
+
+    let settled = false;
+    const finish = value => {
+      if (settled) return;
+      settled = true;
+      document.removeEventListener("keydown", onKeydown);
+      modal.remove();
+      document.body.style.overflow = "";
+      resolve(value);
+    };
+    const onKeydown = event => {
+      if (event.key === "Escape") finish(false);
+      if (event.key === "Enter") finish(true);
+    };
+    modal.querySelector(".juntigo-confirm-cancel").addEventListener("click", () => finish(false));
+    modal.querySelector(".juntigo-confirm-accept").addEventListener("click", () => finish(true));
+    modal.addEventListener("click", event => { if (event.target === modal) finish(false); });
+    document.addEventListener("keydown", onKeydown);
+    modal.querySelector(".juntigo-confirm-cancel").focus();
+  });
+}
+
+function showJuntigoNotice(message, type = "success") {
+  const previous = document.getElementById("juntigo-notice");
+  if (previous) previous.remove();
+  const notice = document.createElement("div");
+  notice.id = "juntigo-notice";
+  notice.className = "juntigo-notice " + (type === "success" ? "is-success" : "is-error");
+  notice.setAttribute("role", "status");
+  notice.textContent = message;
+  document.body.appendChild(notice);
+  window.setTimeout(() => notice.remove(), 3600);
+}
+
 async function blockChatUser() {
   if (!activeChatUserId || !juntigoSessionToken) return;
 
-  const confirmed = window.confirm(
-    "Czy na pewno chcesz zablokować użytkownika" +
-    (activeChatPersonName ? " „" + activeChatPersonName + "”" : "") +
-    "? Po zablokowaniu rozmowa zostanie zakończona."
-  );
+  const confirmed = await showJuntigoConfirm({
+    title: "Zablokować użytkownika?",
+    message: "Czy na pewno chcesz zablokować użytkownika „" + (activeChatPersonName || "Użytkownik Juntigo") + "”? Po zablokowaniu rozmowa zostanie zakończona.",
+    confirmText: "Zablokuj użytkownika",
+    danger: true
+  });
 
   if (!confirmed) return;
 
@@ -1230,7 +1309,7 @@ async function blockChatUser() {
       loadAccountMatches(tokenAtStart)
     ]);
 
-    alert("Użytkownik został zablokowany.");
+    showJuntigoNotice("Użytkownik został zablokowany.", "success");
   } catch (error) {
     console.error("Błąd blokowania użytkownika z czatu:", error);
     setChatError(error.message || "Nie udało się zablokować użytkownika.");
