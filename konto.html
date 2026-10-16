@@ -1054,6 +1054,25 @@ async function sendChatMessage() {
   button.textContent = "Wysyłamy…";
   setChatError("");
 
+  // Pokaż wiadomość natychmiast; potwierdzenie z serwera przyjdzie w tle.
+  const messagesBox = document.getElementById("chat-messages");
+  const optimisticBubble = document.createElement("div");
+  optimisticBubble.className = "chat-message mine";
+  optimisticBubble.dataset.optimisticMessage = clientMessageId;
+  optimisticBubble.style.opacity = "0.72";
+  const optimisticText = document.createElement("div");
+  optimisticText.className = "chat-message-text";
+  optimisticText.textContent = message;
+  const optimisticTime = document.createElement("div");
+  optimisticTime.className = "chat-message-time";
+  optimisticTime.textContent = formatChatTime(new Date());
+  optimisticBubble.append(optimisticText, optimisticTime);
+  if (messagesBox && activeChatMatchId === matchIdAtStart) {
+    messagesBox.appendChild(optimisticBubble);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+  input.value = "";
+
   try {
     const response = await fetch(JUNTIGO_API, {
       method: "POST",
@@ -1074,16 +1093,13 @@ async function sendChatMessage() {
       );
     }
 
-    input.value = "";
-
-    if (
-      getJuntigoSessionToken() === tokenAtStart &&
-      activeChatMatchId === matchIdAtStart
-    ) {
-      await loadChatMessages();
-    }
+    optimisticBubble.style.opacity = "1";
+    optimisticBubble.removeAttribute("data-optimistic-message");
+    // Nie pobieraj całej historii po każdej wysyłce — wiadomość już jest na ekranie.
 
   } catch (error) {
+    optimisticBubble.remove();
+    if (!input.value && activeChatMatchId === matchIdAtStart) input.value = message;
     console.error(
       "Błąd wysyłania wiadomości:",
       error
