@@ -2108,6 +2108,15 @@ function getInstagramUrl(value) {
   return "https://www.instagram.com/" + encodeURIComponent(handle) + "/";
 }
   
+function showTripMatchModal(personName,instagram){
+const previous=document.getElementById("trip-match-modal");if(previous)previous.remove();
+const modal=document.createElement("div");modal.id="trip-match-modal";
+modal.innerHTML='<div class="team-modal-overlay"></div><section class="team-modal-box person-interest-modal-box" role="dialog" aria-modal="true" aria-label="Macie match"><button type="button" class="team-modal-close" aria-label="Zamknij">×</button><div class="team-modal-tag">JUNTIGO</div><h2>Macie match!</h2><p>Ty i '+escapeHtml(personName||"ta osoba")+' jesteście zainteresowani sobą nawzajem.</p><p>Czy chcesz przejść na Instagram?</p><div class="trip-match-actions"><button type="button" class="interest-submit trip-match-later">Później</button><button type="button" class="interest-submit trip-match-instagram" '+(getInstagramUrl(instagram)?'':'disabled')+'>Przejdź na Instagram</button></div></section>';
+document.body.appendChild(modal);document.body.style.overflow="hidden";
+const close=()=>{modal.remove();document.body.style.overflow="";};
+modal.querySelector(".team-modal-overlay").addEventListener("click",close);modal.querySelector(".team-modal-close").addEventListener("click",close);modal.querySelector(".trip-match-later").addEventListener("click",close);
+modal.querySelector(".trip-match-instagram").addEventListener("click",()=>{const url=getInstagramUrl(instagram);if(url)window.open(url,"_blank","noopener,noreferrer");close();});
+}
 async function saveInterest(event, trip, toUserId, toName) {
     if (event) event.preventDefault();
 
@@ -2588,7 +2597,7 @@ submit.disabled=true;submit.textContent="Wysyłamy...";error.textContent="";
 try{
 const response=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"interest",sessionToken,trip:String(trip||"").trim(),toUserId:String(toUserId||"").trim(),instagram:instagram,fromInstagram:instagram})});
 const data=await response.json();if(!data.success)throw new Error(data.error||"Nie udało się wysłać zainteresowania.");
-modal.remove();document.body.style.overflow="";if(contactButton){contactButton.textContent="Zainteresowanie wysłane";contactButton.disabled=true;contactButton.classList.add("interest-sent");}
+modal.remove();document.body.style.overflow="";if(contactButton){contactButton.textContent="Zainteresowanie wysłane";contactButton.disabled=true;contactButton.classList.add("interest-sent");}if(data.match===true){const matchedPerson=(Array.isArray(window.juntigoTeamPeople)?window.juntigoTeamPeople:[]).find(person=>String(person.userId||"").trim()===String(toUserId||"").trim());showTripMatchModal(toName,matchedPerson&&matchedPerson.instagram?matchedPerson.instagram:"");}
 }catch(e){error.textContent=e.message||"Nie udało się wysłać zainteresowania. Spróbuj ponownie.";submit.disabled=false;submit.textContent="Wyślij zainteresowanie";}
 });
 }
