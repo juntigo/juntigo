@@ -966,11 +966,13 @@ async function handleGoogleCredential(response) {
   }
 
   try {
-    const responseSession = await fetch(
-      JUNTIGO_API +
-      "?action=session&idToken=" +
-      encodeURIComponent(idToken)
-    );
+    const responseSession = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "googleSession",
+        idToken: idToken
+      })
+    });
 
     const result = await responseSession.json();
 
