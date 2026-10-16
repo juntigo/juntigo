@@ -706,6 +706,22 @@ function formatChatTime(timestamp) {
   });
 }
 
+function renderChatMessages(messages) {
+  if (!Array.isArray(messages) || !messages.length) {
+    return '<div class="chat-empty">To początek Waszej rozmowy.</div>';
+  }
+  return messages.map(function(message) {
+    const fromUserId = String(message.fromUserId || "").trim();
+    const mine = fromUserId === juntigoUserId;
+    return (
+      '<div class="chat-message' + (mine ? ' mine' : '') + '">' +
+        '<div class="chat-message-text">' + escapeHtml(message.message || "") + '</div>' +
+        '<div class="chat-message-time">' + escapeHtml(formatChatTime(message.timestamp)) + '</div>' +
+      '</div>'
+    );
+  }).join("");
+}
+
 async function loadChatMessagesInternal(silentRefresh = false) {
   const messagesBox = document.getElementById("chat-messages");
   const tokenAtStart = juntigoSessionToken;
@@ -717,7 +733,26 @@ async function loadChatMessagesInternal(silentRefresh = false) {
 
   setChatError("");
 
-  if (!silentRefresh) {
+  const cacheKey = "juntigo_chat_history_v1:" +
+    encodeURIComponent(String(juntigoUserId || "")) + ":" +
+    encodeURIComponent(matchIdAtStart);
+  let hasCachedHistory = false;
+
+  // Pokaż ostatnią znaną historię od razu po ponownym wejściu/odświeżeniu.
+  // Cache jest odseparowany per użytkownik i match; backend nadal pobiera świeże dane.
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const cachedMessages = JSON.parse(cached);
+      if (Array.isArray(cachedMessages)) {
+        messagesBox.innerHTML = renderChatMessages(cachedMessages);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+        hasCachedHistory = true;
+      }
+    }
+  } catch (ignored) {}
+
+  if (!silentRefresh && !hasCachedHistory) {
     messagesBox.innerHTML =
       '<div class="chat-empty">Wczytywanie rozmowy…</div>';
   }
@@ -751,33 +786,11 @@ async function loadChatMessagesInternal(silentRefresh = false) {
       ? result.messages
       : [];
 
-    if (!messages.length) {
-      messagesBox.innerHTML =
-        '<div class="chat-empty">To początek Waszej rozmowy.</div>';
-      return;
-    }
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify(messages.slice(-100)));
+    } catch (ignored) {}
 
-    messagesBox.innerHTML = messages.map(function(message) {
-      const fromUserId =
-        String(message.fromUserId || "").trim();
-
-      const mine =
-  fromUserId === juntigoUserId;
-
-      return (
-        '<div class="chat-message' +
-        (mine ? ' mine' : '') +
-        '">' +
-          '<div class="chat-message-text">' +
-            escapeHtml(message.message || "") +
-          '</div>' +
-          '<div class="chat-message-time">' +
-            escapeHtml(formatChatTime(message.timestamp)) +
-          '</div>' +
-        '</div>'
-      );
-    }).join("");
-
+    messagesBox.innerHTML = renderChatMessages(messages);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
   } catch (error) {
