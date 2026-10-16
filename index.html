@@ -3087,6 +3087,17 @@ async function loadJuntigoNotificationPanel(){
     const data=await response.json();
     if(!data.success)throw new Error(data.error||"Nie udało się pobrać dopasowań.");
     const matches=Array.isArray(data.matches)?data.matches:[];
+    // Pamiętaj odczytane dopasowania lokalnie, nawet jeśli backend zwróci opóźniony stan odczytu.
+    const readStorageKey="juntigo_read_matches_v1";
+    let locallyReadMatchIds=[];
+    try{
+      const stored=JSON.parse(localStorage.getItem(readStorageKey)||"[]");
+      if(Array.isArray(stored))locallyReadMatchIds=stored.map(String);
+    }catch(storageError){console.warn("Nie udało się odczytać lokalnego stanu powiadomień:",storageError);}
+    const locallyReadSet=new Set(locallyReadMatchIds);
+    matches.forEach(match=>{
+      if(match.matchId&&locallyReadSet.has(String(match.matchId)))match.isRead=true;
+    });
     if(summary)summary.textContent=matches.length?matches.length+" dopasowań":"Aktualności z Twoich wyjazdów";
     if(!matches.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz jeszcze dopasowań. Gdy zainteresowanie będzie wzajemne, pojawią się tutaj.</div>';return;}
 
@@ -3147,6 +3158,15 @@ async function loadJuntigoNotificationPanel(){
         if(dot)dot.remove();
         const heading=item.querySelector(".juntigo-notification-copy strong");
         if(heading)heading.textContent=heading.textContent.replace("Masz nowe dopasowanie z ","Dopasowanie z ");
+      }
+      if(matchId){
+        try{
+          const key="juntigo_read_matches_v1";
+          const stored=JSON.parse(localStorage.getItem(key)||"[]");
+          const ids=new Set(Array.isArray(stored)?stored.map(String):[]);
+          ids.add(matchId);
+          localStorage.setItem(key,JSON.stringify(Array.from(ids)));
+        }catch(storageError){console.warn("Nie udało się zapisać lokalnego odczytu powiadomienia:",storageError);}
       }
       if(matchId&&token){
         event.preventDefault();
