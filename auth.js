@@ -43,11 +43,11 @@ function normalizeTagList(values, aliases) {
 }
 
 function getJuntigoSessionToken() {
-  return localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY) || "";
+  return sessionStorage.getItem(JUNTIGO_AUTH_SESSION_KEY) || "";
 }
 
 function clearJuntigoSession() {
-  localStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
+  sessionStorage.removeItem(JUNTIGO_AUTH_SESSION_KEY);
   juntigoSessionValidationPromise = null;
   juntigoSessionValidationToken = "";
 }
