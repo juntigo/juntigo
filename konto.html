@@ -44,9 +44,9 @@
 .interest-empty{color:var(--muted);padding:8px 0}
     .interest-chat-button{min-height:40px;padding:0 16px;border:0;border-radius:999px;background:var(--navy);color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
 .interest-chat-button:hover{background:var(--navy-light)}
-    .chat-modal{position:fixed;inset:0;background:rgba(7,27,51,.58);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999}
+    .chat-modal{position:fixed;inset:0;background:rgba(7,27,51,.58);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999;overscroll-behavior:contain}
 .chat-modal.active{display:flex}
-.chat-box{width:100%;max-width:620px;max-height:calc(100vh - 48px);background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(7,27,51,.25);display:flex;flex-direction:column}
+.chat-box{width:100%;max-width:620px;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(7,27,51,.25);display:flex;flex-direction:column;min-height:0;overscroll-behavior:contain}
 .chat-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;border-bottom:1px solid var(--border)}
 .chat-header-info{min-width:0}
 .chat-header-info strong{display:block;color:var(--navy);font-size:19px}
@@ -65,12 +65,14 @@
 .chat-send:disabled{opacity:.6;cursor:default}
 .chat-error{padding:8px 16px 0;color:#a33a2b;font-size:13px;background:var(--white)}
     @media(max-width:600px){
-      .chat-modal{padding:0}
-      .chat-box{max-height:100vh;height:100vh;border-radius:0}
-      .chat-messages{max-height:none;min-height:0}
-      .chat-form{padding:12px}
-      .chat-input{font-size:16px}
-      .chat-send{padding:0 16px}
+      .chat-modal{padding:0;align-items:stretch;height:100%;height:100dvh;inset:0;overflow:hidden;touch-action:pan-y}
+      .chat-box{width:100%;max-width:none;max-height:100%;height:100%;height:100dvh;border-radius:0;min-height:0}
+      .chat-header,.chat-form{flex-shrink:0}
+      .chat-messages{flex:1;max-height:none;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+      .chat-form{padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+      .chat-input{font-size:16px;max-height:96px;resize:none}
+      .chat-send{padding:0 16px;flex-shrink:0}
+      body.juntigo-chat-open{position:fixed;width:100%;overflow:hidden;left:0;right:0}
     }
     @media(max-width:700px){nav{height:82px}.logo img{width:58px;height:58px}.nav-links{gap:6px}.back-link{padding:9px 15px;font-size:14px}main{padding:45px 0 70px}.account-header{padding:22px}.account-header h2{font-size:23px}.dashboard-grid{grid-template-columns:1fr}.dashboard-card{min-height:105px}}
     #ustawienia .logout-button{display:none;min-height:48px;padding:0 28px;margin:24px auto 0;border:2px solid var(--navy);border-radius:999px;background:white;color:var(--navy);font:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s ease}#ustawienia .logout-button:hover{background:var(--navy);color:white}#ustawienia{ text-align:left }#ustawienia .logout-button[style*="inline-flex"]{display:flex!important;width:max-content;justify-content:center;align-items:center}
@@ -992,7 +994,13 @@ async function openMatchChat(matchId, personName, trip, personUserId) {
       activeChatTrip;
   }
 
- modal.classList.add("active");
+ // Zablokuj przewijanie strony pod czatem, zachowując pozycję na telefonach.
+  if (!document.body.classList.contains("juntigo-chat-open")) {
+    window.__juntigoChatScrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.classList.add("juntigo-chat-open");
+    document.body.style.top = "-" + window.__juntigoChatScrollY + "px";
+  }
+  modal.classList.add("active");
 
 await markMatchAsRead(activeChatMatchId);
 await markMessagesRead(activeChatMatchId);
@@ -1012,6 +1020,13 @@ function closeMatchChat() {
 
   if (modal) {
     modal.classList.remove("active");
+  if (document.body.classList.contains("juntigo-chat-open")) {
+    const savedScrollY = Number(window.__juntigoChatScrollY || 0);
+    document.body.classList.remove("juntigo-chat-open");
+    document.body.style.top = "";
+    window.scrollTo(0, savedScrollY);
+    delete window.__juntigoChatScrollY;
+  }
   }
 
   activeChatMatchId = "";
