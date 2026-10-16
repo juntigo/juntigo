@@ -1013,17 +1013,15 @@ async function openMatchChat(matchId, personName, trip, personUserId) {
   }
   modal.classList.add("active");
 
-// Nie blokuj wyświetlenia rozmowy na dwóch osobnych żądaniach oznaczających odczyt.
+// Najpierw pokaż historię rozmowy. Oznaczanie odczytu nie może opóźniać czatu.
 const openingMatchId = activeChatMatchId;
 const openingToken = juntigoSessionToken;
-const messagesLoadPromise = loadChatMessages();
-const markReadPromises = [
-  Promise.resolve().then(() => markMatchAsRead(openingMatchId)),
-  Promise.resolve().then(() => markMessagesRead(openingMatchId))
-];
-await Promise.allSettled([messagesLoadPromise, ...markReadPromises]);
+await loadChatMessages();
 if (activeChatMatchId === openingMatchId && juntigoSessionToken === openingToken) {
   startChatRefresh(openingMatchId, openingToken);
+  // Te operacje są niezależne od renderowania historii; wykonuj je w tle.
+  Promise.resolve().then(() => markMatchAsRead(openingMatchId)).catch(() => {});
+  Promise.resolve().then(() => markMessagesRead(openingMatchId)).catch(() => {});
 }
 
   if (input) {
