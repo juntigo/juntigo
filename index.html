@@ -3089,13 +3089,26 @@ async function loadJuntigoNotificationPanel(){
     const matches=Array.isArray(data.matches)?data.matches:[];
     if(summary)summary.textContent=matches.length?matches.length+" dopasowań":"Aktualności z Twoich wyjazdów";
     if(!matches.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz jeszcze dopasowań. Gdy zainteresowanie będzie wzajemne, pojawią się tutaj.</div>';return;}
+
+    // Otwarcie panelu oznacza, że użytkownik zobaczył powiadomienia.
+    // Zapisz odczyt w backendzie, aby stan utrzymał się po ponownym otwarciu.
+    const unreadMatches=matches.filter(match=>!(match.isRead===true||String(match.isRead||"").trim().toLowerCase()==="tak"));
+    if(unreadMatches.length){
+      await Promise.all(unreadMatches.filter(match=>match.matchId).map(async match=>{
+        try{
+          const readResponse=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"markMatchRead",sessionToken:token,matchId:String(match.matchId)})});
+          const readData=await readResponse.json();
+          if(readData.success)match.isRead=true;
+        }catch(readError){console.warn("Nie udało się zapisać odczytu dopasowania:",readError);}
+      }));
+    }
     list.innerHTML=matches.slice(0,8).map(match=>{
       const person=match.person||{};
       const name=String(person.name||"Użytkownik Juntigo");
       const trip=String(match.trip||"Wyjazd");
       const city=String(person.city||"");
       const matchId=String(match.matchId||"");
-      const isUnread=match.isRead===true||String(match.isRead||"").toLowerCase()==="tak" ? false : true;
+      const isUnread=!(match.isRead===true||String(match.isRead||"").trim().toLowerCase()==="tak");
       return '<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">♥</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Kliknij, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>';
     }).join("");
   }catch(error){
