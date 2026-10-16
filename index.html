@@ -2132,7 +2132,7 @@
 }
 .nav-inner #juntigo-notification-wrapper {
     position: absolute;
-    left: 126px;
+    left: 184px;
     top: 50%;
     right: auto;
     transform: translateY(-50%);
@@ -2152,6 +2152,25 @@
 .nav-inner #juntigo-notification-wrapper .profile-notification-badge {
     top: 0;
     right: 0;
+}
+
+/* Mobilny panel otwiera się w obrębie ekranu, nie względem całej strony. */
+.nav-inner #juntigo-notification-wrapper .juntigo-notification-panel {
+    position: fixed;
+    top: 92px;
+    left: 14px;
+    right: 14px;
+    width: auto;
+    max-width: 420px;
+    max-height: calc(100dvh - 115px);
+    margin-left: auto;
+    overflow: hidden;
+    z-index: 12000;
+}
+.nav-inner #juntigo-notification-wrapper .juntigo-notification-list {
+    max-height: min(390px, calc(100dvh - 300px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
   nav {
     width: 100%;
