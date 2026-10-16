@@ -238,7 +238,9 @@
     justify-content: center;
 }
  
-.profile-nav-button{position:relative}
+.juntigo-notification-button{position:relative;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s ease}
+.juntigo-notification-button svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.juntigo-notification-button:hover{color:var(--orange);background:rgba(255,107,26,.08)}
 .juntigo-notification-panel{position:absolute;z-index:11000;top:calc(100% + 17px);right:-20px;width:min(390px,calc(100vw - 28px));max-height:min(600px,calc(100vh - 110px));overflow:hidden;border:1px solid #e2e8f0;border-radius:22px;background:#fff;box-shadow:0 22px 70px rgba(7,27,51,.22);color:var(--navy);text-align:left;animation:juntigoNoticeIn .16s ease-out}
 .juntigo-notification-panel[hidden]{display:none}
 .juntigo-notification-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 20px 16px;border-bottom:1px solid #edf0f5}
@@ -2727,7 +2729,7 @@
     ☰
   </button>
 <div class="profile-nav-wrapper" id="juntigo-notification-wrapper">
-  <button type="button" class="profile-nav-button" id="juntigo-notification-toggle" aria-label="Otwórz powiadomienia" aria-expanded="false" aria-controls="juntigo-notification-panel">
+  <button type="button" class="juntigo-notification-button" id="juntigo-notification-toggle" aria-label="Otwórz powiadomienia" aria-expanded="false" aria-controls="juntigo-notification-panel">
       <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
           <path d="M10 21h4"></path>
@@ -3084,7 +3086,9 @@ async function loadJuntigoNotificationPanel(){
       const name=String(person.name||"Użytkownik Juntigo");
       const trip=String(match.trip||"Wyjazd");
       const city=String(person.city||"");
-      return '<a class="juntigo-notification-item is-new" href="konto.html" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">♥</span><span class="juntigo-notification-copy"><strong>Masz nowe dopasowanie z '+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Kliknij, aby przejść do czatu</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>';
+      const matchId=String(match.matchId||"");
+      const isUnread=match.isRead===true||String(match.isRead||"").toLowerCase()==="tak" ? false : true;
+      return '<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">♥</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Kliknij, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>';
     }).join("");
   }catch(error){
     list.innerHTML='<div class="juntigo-notification-empty">Nie udało się wczytać powiadomień. Spróbuj ponownie.</div>';
@@ -3099,11 +3103,40 @@ async function loadJuntigoNotificationPanel(){
   const close=()=>{panel.hidden=true;toggle.setAttribute("aria-expanded","false");};
   toggle.addEventListener("click",async event=>{
     event.stopPropagation();
+    // Menu konta i powiadomienia nie mogą być otwarte jednocześnie.
+    const accountMenu=document.querySelector(".juntigo-auth-menu");
+    if(accountMenu)accountMenu.remove();
     const opening=panel.hidden;
     panel.hidden=!opening;
     toggle.setAttribute("aria-expanded",String(opening));
     if(opening)await loadJuntigoNotificationPanel();
   });
+  listClickSetup();
+  function listClickSetup(){
+    const list=document.getElementById("juntigo-notification-list");
+    if(!list)return;
+    list.addEventListener("click",async event=>{
+      const item=event.target.closest(".juntigo-notification-item");
+      if(!item)return;
+      const matchId=String(item.dataset.matchId||"").trim();
+      const token=getJuntigoSessionToken();
+      if(item.classList.contains("is-new")){
+        item.classList.remove("is-new");
+        const dot=item.querySelector(".juntigo-notification-dot");
+        if(dot)dot.remove();
+        const heading=item.querySelector(".juntigo-notification-copy strong");
+        if(heading)heading.textContent=heading.textContent.replace("Masz nowe dopasowanie z ","Dopasowanie z ");
+      }
+      if(matchId&&token){
+        event.preventDefault();
+        try{
+          await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"markMatchRead",sessionToken:token,matchId:matchId})});
+          if(typeof loadJuntigoNotifications==="function")await loadJuntigoNotifications();
+        }catch(error){console.warn("Nie udało się oznaczyć dopasowania jako przeczytanego:",error);}
+        window.location.href="konto.html";
+      }
+    });
+  }
   document.addEventListener("click",event=>{if(!wrapper.contains(event.target))close();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape")close();});
 })();
