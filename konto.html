@@ -722,6 +722,7 @@ async function loadChatMessagesInternal(silentRefresh = false) {
       '<div class="chat-empty">Wczytywanie rozmowy…</div>';
   }
 
+  const chatRequestStartedAt = performance.now();
   try {
     const response = await fetch(JUNTIGO_API, {
       method: "POST",
@@ -731,8 +732,16 @@ async function loadChatMessagesInternal(silentRefresh = false) {
         matchId: matchIdAtStart
       })
     });
-
+    const chatHeadersReceivedAt = performance.now();
     const result = await response.json();
+    const chatJsonParsedAt = performance.now();
+    console.info("[Juntigo chat timing]", {
+      requestMs: Math.round(chatHeadersReceivedAt - chatRequestStartedAt),
+      jsonParseMs: Math.round(chatJsonParsedAt - chatHeadersReceivedAt),
+      totalMs: Math.round(chatJsonParsedAt - chatRequestStartedAt),
+      messageCount: Array.isArray(result.messages) ? result.messages.length : 0,
+      success: Boolean(result.success)
+    });
 
     if (!result.success) {
       throw new Error(
