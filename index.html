@@ -3207,6 +3207,21 @@ async function loadJuntigoNotificationPanel(){
   const toggle=document.getElementById("juntigo-notification-toggle");
   const panel=document.getElementById("juntigo-notification-panel");
   if(!wrapper||!toggle||!panel)return;
+  // Portal poza transformowany nagłówek: position:fixed musi odnosić się do viewportu.
+  document.body.appendChild(panel);
+  const positionPanel=()=>{
+    const mobile=window.matchMedia("(max-width: 600px)").matches;
+    const rect=toggle.getBoundingClientRect();
+    panel.style.position="fixed";
+    panel.style.top=(mobile?Math.round(rect.bottom+12):Math.round(rect.bottom+16))+"px";
+    panel.style.left=mobile?"12px":"auto";
+    panel.style.right=mobile?"12px":Math.max(12,Math.round(window.innerWidth-rect.right))+"px";
+    panel.style.width=mobile?"auto":"min(390px, calc(100vw - 24px))";
+    panel.style.maxWidth="none";
+    panel.style.transform="none";
+    panel.style.margin="0";
+    panel.style.zIndex="12000";
+  };
   const close=()=>{panel.hidden=true;toggle.setAttribute("aria-expanded","false");};
   toggle.addEventListener("click",async event=>{
     event.stopPropagation();
@@ -3215,6 +3230,7 @@ async function loadJuntigoNotificationPanel(){
     if(accountMenu)accountMenu.remove();
     const opening=panel.hidden;
     panel.hidden=!opening;
+    if(opening)positionPanel();
     toggle.setAttribute("aria-expanded",String(opening));
     if(opening)await loadJuntigoNotificationPanel();
   });
@@ -3272,7 +3288,8 @@ async function loadJuntigoNotificationPanel(){
       }
     });
   }
-  document.addEventListener("click",event=>{if(!wrapper.contains(event.target))close();});
+  document.addEventListener("click",event=>{if(!wrapper.contains(event.target)&&!panel.contains(event.target))close();});
+  window.addEventListener("resize",()=>{if(!panel.hidden)positionPanel();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape")close();});
 })();
 
