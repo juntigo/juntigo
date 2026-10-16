@@ -3091,14 +3091,15 @@ async function loadJuntigoNotificationPanel(){
     if(!data.success)throw new Error(data.error||"Nie udało się pobrać dopasowań.");
     const matches=Array.isArray(data.matches)?data.matches:[];
     const allUnreadMessages=notificationData&&notificationData.success&&Array.isArray(notificationData.unreadMessageItems)?notificationData.unreadMessageItems:[];
-    const readMessagesStorageKey="juntigo_read_messages_v1";
-    let locallyReadMessageMatchIds=[];
+    const readMessagesStorageKey="juntigo_read_messages_v2";
+    let locallyReadMessageKeys=[];
     try{
       const storedMessages=JSON.parse(localStorage.getItem(readMessagesStorageKey)||"[]");
-      if(Array.isArray(storedMessages))locallyReadMessageMatchIds=storedMessages.map(String);
+      if(Array.isArray(storedMessages))locallyReadMessageKeys=storedMessages.map(String);
     }catch(storageError){console.warn("Nie udało się odczytać lokalnego stanu wiadomości:",storageError);}
-    const locallyReadMessageSet=new Set(locallyReadMessageMatchIds);
-    const unreadMessages=allUnreadMessages.filter(message=>!locallyReadMessageSet.has(String(message.matchId||"")));
+    const locallyReadMessageSet=new Set(locallyReadMessageKeys);
+    const getNotificationMessageKey=message=>[message.matchId||"",message.timestamp||"",message.fromUserId||"",message.message||""].map(String).join("|");
+    const unreadMessages=allUnreadMessages.filter(message=>!locallyReadMessageSet.has(getNotificationMessageKey(message)));
     const readStorageKey="juntigo_read_matches_v1";
     let locallyReadMatchIds=[];
     try{
@@ -3138,7 +3139,8 @@ async function loadJuntigoNotificationPanel(){
       const trip=String(message.trip||"Wyjazd");
       const preview=String(message.message||"Nowa wiadomość").slice(0,110);
       const city=String(message.senderCity||"");
-      return {sortKey:"w:"+String(message.timestamp||""),html:'<a class="juntigo-notification-item is-new" href="konto.html?matchId='+encodeURIComponent(matchId)+'" data-notification-type="message" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz rozmowę"><span class="juntigo-notification-avatar" aria-hidden="true">✉</span><span class="juntigo-notification-copy"><strong>Nowa wiadomość od '+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' — '+escapeHtml(preview)+'</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
+      const messageKey=getNotificationMessageKey(message);
+      return {sortKey:"w:"+String(message.timestamp||""),html:'<a class="juntigo-notification-item is-new" href="konto.html?matchId='+encodeURIComponent(matchId)+'" data-notification-type="message" data-match-id="'+escapeHtml(matchId)+'" data-message-key="'+escapeHtml(messageKey)+'" title="Otwórz rozmowę"><span class="juntigo-notification-avatar" aria-hidden="true">✉</span><span class="juntigo-notification-copy"><strong>Nowa wiadomość od '+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' — '+escapeHtml(preview)+'</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
     });
     const items=messageItems.concat(matchItems);
     if(!items.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz nowych wiadomości ani powiadomień o dopasowaniach.</div>';return;}
@@ -3195,11 +3197,12 @@ async function loadJuntigoNotificationPanel(){
         // Zapamiętaj odczyt rozmowy w tej przeglądarce, by opóźniona odpowiedź backendu
         // nie przywracała powiadomienia jako nowego po ponownym otwarciu panelu.
         try{
-          const key="juntigo_read_messages_v1";
+          const key="juntigo_read_messages_v2";
+          const messageKey=String(item.dataset.messageKey||"");
           const stored=JSON.parse(localStorage.getItem(key)||"[]");
           const ids=new Set(Array.isArray(stored)?stored.map(String):[]);
-          ids.add(matchId);
-          localStorage.setItem(key,JSON.stringify(Array.from(ids)));
+          if(messageKey)ids.add(messageKey);
+          localStorage.setItem(key,JSON.stringify(Array.from(ids).slice(-300)));
         }catch(storageError){console.warn("Nie udało się zapisać odczytu wiadomości:",storageError);}
         try{
           await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"markMessagesRead",sessionToken:token,matchId:matchId})});
