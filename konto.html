@@ -124,7 +124,7 @@
               const resultResponse=await fetch(api,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),redirect:"follow",credentials:"omit"});
               const result=await resultResponse.json();
               if(!result.success||!result.sessionToken)throw new Error(result.error||"Backend Juntigo nie utworzył sesji.");
-              localStorage.setItem("juntigoSessionToken",result.sessionToken);
+              sessionStorage.setItem("juntigoSessionToken",result.sessionToken);
               window.location.reload();
             }catch(error){showError(error.message||"Nie udało się zalogować przez Facebooka.");}
             finally{button.disabled=false;}
@@ -236,7 +236,7 @@
 <script>
 const GOOGLE_CLIENT_ID="853762917641-smv3b9b9dmna6cksthg3l7c6bir4oho5.apps.googleusercontent.com";
 const FACEBOOK_APP_ID="28416419968053118";
-let juntigoSessionToken=localStorage.getItem(JUNTIGO_AUTH_SESSION_KEY)||"";
+let juntigoSessionToken=sessionStorage.getItem(JUNTIGO_AUTH_SESSION_KEY)||"";
   let juntigoUserId="";
   let chatRefreshTimer = null;
 function setAccountError(message){const error=document.getElementById("account-error");if(!error)return;error.textContent=message||"";error.style.display=message?"block":"none";}
@@ -1260,7 +1260,7 @@ document.getElementById("chat-modal").addEventListener("click", function(event) 
     closeMatchChat();
   }
 });
-async function handleGoogleCredential(response){const idToken=response.credential||"";if(!idToken)return;try{const responseSession=await fetch(JUNTIGO_API+"?action=session&idToken="+encodeURIComponent(idToken),{method:"GET"});const result=await responseSession.json();if(!result.success||!result.sessionToken){throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");}juntigoSessionToken=result.sessionToken;localStorage.setItem(JUNTIGO_AUTH_SESSION_KEY,juntigoSessionToken);await loadAccountProfile(juntigoSessionToken);}catch(error){console.error("Błąd logowania Juntigo:",error);setAccountError(error.message||"Nie udało się zalogować.");}}
+async function handleGoogleCredential(response){const idToken=response.credential||"";if(!idToken)return;try{const responseSession=await fetch(JUNTIGO_API+"?action=session&idToken="+encodeURIComponent(idToken),{method:"GET"});const result=await responseSession.json();if(!result.success||!result.sessionToken){throw new Error(result.error||"Nie udało się utworzyć sesji Juntigo.");}juntigoSessionToken=result.sessionToken;sessionStorage.setItem(JUNTIGO_AUTH_SESSION_KEY,juntigoSessionToken);await loadAccountProfile(juntigoSessionToken);}catch(error){console.error("Błąd logowania Juntigo:",error);setAccountError(error.message||"Nie udało się zalogować.");}}
 function initializeGoogleLogin(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initializeGoogleLogin,300);return;}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:true});google.accounts.id.renderButton(document.getElementById("google-login-button"),{theme:"outline",size:"large",text:"signin_with",shape:"rectangular",width:270});}
 function initializeFacebookLogin(){}
 window.addEventListener("load",function(){initializeFacebookLogin();loadAccountTripCatalog();if(juntigoSessionToken){setLoginSectionState("checking");loadAccountProfile(juntigoSessionToken);}else{setLoginSectionState("login");initializeGoogleLogin();}});
