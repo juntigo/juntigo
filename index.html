@@ -3090,7 +3090,15 @@ async function loadJuntigoNotificationPanel(){
     const [data,notificationData]=await Promise.all([matchesResponse.json(),notificationsResponse.json()]);
     if(!data.success)throw new Error(data.error||"Nie udało się pobrać dopasowań.");
     const matches=Array.isArray(data.matches)?data.matches:[];
-    const unreadMessages=notificationData&&notificationData.success&&Array.isArray(notificationData.unreadMessageItems)?notificationData.unreadMessageItems:[];
+    const allUnreadMessages=notificationData&&notificationData.success&&Array.isArray(notificationData.unreadMessageItems)?notificationData.unreadMessageItems:[];
+    const readMessagesStorageKey="juntigo_read_messages_v1";
+    let locallyReadMessageMatchIds=[];
+    try{
+      const storedMessages=JSON.parse(localStorage.getItem(readMessagesStorageKey)||"[]");
+      if(Array.isArray(storedMessages))locallyReadMessageMatchIds=storedMessages.map(String);
+    }catch(storageError){console.warn("Nie udało się odczytać lokalnego stanu wiadomości:",storageError);}
+    const locallyReadMessageSet=new Set(locallyReadMessageMatchIds);
+    const unreadMessages=allUnreadMessages.filter(message=>!locallyReadMessageSet.has(String(message.matchId||"")));
     const readStorageKey="juntigo_read_matches_v1";
     let locallyReadMatchIds=[];
     try{
@@ -3181,6 +3189,23 @@ async function loadJuntigoNotificationPanel(){
           ids.add(matchId);
           localStorage.setItem(key,JSON.stringify(Array.from(ids)));
         }catch(storageError){console.warn("Nie udało się zapisać lokalnego odczytu powiadomienia:",storageError);}
+      }
+      if(matchId&&notificationType==="message"){
+        event.preventDefault();
+        // Zapamiętaj odczyt rozmowy w tej przeglądarce, by opóźniona odpowiedź backendu
+        // nie przywracała powiadomienia jako nowego po ponownym otwarciu panelu.
+        try{
+          const key="juntigo_read_messages_v1";
+          const stored=JSON.parse(localStorage.getItem(key)||"[]");
+          const ids=new Set(Array.isArray(stored)?stored.map(String):[]);
+          ids.add(matchId);
+          localStorage.setItem(key,JSON.stringify(Array.from(ids)));
+        }catch(storageError){console.warn("Nie udało się zapisać odczytu wiadomości:",storageError);}
+        try{
+          await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"markMessagesRead",sessionToken:token,matchId:matchId})});
+          if(typeof loadJuntigoNotifications==="function")await loadJuntigoNotifications();
+        }catch(error){console.warn("Nie udało się oznaczyć wiadomości jako przeczytanych:",error);}
+        window.location.href="konto.html?matchId="+encodeURIComponent(matchId);
       }
       if(matchId&&token&&notificationType==="match"){
         event.preventDefault();
