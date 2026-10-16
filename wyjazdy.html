@@ -2626,6 +2626,26 @@ if(document.getElementById("team-modal")!==modal)return;
 if(!data.success){results.innerHTML='<div class="team-empty">Nie udało się pobrać danych ekipy. Spróbuj ponownie.</div>';return;}
 const people=Array.isArray(data.people)?data.people.filter(p=>p&&typeof p==="object"):[];
 if(!people.length){results.innerHTML='<div class="team-empty"><strong>Na razie nikogo tu nie ma.</strong><span>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</span></div>';return;}
+
+// Odtwórz stan wysłanych zainteresowań z konta, aby przycisk był poprawny
+// również po zamknięciu i ponownym otwarciu ekipy.
+if(token){
+  try{
+    const interestsResponse=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"myInterests",sessionToken:token})});
+    const interestsData=await interestsResponse.json();
+    if(interestsData.success&&Array.isArray(interestsData.interests)){
+      const sentTo=new Set(interestsData.interests
+        .filter(item=>String(item.trip||"").trim()===String(trip||"").trim())
+        .map(item=>String(item.toUserId||"").trim())
+        .filter(Boolean));
+      people.forEach(person=>{
+        if(person&&person.userId&&sentTo.has(String(person.userId).trim())) person.alreadyInterested=true;
+      });
+    }
+  }catch(interestLoadError){
+    console.warn("Nie udało się odtworzyć stanu wysłanych zainteresowań:",interestLoadError);
+  }
+}
 window.juntigoTeamPeople=people;
 results.innerHTML='<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+escapeHtml(String(Number(data.count)||people.length))+'</span></div>'+people.map((p,index)=>'<article class="person-card"><h4>'+escapeHtml(p.name||"Użytkownik Juntigo")+'</h4><div class="person-card-topline"><div class="person-meta">'+(p.age?escapeHtml(String(p.age))+' lat':'')+(p.city?' · '+escapeHtml(p.city):'')+'</div>'+(p.verified?'<div class="person-profile-verified">✓ Profil uzupełniony</div>':'')+'</div>'+(p.interests?'<div class="person-interests">'+escapeHtml(p.interests)+'</div>':'')+(p.travelStyle?'<div class="person-interests">Styl: '+escapeHtml(p.travelStyle)+'</div>':'')+(p.about?'<p class="person-about">„'+escapeHtml(p.about)+'”</p>':'')+(p.instagram?'<a class="person-instagram" target="_blank" rel="noopener noreferrer" href="'+getInstagramUrl(p.instagram)+'">'+escapeHtml(p.instagram)+'</a>':'')+(p.userId?'<div class="person-card-actions"><button type="button" class="person-profile-button" data-person-index="'+index+'">Zobacz profil</button><button type="button" class="person-contact" data-person-index="'+index+'" data-trip="'+escapeHtml(trip)+'" data-user-id="'+escapeHtml(p.userId)+'" data-user-name="'+escapeHtml(p.name||"Użytkownik Juntigo")+'" '+(p.alreadyInterested?'disabled':'')+'>'+(p.alreadyInterested?'Zainteresowanie wysłane':'Jestem zainteresowany')+'</button></div>':'')+'</article>').join("");
 results.querySelectorAll(".person-profile-button").forEach(b=>b.addEventListener("click",()=>showTripPersonProfile(window.juntigoTeamPeople[Number(b.dataset.personIndex)])));
