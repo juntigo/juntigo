@@ -82,11 +82,11 @@
       <p>Użytkownik może utworzyć profil zawierający między innymi imię lub pseudonim, wiek, miasto, Instagram, opis, zdjęcie, zainteresowania, styl podróżowania oraz wybrane wyjazdy.</p>
       <p>Profil jest opcjonalny. Utworzenie pełnego profilu służy między innymi zwiększeniu wiarygodności informacji prezentowanych innym użytkownikom. W ramach obecnego MVP pełny profil może być oznaczony jako „Profil uzupełniony”. Oznaczenie to dotyczy kompletności profilu w Juntigo i nie oznacza urzędowego potwierdzenia tożsamości użytkownika.</p>
 
-      <h2>4. Logowanie przez Google</h2>
-      <p>Juntigo może udostępniać opcjonalne logowanie przez Google. W takim przypadku korzystamy z usługi Google Identity Services.</p>
-      <p>W związku z logowaniem Google aplikacja może otrzymać dane przekazane przez Google w ramach mechanizmu logowania, w szczególności nazwę użytkownika, adres e-mail oraz unikalny identyfikator konta Google. Zakres wykorzystywanych danych ograniczamy do danych potrzebnych do uwierzytelnienia użytkownika i działania funkcji konta.</p>
-      <p>Dane otrzymane od Google nie są sprzedawane ani wykorzystywane do wyświetlania reklam na podstawie informacji z konta Google. Nie wykorzystujemy danych Google do tworzenia baz danych reklamowych ani do profilowania użytkowników w celach reklamowych.</p>
-      <p>Wykorzystanie danych otrzymanych z usług Google odbywa się zgodnie z zasadami Google API Services User Data Policy, w tym wymaganiami Limited Use.</p>
+      <h2>4. Logowanie przez Google i Facebook</h2>
+      <p>Juntigo może udostępniać opcjonalne logowanie przez Google lub Facebook. Logowanie Google korzysta z Google Identity Services, a logowanie Facebook z mechanizmu Facebook Login udostępnianego przez Meta.</p>
+      <p>Podczas logowania Google aplikacja może otrzymać nazwę użytkownika, adres e-mail oraz unikalny identyfikator konta Google. Podczas logowania Facebook aplikacja może otrzymać identyfikator konta Facebook, nazwę użytkownika oraz adres e-mail, jeżeli jest dostępny i użytkownik przyzna wymagane uprawnienia. Dane te wykorzystujemy do uwierzytelnienia użytkownika, utworzenia lub powiązania konta Juntigo oraz obsługi funkcji konta.</p>
+      <p>Dane otrzymane od Google lub Meta nie są sprzedawane ani wykorzystywane przez Juntigo do wyświetlania reklam na podstawie informacji z konta. Nie wykorzystujemy ich do tworzenia baz danych reklamowych ani do profilowania użytkowników w celach reklamowych.</p>
+      <p>Wykorzystanie danych otrzymanych z usług Google odbywa się zgodnie z zasadami Google API Services User Data Policy, w tym wymaganiami Limited Use. Logowanie Facebook podlega również zasadom prywatności i warunkom Meta.</p>
       <p>W celu utrzymania zalogowania Juntigo zapisuje w pamięci sesyjnej karty przeglądarki (sessionStorage) techniczny token sesji. Token służy do uwierzytelniania żądań związanych z funkcjami konta; nie zapisujemy w ten sposób hasła do konta Google. Token jest usuwany podczas wylogowania i znika po zakończeniu sesji karty. Po zamknięciu karty może być konieczne ponowne zalogowanie.</p>
 
       <h2>5. Cele przetwarzania danych</h2>
@@ -128,7 +128,7 @@
       <p>Jeżeli użytkownik korzysta z funkcji „Jestem zainteresowany”, Juntigo może przetwarzać informację o tym zainteresowaniu oraz dane potrzebne do umożliwienia wzajemnego kontaktu lub dopasowania.</p>
 
       <h2>10. Odbiorcy danych i dostawcy usług</h2>
-      <p>Dane mogą być przetwarzane przez dostawców usług technicznych wspierających działanie Juntigo, w zakresie niezbędnym do zapewnienia tych usług. W szczególności Juntigo korzysta z hostingu i narzędzi związanych z repozytorium strony oraz z usług Google wykorzystywanych do logowania i infrastruktury technicznej.</p>
+      <p>Dane mogą być przetwarzane przez dostawców usług technicznych wspierających działanie Juntigo, w zakresie niezbędnym do zapewnienia tych usług. W szczególności Juntigo korzysta z hostingu i narzędzi związanych z repozytorium strony, usług Google wykorzystywanych do logowania i infrastruktury technicznej oraz usług Meta w zakresie logowania Facebook.</p>
       <p>Dane nie są sprzedawane brokerom danych ani wykorzystywane do kierowania reklam na podstawie danych z Google.</p>
 
       <h2>11. Przechowywanie danych</h2>
