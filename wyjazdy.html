@@ -2619,7 +2619,7 @@ document.addEventListener("keydown",function esc(event){if(event.key==="Escape"&
 document.body.appendChild(modal);document.body.style.overflow="hidden";
 const results=modal.querySelector(".team-results");
 try{
-const session=await validateJuntigoSession();const token=session.authenticated?getJuntigoSessionToken():"";
+const token=getJuntigoSessionToken()||"";
 const response=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripPeople",trip:trip,sessionToken:token})});
 const data=await response.json();
 if(document.getElementById("team-modal")!==modal)return;
