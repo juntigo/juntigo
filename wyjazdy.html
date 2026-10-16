@@ -2398,7 +2398,7 @@ const select=document.getElementById("monthFilter");
 if(!select)return;
 const monthNames=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 const currentValue=select.value||"all";
-const months=new Set([...EVENTS,...SPORTS].map(item=>String(item.dateStart||"").slice(0,7)).filter(value=>/^\\d{4}-\\d{2}$/.test(value)));
+const months=new Set([...EVENTS,...SPORTS].map(item=>String(item.dateStart||"").slice(0,7)).filter(value=>/^\d{4}-\d{2}$/.test(value)));
 select.replaceChildren(new Option("Wszystkie","all"));
 [...months].sort().forEach(value=>{
 const [year,month]=value.split("-").map(Number);
