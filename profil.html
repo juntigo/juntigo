@@ -982,7 +982,7 @@ async function handleGoogleCredential(response) {
 
     juntigoSessionToken = result.sessionToken;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
   JUNTIGO_AUTH_SESSION_KEY,
   juntigoSessionToken
 );
