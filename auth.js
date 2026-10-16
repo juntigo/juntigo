@@ -96,12 +96,13 @@ async function validateJuntigoSession() {
 
   const validationPromise = (async function() {
     try {
-      const response = await fetch(
-        JUNTIGO_AUTH_API +
-        "?action=profile&sessionToken=" +
-        encodeURIComponent(sessionToken),
-        { method: "GET" }
-      );
+      const response = await fetch(JUNTIGO_AUTH_API, {
+        method: "POST",
+        body: new URLSearchParams({
+          type: "getProfile",
+          sessionToken: sessionToken
+        })
+      });
 
       const result = await response.json();
 
