@@ -1361,9 +1361,13 @@ fetch(JUNTIGO_API, {
     }
 
     // Nie pokazuj lokalnego obiektu jako zapisanego, dopóki nie odczytamy go ponownie z backendu.
-    const verifyResponse = await fetch(
-      JUNTIGO_API + "?action=profile&sessionToken=" + encodeURIComponent(juntigoSessionToken)
-    );
+    const verifyResponse = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "getProfile",
+        sessionToken: juntigoSessionToken
+      })
+    });
     const verifyResult = await verifyResponse.json();
     if (!verifyResult.success || !verifyResult.profile) {
       throw new Error("Serwer przyjął zapis, ale nie można ponownie odczytać profilu. Sprawdź wdrożenie Apps Script.");
