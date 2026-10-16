@@ -1013,10 +1013,18 @@ async function openMatchChat(matchId, personName, trip, personUserId) {
   }
   modal.classList.add("active");
 
-await markMatchAsRead(activeChatMatchId);
-await markMessagesRead(activeChatMatchId);
-await loadChatMessages();
-startChatRefresh(activeChatMatchId, juntigoSessionToken);
+// Nie blokuj wyświetlenia rozmowy na dwóch osobnych żądaniach oznaczających odczyt.
+const openingMatchId = activeChatMatchId;
+const openingToken = juntigoSessionToken;
+const messagesLoadPromise = loadChatMessages();
+const markReadPromises = [
+  Promise.resolve().then(() => markMatchAsRead(openingMatchId)),
+  Promise.resolve().then(() => markMessagesRead(openingMatchId))
+];
+await Promise.allSettled([messagesLoadPromise, ...markReadPromises]);
+if (activeChatMatchId === openingMatchId && juntigoSessionToken === openingToken) {
+  startChatRefresh(openingMatchId, openingToken);
+}
 
   if (input) {
     input.focus();
