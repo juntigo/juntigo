@@ -3083,11 +3083,14 @@ async function loadJuntigoNotificationPanel(){
   if(!token){list.innerHTML='<div class="juntigo-notification-empty">Zaloguj się, aby zobaczyć powiadomienia i dopasowania.</div>';return;}
   list.innerHTML='<div class="juntigo-notification-loading">Wczytywanie powiadomień…</div>';
   try{
-    const response=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"myMatches",sessionToken:token})});
-    const data=await response.json();
+    const [matchesResponse,notificationsResponse]=await Promise.all([
+      fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"myMatches",sessionToken:token})}),
+      fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"notifications",sessionToken:token})})
+    ]);
+    const [data,notificationData]=await Promise.all([matchesResponse.json(),notificationsResponse.json()]);
     if(!data.success)throw new Error(data.error||"Nie udało się pobrać dopasowań.");
     const matches=Array.isArray(data.matches)?data.matches:[];
-    // Pamiętaj odczytane dopasowania lokalnie, nawet jeśli backend zwróci opóźniony stan odczytu.
+    const unreadMessages=notificationData&&notificationData.success&&Array.isArray(notificationData.unreadMessageItems)?notificationData.unreadMessageItems:[];
     const readStorageKey="juntigo_read_matches_v1";
     let locallyReadMatchIds=[];
     try{
@@ -3095,14 +3098,12 @@ async function loadJuntigoNotificationPanel(){
       if(Array.isArray(stored))locallyReadMatchIds=stored.map(String);
     }catch(storageError){console.warn("Nie udało się odczytać lokalnego stanu powiadomień:",storageError);}
     const locallyReadSet=new Set(locallyReadMatchIds);
-    matches.forEach(match=>{
-      if(match.matchId&&locallyReadSet.has(String(match.matchId)))match.isRead=true;
-    });
-    if(summary)summary.textContent=matches.length?matches.length+" dopasowań":"Aktualności z Twoich wyjazdów";
-    if(!matches.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz jeszcze dopasowań. Gdy zainteresowanie będzie wzajemne, pojawią się tutaj.</div>';return;}
+    matches.forEach(match=>{if(match.matchId&&locallyReadSet.has(String(match.matchId)))match.isRead=true;});
+    if(summary){
+      const count=Number(notificationData&&notificationData.unreadCount||0);
+      summary.textContent=count===1?"1 nieprzeczytane powiadomienie":count+" nieprzeczytanych powiadomień";
+    }
 
-    // Otwarcie panelu oznacza, że użytkownik zobaczył powiadomienia.
-    // Zapisz odczyt w backendzie, aby stan utrzymał się po ponownym otwarciu.
     const unreadMatches=matches.filter(match=>!(match.isRead===true||String(match.isRead||"").trim().toLowerCase()==="tak"));
     if(unreadMatches.length){
       await Promise.all(unreadMatches.filter(match=>match.matchId).map(async match=>{
@@ -3113,15 +3114,27 @@ async function loadJuntigoNotificationPanel(){
         }catch(readError){console.warn("Nie udało się zapisać odczytu dopasowania:",readError);}
       }));
     }
-    list.innerHTML=matches.slice(0,8).map(match=>{
+
+    const matchItems=matches.slice(0,8).map(match=>{
       const person=match.person||{};
       const name=String(person.name||"Użytkownik Juntigo");
       const trip=String(match.trip||"Wyjazd");
       const city=String(person.city||"");
       const matchId=String(match.matchId||"");
       const isUnread=!(match.isRead===true||String(match.isRead||"").trim().toLowerCase()==="tak");
-      return '<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">♥</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Kliknij, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>';
-    }).join("");
+      return {sortKey:"m:"+matchId,html:'<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-notification-type="match" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">♥</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Otwórz konto, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>'};
+    });
+    const messageItems=unreadMessages.slice(0,12).map(message=>{
+      const matchId=String(message.matchId||"");
+      const name=String(message.senderName||"Użytkownik Juntigo");
+      const trip=String(message.trip||"Wyjazd");
+      const preview=String(message.message||"Nowa wiadomość").slice(0,110);
+      const city=String(message.senderCity||"");
+      return {sortKey:"w:"+String(message.timestamp||""),html:'<a class="juntigo-notification-item is-new" href="konto.html?matchId='+encodeURIComponent(matchId)+'" data-notification-type="message" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz rozmowę"><span class="juntigo-notification-avatar" aria-hidden="true">✉</span><span class="juntigo-notification-copy"><strong>Nowa wiadomość od '+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' — '+escapeHtml(preview)+'</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
+    });
+    const items=messageItems.concat(matchItems);
+    if(!items.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz nowych wiadomości ani powiadomień o dopasowaniach.</div>';return;}
+    list.innerHTML=items.map(item=>item.html).join("");
   }catch(error){
     list.innerHTML='<div class="juntigo-notification-empty">Nie udało się wczytać powiadomień. Spróbuj ponownie.</div>';
     console.warn("Błąd panelu powiadomień Juntigo:",error);
@@ -3151,6 +3164,7 @@ async function loadJuntigoNotificationPanel(){
       const item=event.target.closest(".juntigo-notification-item");
       if(!item)return;
       const matchId=String(item.dataset.matchId||"").trim();
+      const notificationType=String(item.dataset.notificationType||"match");
       const token=getJuntigoSessionToken();
       if(item.classList.contains("is-new")){
         item.classList.remove("is-new");
@@ -3159,7 +3173,7 @@ async function loadJuntigoNotificationPanel(){
         const heading=item.querySelector(".juntigo-notification-copy strong");
         if(heading)heading.textContent=heading.textContent.replace("Masz nowe dopasowanie z ","Dopasowanie z ");
       }
-      if(matchId){
+      if(matchId&&notificationType==="match"){
         try{
           const key="juntigo_read_matches_v1";
           const stored=JSON.parse(localStorage.getItem(key)||"[]");
@@ -3168,7 +3182,7 @@ async function loadJuntigoNotificationPanel(){
           localStorage.setItem(key,JSON.stringify(Array.from(ids)));
         }catch(storageError){console.warn("Nie udało się zapisać lokalnego odczytu powiadomienia:",storageError);}
       }
-      if(matchId&&token){
+      if(matchId&&token&&notificationType==="match"){
         event.preventDefault();
         try{
           await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"markMatchRead",sessionToken:token,matchId:matchId})});
