@@ -3010,7 +3010,7 @@ async function loadTripInterestCounts() {
 
             try {
                 const response = await fetch(
-                    JUNTIGO_API + "?trip=" + encodeURIComponent(trip)
+                    JUNTIGO_API + "?action=tripCounts&trip=" + encodeURIComponent(trip)
                 );
 
                 const data = await response.json();
