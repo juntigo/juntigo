@@ -837,10 +837,13 @@ function loadProfileFromBackend(sessionToken, existingProfile = null) {
       success: true,
       profile: existingProfile
     })
-  : fetch(
-      JUNTIGO_API + "?action=profile&sessionToken=" +
-      encodeURIComponent(sessionToken)
-    ).then(response => response.json());
+  : fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({
+        type: "getProfile",
+        sessionToken: sessionToken
+      })
+    }).then(response => response.json());
 
 profileRequest
     .then(data => {
