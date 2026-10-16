@@ -3444,9 +3444,10 @@ function showTeam(trip, button, tripLabel) {
   const sessionToken = getJuntigoSessionToken();
   const teamRequestId = String(Date.now()) + "-" + Math.random().toString(36).slice(2);
   modal.dataset.teamRequestId = teamRequestId;
-  const url = JUNTIGO_API + "?trip=" + encodeURIComponent(trip) + (sessionToken ? "&sessionToken=" + encodeURIComponent(sessionToken) : "");
-
-fetch(url).then(response => response.json()).then((data) => {
+  fetch(JUNTIGO_API, {
+    method: "POST",
+    body: new URLSearchParams({ type: "tripPeople", trip: trip, sessionToken: sessionToken })
+  }).then(response => response.json()).then((data) => {
 
     if (
       document.getElementById("team-modal") !== modal ||
