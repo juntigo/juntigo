@@ -2356,7 +2356,7 @@ const EVENT_END_DATES={
 
 "EVENT_NYE_TVP_2026":"2027-01-01",
 "EVENT_NYE_VIENNA_2026":"2027-01-01",
-"EVENT_NYE_SALZBURG_2026":"2027-01-01"
+"EVENT_NYE_SALZBURG_2026":"2027-01-01",
 "EVENT_MARKET_DRESDEN_2026":"2026-12-24"
 };
 
@@ -2397,7 +2397,7 @@ const EVENTS=[
 ["EVENT_MARKET_ZAGREB_2026","Advent Zagreb","Zagrzeb","Chorwacja","hr","🎄","2026-11-28","28 listopada 2026 – 7 stycznia 2027","Świąteczne wydarzenia i targi w centrum Zagrzebia."],
 ["EVENT_NYE_TVP_2026","Sylwester z Dwójką — koncert TVP2","Katowice","Polska","pl","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Telewizyjny koncert sylwestrowy przed katowickim Spodkiem."],
 ["EVENT_NYE_VIENNA_2026","Vienna New Year's Eve Trail — Silvesterpfad","Wiedeń","Austria","at","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Duża miejska impreza sylwestrowa w centrum Wiednia."],
-["EVENT_NYE_SALZBURG_2026","Sylwester na Starym Mieście w Salzburgu","Salzburg","Austria","at","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Sylwestrowy program w historycznym centrum Salzburga."]
+["EVENT_NYE_SALZBURG_2026","Sylwester na Starym Mieście w Salzburgu","Salzburg","Austria","at","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Sylwestrowy program w historycznym centrum Salzburga."],
 ["EVENT_MARKET_DRESDEN_2026","Striezelmarkt w Dreźnie","Drezno","Niemcy","de","🎄","2026-11-25","25 listopada – 24 grudnia 2026","Jeden z najbardziej znanych niemieckich jarmarków bożonarodzeniowych, z tradycyjnym rękodziełem i wypiekami."],
 ].map(x=>({tripId:x[0],destination:x[1],city:x[2],country:x[3],countryCode:x[4],icon:x[5],type:(x[0].includes("_MARKET_")?"market":(x[0].includes("_NYE_")?"nye":"event")),direction:x[4]==="pl"?"poland":"abroad",dateStart:x[6],dateEnd:EVENT_END_DATES[x[0]]||x[6],dateLabel:x[7],description:x[8]}));
 
