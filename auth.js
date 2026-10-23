@@ -308,7 +308,7 @@ function ensureJuntigoNavStyles() {
       height: 34px;
       border-radius: 50%;
       overflow: hidden;
-      background: #071b33;
+      background: linear-gradient(135deg, #071b33 0%, #0e3b60 100%);
       color: #fff;
       display: flex;
       align-items: center;
