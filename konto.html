@@ -300,8 +300,26 @@ function setLoginSectionState(state, identityText){
 }
 const juntigoAccountTripCatalog=new Map();
 let juntigoAccountTripCatalogReady=false;
+const JUNTIGO_REMOVED_OCTOBER_TRIPS=new Set([
+  "EVENT_WARSAW_BEER_2026",
+  "EVENT_KRAKOW_CONRAD_2026",
+  "EVENT_PRAGUE_SIGNAL_2026",
+  "EVENT_VIENNA_VIENNALE_2026",
+  "EVENT_BERLIN_LIGHTS_2026",
+  "EVENT_AMSTERDAM_ADE_2026",
+  "EVENT_BARCELONA_INEDIT_2026",
+  "EVENT_MADRID_JAZZ_2026",
+  "EVENT_PARIS_GAMES_2026",
+  "EVENT_MILAN_JAZZMI_2026",
+  "EVENT_LISBON_DOCLISBOA_2026",
+  "ROMA_REAL_2026-10-14","REAL_MADRID_LEIPZIG_2026-10-21","BARCA_REAL_2026-10-25",
+  "LIVERPOOL_MAN_CITY_2026-10-11","MAN_UTD_CHELSEA_2026-10-31","ARSENAL_LILLE_2026-10-13",
+  "LEGIA_WISLA_2026-10-11","LEGIA_LECH_2026-10-25","LECH_BAYER_2026-10-15","LECH_SUNDERLAND_2026-10-22",
+  "OKTOBERFEST","Oktoberfest 2026"
+]);
 function renderAccountTripList(){
-  const trips=Array.isArray(window.juntigoAccountProfileTrips)?window.juntigoAccountProfileTrips:[];
+  const trips=(Array.isArray(window.juntigoAccountProfileTrips)?window.juntigoAccountProfileTrips:[])
+    .filter(trip=>!JUNTIGO_REMOVED_OCTOBER_TRIPS.has(String(trip||"").trim())&&!/2026-10-\d{2}$/.test(String(trip||"").trim()));
   const tripList=document.getElementById("trip-list");
   if(!tripList)return;
   if(!trips.length){tripList.innerHTML='<div class="empty">Brak wybranych wyjazdów.</div>';return;}
