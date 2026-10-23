@@ -2348,24 +2348,16 @@ const EVENT_END_DATES={
 "EVENT_MARKET_ZAKOPANE_2026":"2026-12-30",
 "EVENT_MARKET_VIENNA_SCHONBRUNN_2026":"2027-01-06",
 "EVENT_MARKET_BUDAPEST_BASILICA_2026":"2027-01-01",
-"EVENT_MARKET_COPENHAGEN_TIVOLI_2026":"2027-01-03",
-"EVENT_MARKET_COLOGNE_2026":"2026-12-23",
-"EVENT_MARKET_TALLINN_2026":"2027-01-06",
+
 "EVENT_MARKET_BRUSSELS_2026":"2027-01-03",
 "EVENT_MARKET_NUREMBERG_2026":"2026-12-24",
 "EVENT_MARKET_PRAGUE_2026":"2027-01-06",
 "EVENT_MARKET_ZAGREB_2026":"2027-01-07",
-"EVENT_MARKET_STRASBOURG_2026":"2026-12-24",
-"EVENT_MARKET_COLMAR_2026":"2026-12-29",
-"EVENT_MARKET_MANCHESTER_2026":"2026-12-22",
-"EVENT_MARKET_EDINBURGH_2026":"2027-01-03",
-"EVENT_MARKET_LUXEMBOURG_2026":"2027-01-03",
-"EVENT_MARKET_DUBLIN_2026":"2026-12-23",
-"EVENT_MARKET_BASEL_2026":"2026-12-23",
-"EVENT_MARKET_GENEVA_2026":"2026-12-24",
+
 "EVENT_NYE_TVP_2026":"2027-01-01",
 "EVENT_NYE_VIENNA_2026":"2027-01-01",
 "EVENT_NYE_SALZBURG_2026":"2027-01-01"
+"EVENT_MARKET_DRESDEN_2026":"2026-12-24"
 };
 
 const EVENTS=[
@@ -2417,6 +2409,7 @@ const EVENTS=[
 ["EVENT_NYE_TVP_2026","Sylwester z Dwójką — koncert TVP2","Katowice","Polska","pl","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Telewizyjny koncert sylwestrowy przed katowickim Spodkiem."],
 ["EVENT_NYE_VIENNA_2026","Vienna New Year's Eve Trail — Silvesterpfad","Wiedeń","Austria","at","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Duża miejska impreza sylwestrowa w centrum Wiednia."],
 ["EVENT_NYE_SALZBURG_2026","Sylwester na Starym Mieście w Salzburgu","Salzburg","Austria","at","🎆","2026-12-31","31 grudnia 2026 – 1 stycznia 2027","Sylwestrowy program w historycznym centrum Salzburga."]
+["EVENT_MARKET_DRESDEN_2026","Striezelmarkt w Dreźnie","Drezno","Niemcy","de","🎄","2026-11-25","25 listopada – 24 grudnia 2026","Jeden z najbardziej znanych niemieckich jarmarków bożonarodzeniowych, z tradycyjnym rękodziełem i wypiekami."],
 ].map(x=>({tripId:x[0],destination:x[1],city:x[2],country:x[3],countryCode:x[4],icon:x[5],type:(x[0].includes("_MARKET_")?"market":(x[0].includes("_NYE_")?"nye":"event")),direction:x[4]==="pl"?"poland":"abroad",dateStart:x[6],dateEnd:EVENT_END_DATES[x[0]]||x[6],dateLabel:x[7],description:x[8]}));
 
 const SPORT_TEAMS=[
