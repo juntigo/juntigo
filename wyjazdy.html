@@ -2298,22 +2298,37 @@ const COUNTRIES=[{name:"Polska",code:"pl",flag:"🇵🇱",items:[["WARSZAWA","Wa
 {name:"Włochy",code:"it",flag:"🇮🇹",items:[["RZYM","Rzym","🏙️"],["BARI","Bari","🏙️"],["PESCARA","Pescara","🏙️"],["REGGIO_DI_CALABRIA","Reggio di Calabria","🏙️"],["OLBIA_SARDYNIA","Olbia – Sardynia","🏝️"],["PERUGIA","Perugia","🏙️"],["LAMEZIA_TERME","Lamezia Terme","🏙️"],["ANKONA","Ankona","🏙️"],["GENUA","Genua","🏙️"],["ALGHERO_SARDYNIA","Alghero – Sardynia","🏝️"],["RIMINI","Rimini","🏙️"],["NEAPOL","Neapol","🏙️"],["CAGLIARI_SARDYNIA","Cagliari – Sardynia","🏝️"],["PIZA","Piza","🏙️"],["FLORENCJA","Florencja","🏙️"],["BOLONIA","Bolonia","🏙️"],["PALERMO_SYCYLIA","Palermo – Sycylia","🏝️"],["KATANIA_SYCYLIA","Katania – Sycylia","🏝️"],["TRAPANI_SYCYLIA","Trapani – Sycylia","🏝️"],["MEDIOLAN","Mediolan","🏙️"],["WENECJA","Wenecja","🏙️"],["BRINDISI","Brindisi","🏙️"],["TURYN","Turyn","🏙️"],["TRIEST","Triest","🏙️"]]}
 ];
 
+const JUNTIGO_REMOVED_OCTOBER_TRIPS=new Set([
+ "EVENT_WARSAW_BEER_2026",
+ "EVENT_KRAKOW_CONRAD_2026",
+ "EVENT_PRAGUE_SIGNAL_2026",
+ "EVENT_VIENNA_VIENNALE_2026",
+ "EVENT_BERLIN_LIGHTS_2026",
+ "EVENT_AMSTERDAM_ADE_2026",
+ "EVENT_BARCELONA_INEDIT_2026",
+ "EVENT_MADRID_JAZZ_2026",
+ "EVENT_PARIS_GAMES_2026",
+ "EVENT_MILAN_JAZZMI_2026",
+ "EVENT_LISBON_DOCLISBOA_2026",
+ "ROMA_REAL_2026-10-14","REAL_MADRID_LEIPZIG_2026-10-21","BARCA_REAL_2026-10-25",
+ "LIVERPOOL_MAN_CITY_2026-10-11","MAN_UTD_CHELSEA_2026-10-31","ARSENAL_LILLE_2026-10-13",
+ "LEGIA_WISLA_2026-10-11","LEGIA_LECH_2026-10-25","LECH_BAYER_2026-10-15","LECH_SUNDERLAND_2026-10-22",
+ "OKTOBERFEST","Oktoberfest 2026"
+]);
+function isRemovedOctoberTrip(trip){
+ const id=String(trip&&trip.tripId||trip||"").trim();
+ return JUNTIGO_REMOVED_OCTOBER_TRIPS.has(id) || /2026-10-\d{2}$/.test(id);
+}
+
 const EVENT_TRIPS=[];
 
 const EVENT_END_DATES={
-"EVENT_WARSAW_BEER_2026":"2026-10-17",
-"EVENT_KRAKOW_CONRAD_2026":"2026-10-25",
+
+
 "EVENT_WROCLAW_ONELOVE_2026":"2026-11-21",
 "EVENT_GDANSK_WITCHER_2026":"2026-11-05",
-"EVENT_PRAGUE_SIGNAL_2026":"2026-10-18",
-"EVENT_VIENNA_VIENNALE_2026":"2026-11-03",
-"EVENT_BERLIN_LIGHTS_2026":"2026-10-18",
-"EVENT_AMSTERDAM_ADE_2026":"2026-10-25",
-"EVENT_BARCELONA_INEDIT_2026":"2026-11-08",
-"EVENT_MADRID_JAZZ_2026":"2026-11-30",
-"EVENT_PARIS_GAMES_2026":"2026-10-25",
-"EVENT_MILAN_JAZZMI_2026":"2026-11-08",
-"EVENT_LISBON_DOCLISBOA_2026":"2026-10-25",
+
+
 "EVENT_LONDON_JAZZ_2026":"2026-11-22",
 "EVENT_LONDON_LORD_MAYOR_2026":"2026-11-14",
 "EVENT_PARIS_ORELSAN_2026":"2026-12-28",
@@ -2323,19 +2338,19 @@ const EVENT_END_DATES={
 };
 
 const EVENTS=[
-["EVENT_WARSAW_BEER_2026","Warszawski Festiwal Piwa","Warszawa","Polska","pl","🍺","2026-10-15","15–17 października 2026","Trzy dni dla miłośników piwa kraftowego, degustacji i miejskiej atmosfery festiwalowej."],
-["EVENT_KRAKOW_CONRAD_2026","Festiwal Conrada","Kraków","Polska","pl","📚","2026-10-19","19–25 października 2026","Jedno z najważniejszych wydarzeń literackich w Polsce, pełne spotkań z autorami, rozmów i debat."],
+
+
 ["EVENT_WROCLAW_ONELOVE_2026","One Love Wrocław Music Festival","Wrocław","Polska","pl","🎵","2026-11-21","21 listopada 2026","Duży festiwal muzyczny w Hali Stulecia z dwiema scenami i mieszanką muzyki głównego nurtu oraz alternatywy."],
 ["EVENT_GDANSK_WITCHER_2026","WIEDŹMIN. Muzyka Kontynentu","Gdańsk","Polska","pl","🎻","2026-11-05","5 listopada 2026","Widowisko muzyczne inspirowane światem Wiedźmina i muzyką znaną z uniwersum Kontynentu."],
-["EVENT_PRAGUE_SIGNAL_2026","Signal Festival","Praga","Czechy","cz","💡","2026-10-15","15–18 października 2026","Praga zamienia się w galerię światła, videomappingu i sztuki cyfrowej rozmieszczonej w różnych częściach miasta."],
-["EVENT_VIENNA_VIENNALE_2026","Viennale — Vienna International Film Festival","Wiedeń","Austria","at","🎬","2026-10-22","22 października – 3 listopada 2026","Międzynarodowy festiwal filmowy dla osób szukających ambitnego kina, premier i filmowych odkryć."],
-["EVENT_BERLIN_LIGHTS_2026","Festival of Lights","Berlin","Niemcy","de","✨","2026-10-09","9–18 października 2026","Berlińskie zabytki i charakterystyczne miejsca stają się wielką sceną dla iluminacji, projekcji i sztuki światła."],
-["EVENT_AMSTERDAM_ADE_2026","Amsterdam Dance Event","Amsterdam","Holandia","nl","🎧","2026-10-21","21–25 października 2026","Jedno z największych wydarzeń muzyki elektronicznej — setki koncertów, klubowych wydarzeń i spotkań w całym Amsterdamie."],
-["EVENT_BARCELONA_INEDIT_2026","IN-EDIT Barcelona","Barcelona","Hiszpania","es","🎞️","2026-10-29","29 października – 8 listopada 2026","Festiwal filmów muzycznych łączący kino dokumentalne, muzykę i historie artystów oraz scen muzycznych."],
-["EVENT_MADRID_JAZZ_2026","JAZZMADRID26","Madryt","Hiszpania","es","🎷","2026-10-02","2 października – 30 listopada 2026","Jesienna seria koncertów jazzowych w różnych przestrzeniach Madrytu, od klubów po większe sale."],
-["EVENT_PARIS_GAMES_2026","Paris Games Week","Paryż","Francja","fr","🎮","2026-10-22","22–25 października 2026","Najważniejsze paryskie święto gamingu — gry, sprzęt, prezentacje i spotkania ze społecznością graczy."],
-["EVENT_MILAN_JAZZMI_2026","JazzMi 2026","Mediolan","Włochy","it","🎷","2026-10-19","19 października – 8 listopada 2026","Festiwal pokazujący jazz w różnych odsłonach — od międzynarodowych gwiazd po nowe i eksperymentalne brzmienia."],
-["EVENT_LISBON_DOCLISBOA_2026","Doclisboa","Lizbona","Portugalia","pt","🎬","2026-10-15","15–25 października 2026","Międzynarodowy festiwal kina dokumentalnego z autorskim programem filmów i wydarzeń w Lizbonie."],
+
+
+
+
+
+
+
+
+
 ["EVENT_LONDON_JAZZ_2026","EFG London Jazz Festival","Londyn","Anglia","gb-eng","🎷","2026-11-13","13–22 listopada 2026","Dziesięć dni koncertów jazzowych w klubach i salach Londynu, od światowych gwiazd po nowe talenty."],
 ["EVENT_LONDON_LORD_MAYOR_2026","Lord Mayor Show","Londyn","Anglia","gb-eng","🎭","2026-11-14","14 listopada 2026","Tradycyjna londyńska parada z wielkimi platformami, orkiestrami, występami i wyjątkową atmosferą centrum miasta."],
 ["EVENT_PARIS_ORELSAN_2026","Orelsan — koncert","Paryż","Francja","fr","🎤","2026-12-09","9–28 grudnia 2026 (wybrane terminy)","Koncertowy wyjazd do Paryża dla fanów francuskiego rapu i jednego z najpopularniejszych artystów sceny."],
@@ -2346,43 +2361,33 @@ const EVENTS=[
 
 const SPORT_TEAMS=[
 {teamId:"REAL_MADRID",team:"Real Madryt",city:"Madryt",country:"Hiszpania",countryCode:"es",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",matches:[
-["ROMA_REAL_2026-10-14","AS Roma – Real Madryt","2026-10-14","14 października 2026","Champions League","Rzym"],
-["REAL_MADRID_LEIPZIG_2026-10-21","Real Madryt – RB Leipzig","2026-10-21","21 października 2026","Champions League","Madryt"],
 ["REAL_MADRID_PSV_2026-11-24","Real Madryt – PSV Eindhoven","2026-11-24","24 listopada 2026","Champions League","Madryt"],
 
 ]},
 {teamId:"FC_BARCELONA",team:"FC Barcelona",city:"Barcelona",country:"Hiszpania",countryCode:"es",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",matches:[
-["BARCA_REAL_2026-10-25","FC Barcelona – Real Madryt","2026-10-25","25 października 2026","La Liga","Barcelona"],
 ["BARCA_ATLETICO_2026-11-08","Atlético Madryt – FC Barcelona","2026-11-08","8 listopada 2026","La Liga","Madryt"],
 ["BARCA_MAN_CITY_2026-12-08","FC Barcelona – Manchester City","2026-12-08","8 grudnia 2026","Champions League","Barcelona"]
 ]},
 {teamId:"LIVERPOOL",team:"Liverpool FC",city:"Liverpool",country:"Anglia",countryCode:"gb-eng",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",matches:[
-["LIVERPOOL_MAN_CITY_2026-10-11","Liverpool – Manchester City","2026-10-11","11 października 2026","Premier League","Liverpool"],
 ["LIVERPOOL_ARSENAL_2026-11-01","Liverpool – Arsenal","2026-11-01","1 listopada 2026","Premier League","Liverpool"],
 ["LIVERPOOL_MAN_UTD_2026-11-22","Liverpool – Manchester United","2026-11-22","22 listopada 2026","Premier League","Liverpool"],
 ["LIVERPOOL_PORTO_2026-12-09","Liverpool – FC Porto","2026-12-09","9 grudnia 2026","Champions League","Liverpool"]
 ]},
 {teamId:"MAN_UTD",team:"Manchester United",city:"Manchester",country:"Anglia",countryCode:"gb-eng",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",matches:[
-["MAN_UTD_CHELSEA_2026-10-31","Chelsea – Manchester United","2026-10-31","31 października 2026","Premier League","Londyn"],
 ["MAN_UTD_LIVERPOOL_2026-11-22","Liverpool – Manchester United","2026-11-22","22 listopada 2026","Premier League","Liverpool"],
 ["MAN_UTD_ARSENAL_2026-12-19","Arsenal – Manchester United","2026-12-19","19 grudnia 2026","Premier League","Londyn"],
 ["MAN_UTD_FOREST_2026-12-27","Manchester United – Nottingham Forest","2026-12-27","27 grudnia 2026","Premier League","Manchester"]
 ]},
 {teamId:"ARSENAL",team:"Arsenal FC",city:"Londyn",country:"Anglia",countryCode:"gb-eng",icon:"⚽",crest:"https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",matches:[
-["ARSENAL_LILLE_2026-10-13","Arsenal – Lille","2026-10-13","13 października 2026","Champions League","Londyn"],
 ["ARSENAL_DORTMUND_2026-11-24","Arsenal – Borussia Dortmund","2026-11-24","24 listopada 2026","Champions League","Londyn"],
 ["ARSENAL_MAN_CITY_2026-11-28","Arsenal – Manchester City","2026-11-28","28 listopada 2026","Premier League","Londyn"],
 ["ARSENAL_REAL_2026-12-09","Arsenal – Real Madryt","2026-12-09","9 grudnia 2026","Champions League","Londyn"]
 ]},
 {teamId:"LEGIA_WARSZAWA",team:"Legia Warszawa",city:"Warszawa",country:"Polska",countryCode:"pl",icon:"⚽",crest:"https://legia.net/uploads/base/h/e/herb_legia.png",matches:[
-["LEGIA_WISLA_2026-10-11","Legia Warszawa – Wisła Kraków","2026-10-11","11 października 2026","Ekstraklasa","Warszawa"],
-["LEGIA_LECH_2026-10-25","Legia Warszawa – Lech Poznań","2026-10-25","25 października 2026","Ekstraklasa","Warszawa"],
 ["LEGIA_RAKOW_2026-11-08","Legia Warszawa – Raków Częstochowa","2026-11-08","8 listopada 2026","Ekstraklasa","Warszawa"],
 ["LEGIA_POGON_2026-12-12","Legia Warszawa – Pogoń Szczecin","2026-12-12","12 grudnia 2026","Ekstraklasa","Warszawa"]
 ]},
 {teamId:"LECH_POZNAN",team:"Lech Poznań",city:"Poznań",country:"Polska",countryCode:"pl",icon:"⚽",crest:"https://toppng.com/uploads/preview/lech-poznan-logo-png-11536018018251pishydz.png",matches:[
-["LECH_BAYER_2026-10-15","Lech Poznań – Bayer Leverkusen","2026-10-15","15 października 2026","Europa / europejskie rozgrywki","Poznań"],
-["LECH_SUNDERLAND_2026-10-22","Lech Poznań – Sunderland","2026-10-22","22 października 2026","Europa / europejskie rozgrywki","Poznań"],
 ["LECH_BENFICA_2026-11-05","Benfica – Lech Poznań","2026-11-05","5 listopada 2026","Europa / europejskie rozgrywki","Lizbona"],
 ["LECH_POGON_2026-11-28","Lech Poznań – Pogoń Szczecin","2026-11-28","28 listopada 2026","Ekstraklasa","Poznań"]
 ]}
@@ -2477,7 +2482,7 @@ function filteredTrips(){
 const type=typeFilter.value,direction=directionFilter.value,month=monthFilter.value;
 const source=type==="event"?EVENTS:(type==="sport"?SPORTS:(type==="city"?CITY_TRIPS:(month!=="all"?[...EVENTS,...SPORTS]:[...CITY_TRIPS,...EVENTS,...SPORTS])));
 const todayKey=formatDateKey(new Date());
-return source.filter(t=>(t.type==="city"||String(t.dateEnd||t.dateStart||"")>=todayKey)&&(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||!["event","sport"].includes(t.type)||getTripMonths(t).includes(month)));
+return source.filter(t=>!isRemovedOctoberTrip(t)&&(t.type==="city"||String(t.dateEnd||t.dateStart||"")>=todayKey)&&(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||!["event","sport"].includes(t.type)||getTripMonths(t).includes(month)));
 }
 
 function cityCard(t){
