@@ -215,7 +215,7 @@
 
 /* Avatar bez zdjęcia: identyczny kolor jak .avatar na konto.html */
 #juntigo-account-wrapper .profile-nav-button.is-authenticated .juntigo-nav-avatar {
-    background: linear-gradient(145deg, #071b33, #124d78) !important;
+    background: var(--navy) !important;
 }
     .profile-notification-badge {
     position: absolute;
@@ -258,8 +258,8 @@
 .juntigo-notification-item{display:flex;gap:12px;padding:13px;border-radius:15px;color:var(--navy);text-decoration:none;transition:background .15s ease}
 .juntigo-notification-item:hover{background:#f3f6fa}
 .juntigo-notification-item.is-new{background:#fff7f0}
-.juntigo-notification-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:#eaf0f8;color:var(--navy);font-size:18px;font-weight:900}
-.juntigo-notification-avatar.is-match{background:#fff0e4;color:#ed6b12}
+.juntigo-notification-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:var(--navy);color:#fff;font-size:18px;font-weight:900}
+.juntigo-notification-avatar.is-match{background:var(--navy);color:#fff}
 .juntigo-notification-copy{min-width:0;flex:1}
 .juntigo-notification-copy strong{display:block;margin-bottom:3px;font-size:13px;line-height:1.4}
 .juntigo-notification-copy span{display:block;color:#718096;font-size:12px;line-height:1.45}
@@ -3063,7 +3063,7 @@
     </div>
     </footer>
 
-<script src="auth.js?v=10"></script>
+<script src="auth.js?v=11"></script>
 
 <script>
 
