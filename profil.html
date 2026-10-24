@@ -859,6 +859,7 @@ profileRequest
       const profile = data.profile;
 
       document.getElementById("profile-name").value = profile.name || "";
+      updateProfilePhotoInitial();
       document.getElementById("profile-age").value = profile.age || "";
       document.getElementById("profile-city").value = profile.city || "";
       document.getElementById("profile-instagram").value = profile.instagram || "";
@@ -1028,6 +1029,16 @@ window.addEventListener("load", async function() {
   
 const profilePhotoInput = document.getElementById("profile-photo");
 const profilePhotoPreview = document.getElementById("profile-photo-preview");
+const profileNameInput = document.getElementById("profile-name");
+
+function updateProfilePhotoInitial() {
+  if (profilePhotoPreview.querySelector("img")) return;
+  const name = profileNameInput.value.trim();
+  profilePhotoPreview.textContent = name ? Array.from(name)[0].toLocaleUpperCase("pl-PL") : "J";
+}
+
+profileNameInput.addEventListener("input", updateProfilePhotoInitial);
+updateProfilePhotoInitial();
 
 profilePhotoInput.addEventListener("change", () => {
   const file = profilePhotoInput.files[0];
