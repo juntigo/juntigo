@@ -130,9 +130,10 @@ footer{
     radial-gradient(ellipse at 8% 100%,rgba(255,194,71,.10),transparent 32%),
     linear-gradient(130deg,#061a32 0%,#0b2b4c 62%,#104b72 100%);
   --brand-orange-gradient:
-    radial-gradient(ellipse at 82% 0%,rgba(255,194,71,.26),transparent 38%),
-    radial-gradient(ellipse at 0% 100%,rgba(205,68,0,.18),transparent 40%),
-    linear-gradient(120deg,#f5660b 0%,#ff7417 48%,#ff913d 100%);
+    radial-gradient(ellipse at 84% 8%,rgba(255,211,119,.38),transparent 34%),
+    radial-gradient(ellipse at 12% 100%,rgba(179,54,0,.30),transparent 42%),
+    radial-gradient(ellipse at 50% 45%,rgba(255,143,48,.22),transparent 62%),
+    linear-gradient(118deg,#e95a08 0%,#f96b0d 30%,#ff781b 62%,#ff963f 100%);
   --brand-dark-gradient:
     radial-gradient(ellipse at 88% 0%,rgba(18,185,244,.16),transparent 36%),
     linear-gradient(135deg,#061a32 0%,#0b2b4c 64%,#104b72 100%);
