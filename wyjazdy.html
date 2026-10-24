@@ -2522,7 +2522,9 @@ function flagImg(code,alt){return '<img class="country-flag-img" src="'+flagUrl(
 
 function filteredTrips(){
 const type=typeFilter.value,direction=directionFilter.value,month=monthFilter.value;
-const source=type==="sport"?SPORTS:(type==="city"?CITY_TRIPS:(month!=="all"?[...EVENTS,...SPORTS]:[...CITY_TRIPS,...EVENTS,...SPORTS]));
+// Sort events, markets and New Year's Eve by start date only; keep the sports schedule untouched.
+const chronologicalEvents=[...EVENTS].sort((a,b)=>String(a.dateStart||"").localeCompare(String(b.dateStart||"")));
+const source=type==="sport"?SPORTS:(type==="city"?CITY_TRIPS:(month!=="all"?[...chronologicalEvents,...SPORTS]:[...CITY_TRIPS,...chronologicalEvents,...SPORTS]));
 const todayKey=formatDateKey(new Date());
 return source.filter(t=>!isRemovedOctoberTrip(t)&&(t.type==="city"||String(t.dateEnd||t.dateStart||"")>=todayKey)&&(type==="all"||t.type===type)&&(direction==="all"||t.direction===direction)&&(!month||month==="all"||!["event","market","nye","sport"].includes(t.type)||getTripMonths(t).includes(month)));
 }
