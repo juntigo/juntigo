@@ -122,3 +122,46 @@ footer{
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+/* Premium section backgrounds: restrained gradients, clean cards and readable controls. */
+:root{
+  --brand-hero-gradient:
+    radial-gradient(ellipse at 86% 8%,rgba(18,185,244,.22),transparent 34%),
+    radial-gradient(ellipse at 8% 100%,rgba(255,194,71,.10),transparent 32%),
+    linear-gradient(130deg,#061a32 0%,#0b2b4c 62%,#104b72 100%);
+  --brand-orange-gradient:
+    radial-gradient(ellipse at 82% 0%,rgba(255,194,71,.26),transparent 38%),
+    radial-gradient(ellipse at 0% 100%,rgba(205,68,0,.18),transparent 40%),
+    linear-gradient(120deg,#f5660b 0%,#ff7417 48%,#ff913d 100%);
+  --brand-dark-gradient:
+    radial-gradient(ellipse at 88% 0%,rgba(18,185,244,.16),transparent 36%),
+    linear-gradient(135deg,#061a32 0%,#0b2b4c 64%,#104b72 100%);
+}
+.hero{
+  background:var(--brand-hero-gradient);
+}
+.cta{
+  background:var(--brand-orange-gradient) !important;
+  color:#fff;
+}
+.cta .button{
+  background:linear-gradient(145deg,#071b33 0%,#12385d 100%);
+  border-color:rgba(255,255,255,.12);
+}
+.cta .button:hover{
+  background:linear-gradient(145deg,#fff 0%,#fff7ef 100%);
+  border-color:#fff;
+  color:var(--brand-navy);
+}
+.example{
+  background:var(--brand-dark-gradient);
+}
+.final-cta{
+  background:
+    radial-gradient(ellipse at 10% 100%,rgba(255,194,71,.14),transparent 34%),
+    radial-gradient(ellipse at 90% 0%,rgba(18,185,244,.10),transparent 36%),
+    linear-gradient(180deg,#fff 0%,#fffaf4 100%);
+}
+footer{
+  background:linear-gradient(135deg,rgba(255,255,255,.98) 0%,rgba(255,250,244,.96) 100%);
+}
