@@ -49,7 +49,7 @@
 .chat-box{width:100%;max-width:620px;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(7,27,51,.25);display:flex;flex-direction:column;min-height:0;overscroll-behavior:contain}
 .chat-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;border-bottom:1px solid var(--border)}
 .chat-header-person{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.chat-person-avatar{width:44px;height:44px;flex:0 0 44px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(145deg,#071b33 0%,#104b72 100%);color:#fff;font-size:17px;font-weight:800;border:1px solid rgba(7,27,51,.08)}
+.chat-person-avatar,.chat-person-avatar.is-visible{width:44px;height:44px;min-width:44px;min-height:44px;flex:0 0 44px;border-radius:50%;display:flex!important;visibility:visible;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(145deg,#071b33 0%,#104b72 100%);color:#fff;font-size:17px;font-weight:800;border:1px solid rgba(7,27,51,.08);box-sizing:border-box}
 .chat-person-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
 .chat-header-info{min-width:0}
 .chat-header-info strong{display:block;color:var(--navy);font-size:19px;overflow-wrap:anywhere}
@@ -228,7 +228,7 @@
   <div class="chat-box">
     <div class="chat-header">
       <div class="chat-header-person">
-        <div class="chat-person-avatar" id="chat-person-avatar" aria-hidden="true">C</div>
+        <div class="chat-person-avatar is-visible" id="chat-person-avatar" aria-hidden="true">C</div>
         <div class="chat-header-info">
           <strong id="chat-person-name">Czat Juntigo</strong>
           <span id="chat-trip-name"></span>
@@ -432,6 +432,218 @@ async function loadAccountProfile(sessionToken) {
   return accountProfileInFlight;
 }
 
+
+const JUNTIGO_TRIP_DISPLAY_NAMES = {
+  "CITY_WARSZAWA": "Warszawa",
+  "CITY_KRAKOW": "Kraków",
+  "CITY_WROCLAW": "Wrocław",
+  "CITY_LODZ": "Łódź",
+  "CITY_POZNAN": "Poznań",
+  "CITY_GDANSK": "Gdańsk",
+  "CITY_KATOWICE": "Katowice",
+  "CITY_SZCZECIN": "Szczecin",
+  "CITY_TORUN": "Toruń",
+  "CITY_CZESTOCHOWA": "Częstochowa",
+  "CITY_BYDGOSZCZ": "Bydgoszcz",
+  "CITY_LUBLIN": "Lublin",
+  "CITY_BIALYSTOK": "Białystok",
+  "CITY_GDYNIA": "Gdynia",
+  "CITY_RZESZOW": "Rzeszów",
+  "CITY_TIRANA": "Tirana",
+  "CITY_WIEDEN": "Wiedeń",
+  "CITY_BRUKSELA": "Bruksela",
+  "CITY_SOFIA": "Sofia",
+  "CITY_BURGAS": "Burgas",
+  "CITY_WARNA": "Warna",
+  "CITY_ZAGRZEB": "Zagrzeb",
+  "CITY_DUBROWNIK": "Dubrownik",
+  "CITY_ZADAR": "Zadar",
+  "CITY_SPLIT": "Split",
+  "CITY_RIJEKA": "Rijeka",
+  "CITY_PODGORICA": "Podgorica",
+  "CITY_PRAGA": "Praga",
+  "CITY_LARNAKA": "Larnaka",
+  "CITY_PAFOS": "Pafos",
+  "CITY_KOPENHAGA": "Kopenhaga",
+  "CITY_TALLINN": "Tallinn",
+  "CITY_TURKU": "Turku",
+  "CITY_HELSINKI": "Helsinki",
+  "CITY_PARYZ": "Paryż",
+  "CITY_NICEA": "Nicea",
+  "CITY_MARSYLIA": "Marsylia",
+  "CITY_ATENY": "Ateny",
+  "CITY_KRETA": "Kreta",
+  "CITY_SALONIKI": "Saloniki",
+  "CITY_KORFU": "Korfu",
+  "CITY_RODOS": "Rodos",
+  "CITY_ZAKINTOS": "Zakintos",
+  "CITY_KOS": "Kos",
+  "CITY_KUTAISI": "Kutaisi",
+  "CITY_TBILISI": "Tbilisi",
+  "CITY_EINDHOVEN": "Eindhoven",
+  "CITY_AMSTERDAM": "Amsterdam",
+  "CITY_MADRYT": "Madryt",
+  "CITY_BARCELONA": "Barcelona",
+  "CITY_SEVILLA": "Sewilla",
+  "CITY_MALAGA": "Malaga",
+  "CITY_ALICANTE": "Alicante",
+  "CITY_PALMA_DE_MALLORCA": "Palma de Mallorca",
+  "CITY_GIRONA": "Girona",
+  "CITY_WALENCJA": "Walencja",
+  "CITY_BILBAO": "Bilbao",
+  "CITY_MINORKA": "Minorka",
+  "CITY_TENERYFA": "Teneryfa",
+  "CITY_LAS_PALMAS_DE_GRAN_CANARIA": "Las Palmas de Gran Canaria",
+  "CITY_FUERTEVENTURA": "Fuerteventura",
+  "CITY_LANZAROTE": "Lanzarote",
+  "CITY_SHANNON": "Shannon",
+  "CITY_DUBLIN": "Dublin",
+  "CITY_LONDYN": "Londyn",
+  "CITY_LIVERPOOL": "Liverpool",
+  "CITY_NEWCASTLE_UPON_TYNE": "Newcastle upon Tyne",
+  "CITY_BIRMINGHAM": "Birmingham",
+  "CITY_MANCHESTER": "Manchester",
+  "CITY_BRISTOL": "Bristol",
+  "CITY_LEEDS": "Leeds",
+  "CITY_NOTTINGHAM": "Nottingham",
+  "CITY_BOURNEMOUTH": "Bournemouth",
+  "CITY_EDYNBURG": "Edynburg",
+  "CITY_GLASGOW": "Glasgow",
+  "CITY_ABERDEEN": "Aberdeen",
+  "CITY_BELFAST": "Belfast",
+  "CITY_REYKJAVIK": "Reykjavik",
+  "CITY_WILNO": "Wilno",
+  "CITY_RYGA": "Ryga",
+  "CITY_VALLETTA": "Valletta",
+  "CITY_RABAT": "Rabat",
+  "CITY_MARRAKESZ": "Marrakesz",
+  "CITY_AGADIR": "Agadir",
+  "CITY_DUSSELDORF": "Düsseldorf",
+  "CITY_HAMBURG": "Hamburg",
+  "CITY_MEMMINGEN": "Memmingen",
+  "CITY_DORTMUND": "Dortmund",
+  "CITY_STUTTGART": "Stuttgart",
+  "CITY_MONACHIUM": "Monachium",
+  "CITY_BERLIN": "Berlin",
+  "CITY_OSLO": "Oslo",
+  "CITY_LIZBONA": "Lizbona",
+  "CITY_PORTO": "Porto",
+  "CITY_FARO": "Faro",
+  "CITY_BUKARESZT": "Bukareszt",
+  "CITY_BRATYSLAWA": "Bratysława",
+  "CITY_BAZYLEA": "Bazylea",
+  "CITY_SZTOKHOLM": "Sztokholm",
+  "CITY_ANTALYA": "Antalya",
+  "CITY_IZMIR": "Izmir",
+  "CITY_BUDAPESZT": "Budapeszt",
+  "CITY_RZYM": "Rzym",
+  "CITY_BARI": "Bari",
+  "CITY_PESCARA": "Pescara",
+  "CITY_REGGIO_DI_CALABRIA": "Reggio di Calabria",
+  "CITY_OLBIA_SARDYNIA": "Olbia – Sardynia",
+  "CITY_PERUGIA": "Perugia",
+  "CITY_LAMEZIA_TERME": "Lamezia Terme",
+  "CITY_ANKONA": "Ankona",
+  "CITY_GENUA": "Genua",
+  "CITY_ALGHERO_SARDYNIA": "Alghero – Sardynia",
+  "CITY_RIMINI": "Rimini",
+  "CITY_NEAPOL": "Neapol",
+  "CITY_CAGLIARI_SARDYNIA": "Cagliari – Sardynia",
+  "CITY_PIZA": "Piza",
+  "CITY_FLORENCJA": "Florencja",
+  "CITY_BOLONIA": "Bolonia",
+  "CITY_PALERMO_SYCYLIA": "Palermo – Sycylia",
+  "CITY_KATANIA_SYCYLIA": "Katania – Sycylia",
+  "CITY_TRAPANI_SYCYLIA": "Trapani – Sycylia",
+  "CITY_MEDIOLAN": "Mediolan",
+  "CITY_WENECJA": "Wenecja",
+  "CITY_BRINDISI": "Brindisi",
+  "CITY_TURYN": "Turyn",
+  "CITY_TRIEST": "Triest",
+  "EVENT_WROCLAW_ONELOVE_2026": "One Love Wrocław Music Festival",
+  "EVENT_GDANSK_WITCHER_2026": "WIEDŹMIN. Muzyka Kontynentu",
+  "EVENT_LONDON_JAZZ_2026": "EFG London Jazz Festival",
+  "EVENT_LONDON_LORD_MAYOR_2026": "Lord Mayor Show",
+  "EVENT_PARIS_ORELSAN_2026": "Orelsan — koncert",
+  "EVENT_MADRID_HOMENS_G_2026": "Hombres G — koncert",
+  "EVENT_LISBON_TRIBECA_2026": "Tribeca Festival Lisboa",
+  "EVENT_AMSTERDAM_LIGHT_2026": "Amsterdam Light Festival",
+  "EVENT_MARKET_POZNAN_MTP_2026": "Jarmark Bożonarodzeniowy na MTP",
+  "EVENT_MARKET_POZNAN_BETLEJEM_2026": "Betlejem Poznańskie — plac Wolności",
+  "EVENT_MARKET_BYDGOSZCZ_2026": "Bydgoski Jarmark Świąteczny",
+  "EVENT_MARKET_GDANSK_2026": "Jarmark Bożonarodzeniowy w Gdańsku",
+  "EVENT_MARKET_WARSAW_2026": "Jarmark Świąteczny w Warszawie",
+  "EVENT_MARKET_WROCLAW_2026": "Jarmark Bożonarodzeniowy we Wrocławiu",
+  "EVENT_MARKET_KRAKOW_2026": "Jarmark Bożonarodzeniowy w Krakowie",
+  "EVENT_MARKET_SZCZECIN_2026": "Jarmark Bożonarodzeniowy w Szczecinie",
+  "EVENT_MARKET_ZAKOPANE_2026": "Jarmark Bożonarodzeniowy w Zakopanem",
+  "EVENT_MARKET_VIENNA_SCHONBRUNN_2026": "Jarmark Bożonarodzeniowy przy pałacu Schönbrunn",
+  "EVENT_MARKET_BUDAPEST_BASILICA_2026": "Advent Basilica — jarmark przy bazylice",
+  "EVENT_MARKET_BRUSSELS_2026": "Winter Wonders — Bruksela",
+  "EVENT_MARKET_NUREMBERG_2026": "Christkindlesmarkt w Norymberdze",
+  "EVENT_MARKET_PRAGUE_2026": "Jarmarki Bożonarodzeniowe w Pradze",
+  "EVENT_MARKET_ZAGREB_2026": "Advent Zagreb",
+  "EVENT_NYE_TVP_2026": "Sylwester z Dwójką — koncert TVP2",
+  "EVENT_NYE_VIENNA_2026": "Vienna New Year",
+  "EVENT_NYE_SALZBURG_2026": "Sylwester na Starym Mieście w Salzburgu",
+  "EVENT_MARKET_DRESDEN_2026": "Striezelmarkt w Dreźnie",
+  "REAL_MADRID_PSV_2026-11-24": "Real Madryt – PSV Eindhoven",
+  "BARCA_ATLETICO_2026-11-08": "Atlético Madryt – FC Barcelona",
+  "BARCA_MAN_CITY_2026-12-08": "FC Barcelona – Manchester City",
+  "LIVERPOOL_ARSENAL_2026-11-01": "Liverpool – Arsenal",
+  "LIVERPOOL_MAN_UTD_2026-11-22": "Liverpool – Manchester United",
+  "LIVERPOOL_PORTO_2026-12-09": "Liverpool – FC Porto",
+  "MAN_UTD_LIVERPOOL_2026-11-22": "Liverpool – Manchester United",
+  "MAN_UTD_ARSENAL_2026-12-19": "Arsenal – Manchester United",
+  "MAN_UTD_FOREST_2026-12-27": "Manchester United – Nottingham Forest",
+  "ARSENAL_DORTMUND_2026-11-24": "Arsenal – Borussia Dortmund",
+  "ARSENAL_MAN_CITY_2026-11-28": "Arsenal – Manchester City",
+  "ARSENAL_REAL_2026-12-09": "Arsenal – Real Madryt",
+  "LEGIA_RAKOW_2026-11-08": "Legia Warszawa – Raków Częstochowa",
+  "LEGIA_POGON_2026-12-12": "Legia Warszawa – Pogoń Szczecin",
+  "LECH_BENFICA_2026-11-05": "Benfica – Lech Poznań",
+  "LECH_POGON_2026-11-28": "Lech Poznań – Pogoń Szczecin",
+  "JUVENTUS_NAPOLI_2026-11-01": "Juventus – Napoli",
+  "FIORENTINA_JUVENTUS_2026-11-08": "Fiorentina – Juventus",
+  "JUVENTUS_VENEZIA_2026-11-22": "Juventus – Venezia",
+  "COMO_JUVENTUS_2026-11-29": "Como – Juventus",
+  "GENOA_MILAN_2026-11-08": "Genoa – AC Milan",
+  "MILAN_FROSINONE_2026-11-22": "AC Milan – Frosinone",
+  "CAGLIARI_MILAN_2026-11-28": "Cagliari – AC Milan",
+  "INTER_COMO_2026-11-08": "Inter Mediolan – Como",
+  "ATALANTA_INTER_2026-11-22": "Atalanta – Inter Mediolan",
+  "INTER_GENOA_2026-11-28": "Inter Mediolan – Genoa",
+  "NAPOLI_LAZIO_2026-11-08": "Napoli – Lazio",
+  "NAPOLI_TORINO_2026-11-21": "Napoli – Torino",
+  "SASSUOLO_NAPOLI_2026-11-28": "Sassuolo – Napoli",
+  "ROMA_SASSUOLO_2026-11-07": "Roma – Sassuolo",
+  "PARMA_ROMA_2026-11-21": "Parma – Roma",
+  "ROMA_MONZA_2026-11-29": "Roma – Monza",
+  "LAZIO_ROMA_2026-12-13": "Lazio – Roma"
+};
+function formatJuntigoTripLabel(value){
+  const raw=String(value||"").trim();
+  if(!raw)return "";
+  if(/^(Wycieczka|Wydarzenie|Sport|Sylwester|Jarmarki i święta)\s*[—-]/i.test(raw))return raw;
+  const title=JUNTIGO_TRIP_DISPLAY_NAMES[raw];
+  if(title){
+    if(raw.startsWith("CITY_"))return "Wycieczka — "+title;
+    if(raw.startsWith("EVENT_NYE_"))return "Sylwester — "+title;
+    if(raw.startsWith("EVENT_MARKET_"))return "Jarmarki i święta — "+title;
+    if(raw.startsWith("EVENT_"))return "Wydarzenie — "+title;
+    if(Object.prototype.hasOwnProperty.call({"REAL_MADRID_PSV_2026-11-24":"Real Madryt – PSV Eindhoven","BARCA_ATLETICO_2026-11-08":"Atlético Madryt – FC Barcelona","BARCA_MAN_CITY_2026-12-08":"FC Barcelona – Manchester City","LIVERPOOL_ARSENAL_2026-11-01":"Liverpool – Arsenal","LIVERPOOL_MAN_UTD_2026-11-22":"Liverpool – Manchester United","LIVERPOOL_PORTO_2026-12-09":"Liverpool – FC Porto","MAN_UTD_LIVERPOOL_2026-11-22":"Liverpool – Manchester United","MAN_UTD_ARSENAL_2026-12-19":"Arsenal – Manchester United","MAN_UTD_FOREST_2026-12-27":"Manchester United – Nottingham Forest","ARSENAL_DORTMUND_2026-11-24":"Arsenal – Borussia Dortmund","ARSENAL_MAN_CITY_2026-11-28":"Arsenal – Manchester City","ARSENAL_REAL_2026-12-09":"Arsenal – Real Madryt","LEGIA_RAKOW_2026-11-08":"Legia Warszawa – Raków Częstochowa","LEGIA_POGON_2026-12-12":"Legia Warszawa – Pogoń Szczecin","LECH_BENFICA_2026-11-05":"Benfica – Lech Poznań","LECH_POGON_2026-11-28":"Lech Poznań – Pogoń Szczecin","JUVENTUS_NAPOLI_2026-11-01":"Juventus – Napoli","FIORENTINA_JUVENTUS_2026-11-08":"Fiorentina – Juventus","JUVENTUS_VENEZIA_2026-11-22":"Juventus – Venezia","COMO_JUVENTUS_2026-11-29":"Como – Juventus","GENOA_MILAN_2026-11-08":"Genoa – AC Milan","MILAN_FROSINONE_2026-11-22":"AC Milan – Frosinone","CAGLIARI_MILAN_2026-11-28":"Cagliari – AC Milan","INTER_COMO_2026-11-08":"Inter Mediolan – Como","ATALANTA_INTER_2026-11-22":"Atalanta – Inter Mediolan","INTER_GENOA_2026-11-28":"Inter Mediolan – Genoa","NAPOLI_LAZIO_2026-11-08":"Napoli – Lazio","NAPOLI_TORINO_2026-11-21":"Napoli – Torino","SASSUOLO_NAPOLI_2026-11-28":"Sassuolo – Napoli","ROMA_SASSUOLO_2026-11-07":"Roma – Sassuolo","PARMA_ROMA_2026-11-21":"Parma – Roma","ROMA_MONZA_2026-11-29":"Roma – Monza","LAZIO_ROMA_2026-12-13":"Lazio – Roma"},raw))return "Sport — "+title;
+    return title;
+  }
+  if(/^CITY_/i.test(raw)){
+    const city=raw.slice(5).toLocaleLowerCase("pl").replace(/_/g," ").replace(/\b\p{L}/gu,c=>c.toLocaleUpperCase("pl"));
+    return "Wycieczka — "+city;
+  }
+  if(/^EVENT_NYE_/i.test(raw))return "Sylwester — "+raw.replace(/^EVENT_NYE_/i,"").replace(/_\d{4}$/,"").replace(/_/g," ").toLocaleLowerCase("pl").replace(/\b\p{L}/gu,c=>c.toLocaleUpperCase("pl"));
+  if(/^EVENT_MARKET_/i.test(raw))return "Jarmarki i święta — "+raw.replace(/^EVENT_MARKET_/i,"").replace(/_\d{4}$/,"").replace(/_/g," ").toLocaleLowerCase("pl").replace(/\b\p{L}/gu,c=>c.toLocaleUpperCase("pl"));
+  if(/^EVENT_/i.test(raw))return "Wydarzenie — "+raw.replace(/^EVENT_/i,"").replace(/_\d{4}$/,"").replace(/_/g," ").toLocaleLowerCase("pl").replace(/\b\p{L}/gu,c=>c.toLocaleUpperCase("pl"));
+  return raw;
+}
+
 function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
   async function loadAccountInterests(sessionToken) {
   const interestList = document.getElementById("interest-list");
@@ -527,7 +739,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
               escapeHtml(personName) +
             '</strong>' +
             '<span>✈️ ' +
-              escapeHtml(trip) +
+              escapeHtml(formatJuntigoTripLabel(trip)) +
             '</span>' +
           '</div>' +
           actionHtml +
@@ -679,7 +891,7 @@ function escapeHtml(value){return String(value||"").replace(/&/g,"&amp;").replac
               : '') +
             '<span class="match-trip">' +
               '✈️ ' +
-              escapeHtml(trip) +
+              escapeHtml(formatJuntigoTripLabel(trip)) +
             '</span>' +
           '</div>' +
           '<span class="match-arrow">›</span>' +
@@ -1009,7 +1221,7 @@ async function openMatchChat(matchId, personName, trip, personUserId, personPhot
   activeChatPersonName =
     String(personName || "Użytkownik Juntigo").trim();
   activeChatTrip =
-    String(trip || "").trim();
+    formatJuntigoTripLabel(trip);
   activeChatUserId =
     String(personUserId || "").trim();
 
