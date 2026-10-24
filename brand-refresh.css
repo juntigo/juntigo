@@ -165,3 +165,50 @@ footer{
 footer{
   background:linear-gradient(135deg,rgba(255,255,255,.98) 0%,rgba(255,250,244,.96) 100%);
 }
+
+/* Phase 2: extend the premium treatment to large content bands, not individual controls. */
+.juntigo-options,
+.categories,
+.pricing{
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(18,185,244,.045),transparent 34%),
+    linear-gradient(135deg,#fff 0%,#fffaf4 58%,#f5f8fb 100%) !important;
+}
+.juntigo-flow-step,
+.category,
+.controls,
+.citybreak-intro,
+.year-note,
+.country-section,
+.sport-team-section,
+.choice,
+.price-card,
+.step{
+  background:linear-gradient(145deg,#fff 0%,#fffdf9 100%);
+}
+.planning-service{
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,194,71,.16),transparent 42%),
+    linear-gradient(120deg,#fff7ef 0%,#fffaf5 56%,#f8fbfd 100%);
+  border-color:rgba(255,116,23,.22);
+}
+.planning-service-result,
+.note,
+.price-badge{
+  background:linear-gradient(135deg,#fff0e5 0%,#fff8ed 100%);
+}
+.controls-wrap{
+  background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,250,244,.9) 100%);
+}
+.login-section,
+.account-header,
+.section,
+.profile-card,
+.profile-view-card,
+.profile-form-card,
+.dashboard-card{
+  background:linear-gradient(145deg,#fff 0%,#fffdf9 100%);
+}
+@media(prefers-reduced-motion:reduce){
+  .trip-card,.city-card,.price-card,.choice,.step,.dashboard-card{transition:none!important}
+}
