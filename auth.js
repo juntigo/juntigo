@@ -510,7 +510,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     `;
 
     const avatar = profileButton.querySelector(".juntigo-nav-avatar");
-  avatar.style.setProperty("background", "linear-gradient(145deg, #071b33, #124d78)", "important");
+  avatar.style.setProperty("background", "linear-gradient(145deg,var(--brand-navy),#124d78)", "important");
 
     if (profile.photo && /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(profile.photo))) {
       const img = document.createElement("img");
