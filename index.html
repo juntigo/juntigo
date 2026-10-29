@@ -5110,6 +5110,32 @@ async function openInterestForm(contactButton) {
 }
 
 function showJuntigoMatchModal(personName, tripName) {
+  const tripKey = String(tripName || "").trim();
+  const cityTripNames = {
+    CITY_MEDIOLAN: "Mediolan",
+    CITY_BARCELONA: "Barcelona",
+    CITY_PARIS: "Paryż",
+    CITY_PRAGUE: "Praga",
+    CITY_ROME: "Rzym",
+    CITY_LONDON: "Londyn",
+    CITY_MADRID: "Madryt",
+    CITY_LISBON: "Lizbona",
+    CITY_AMSTERDAM: "Amsterdam",
+    CITY_BERLIN: "Berlin",
+    CITY_VIENNA: "Wiedeń",
+    CITY_BUDAPEST: "Budapeszt",
+    CITY_ATHENS: "Ateny",
+    CITY_DUBROVNIK: "Dubrownik",
+    CITY_NEW_YORK: "Nowy Jork",
+    CITY_TOKYO: "Tokio"
+  };
+  const homepageTrip = typeof HOME_TRIPS !== "undefined" && Array.isArray(HOME_TRIPS)
+    ? HOME_TRIPS.find(item => String(item.tripId || "").toLowerCase() === tripKey.toLowerCase())
+    : null;
+  const displayTripName = (homepageTrip && homepageTrip.title) ||
+    cityTripNames[tripKey.toUpperCase()] ||
+    (tripKey.startsWith("CITY_") ? tripKey.slice(5).replace(/_/g, " ").toLowerCase().replace(/(^|\\s)\\S/g, letter => letter.toUpperCase()) : tripKey) ||
+    "Wyjazd";
   const existing = document.getElementById("juntigo-match-success-modal");
   if (existing) existing.remove();
 
@@ -5119,11 +5145,11 @@ function showJuntigoMatchModal(personName, tripName) {
   modal.innerHTML = `
     <section role="dialog" aria-modal="true" aria-labelledby="juntigo-match-title" style="position:relative;box-sizing:border-box;width:min(100%,480px);padding:36px 30px 30px;border-radius:26px;background:#fff;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.28)">
       <button type="button" data-close-match aria-label="Zamknij" style="position:absolute;right:16px;top:16px;width:40px;height:40px;border:0;border-radius:50%;background:#f1f3f5;color:#071b33;font-size:24px;cursor:pointer">×</button>
-      <div aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;margin:0 auto 20px;border-radius:50%;background:#fff0e5;color:#ff7417;font-size:38px">♥</div>
+      <div aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;margin:0 auto 20px;border-radius:50%;background:#fff0e5;color:#ff7417;font-size:38px">✈️</div>
       <div style="margin-bottom:10px;color:#ff7417;font-size:12px;font-weight:900;letter-spacing:3px">JUNTIGO</div>
       <h2 id="juntigo-match-title" style="margin:0 0 12px;color:#071b33;font-size:30px;line-height:1.15">Macie match!</h2>
       <p style="margin:0 0 8px;color:#536b84;font-size:16px;line-height:1.6">Ty i <strong style="color:#071b33">${escapeHtml(personName || "druga osoba")}</strong> chcecie wybrać się razem.</p>
-      <p style="margin:0 0 24px;color:#ff7417;font-size:16px;font-weight:800">${escapeHtml(tripName || "Wyjazd")}</p>
+      <p style="margin:0 0 24px;color:#ff7417;font-size:16px;font-weight:800">${escapeHtml(displayTripName)}</p>
       <a href="konto.html" style="display:flex;align-items:center;justify-content:center;min-height:52px;padding:0 20px;border-radius:999px;background:#ff7417;color:#fff;text-decoration:none;font-weight:800">Zobacz dopasowanie</a>
       <button type="button" data-close-match-secondary style="margin-top:12px;padding:10px 18px;border:0;background:transparent;color:#536b84;font:inherit;font-weight:700;cursor:pointer">Zostań na stronie</button>
     </section>`;
