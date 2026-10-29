@@ -5095,9 +5095,17 @@ async function openInterestForm(contactButton) {
     submit.disabled = true;
     submit.textContent = "Wysyłanie…";
     error.style.display = "none";
-    const sent = await saveInterest(contactButton.dataset.trip, contactButton.dataset.userId, instagram, contactButton);
-    if (sent) closeInterestForm();
-    else { submit.disabled = false; submit.textContent = "Wyślij zainteresowanie"; }
+    const result = await saveInterest(contactButton.dataset.trip, contactButton.dataset.userId, instagram, contactButton);
+    if (result && result.success) {
+      closeInterestForm();
+      if (result.match) {
+        // Poczekaj, aż formularz zniknie, aby okno matcha było zawsze na wierzchu.
+        window.setTimeout(() => showJuntigoMatchModal(contactButton.dataset.userName, contactButton.dataset.trip), 80);
+      }
+    } else {
+      submit.disabled = false;
+      submit.textContent = "Wyślij zainteresowanie";
+    }
   });
 }
 
@@ -5159,11 +5167,10 @@ async function saveInterest(trip, toUserId, instagram, contactButton) {
     const data = await response.json();
     if (!data.success) throw new Error(data.error || "Nie udało się wysłać zainteresowania.");
     if (contactButton) { contactButton.textContent = "Zainteresowanie wysłane"; contactButton.classList.add("interest-sent"); contactButton.disabled = true; }
-    if (data.match === true) {
-      closeInterestForm();
-      showJuntigoMatchModal(contactButton && contactButton.dataset.userName, trip);
-    }
-    return true;
+    const isMatch = data.match === true ||
+      String(data.match || "").trim().toLowerCase() === "true" ||
+      Boolean(String(data.matchId || "").trim());
+    return {success:true, match:isMatch, matchId:String(data.matchId || "")};
   } catch (error) {
     console.error("Błąd wysyłania zainteresowania:", error);
     const formError = document.getElementById("interest-form-error");
