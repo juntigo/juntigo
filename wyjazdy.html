@@ -2625,9 +2625,10 @@ document.addEventListener("click",event=>{const teamButton=event.target.closest(
 function formatPersonTripLabels(value){
 const ids=(Array.isArray(value)?value:String(value||"").split(",")).map(item=>String(item||"").trim()).filter(Boolean);
 return ids.map(id=>{
-const cityTrip=typeof CITY_TRIPS!=="undefined"?CITY_TRIPS.find(item=>String(item.tripId||"")===id):null;
+const normalizedId=id.toUpperCase();
+const cityTrip=typeof CITY_TRIPS!=="undefined"?CITY_TRIPS.find(item=>String(item.tripId||"").toUpperCase()===normalizedId):null;
 if(cityTrip&&cityTrip.destination)return cityTrip.destination;
-if(id.startsWith("CITY_"))return id.slice(5).split("_").map(part=>part?part.charAt(0)+part.slice(1).toLocaleLowerCase("pl"):"").join(" ");
+if(normalizedId.startsWith("CITY_"))return normalizedId.slice(5).split("_").map(part=>part?part.charAt(0)+part.slice(1).toLocaleLowerCase("pl"):"").join(" ");
 return id;
 });
 }
