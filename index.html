@@ -3834,8 +3834,8 @@ async function addHomepageTripToProfile(trip, title, button) {
     });
     const data = await response.json();
     if (!data.success) {
-      if (/nieprawidłowy wyjazd/i.test(String(data.error || ""))) {
-        showHomepageTripToast("Wyjazd już dodany do profilu");
+      if (/nieprawidłowy wyjazd|już dodan|już jest dodan|duplicate|already exists/i.test(String(data.error || ""))) {
+        showHomepageTripToast("Wyjazd już jest dodany w profilu", true);
         return;
       }
       if (/sesj|zalog|token|uwierzyteln/i.test(String(data.error || ""))) {
@@ -3845,7 +3845,11 @@ async function addHomepageTripToProfile(trip, title, button) {
       }
       throw new Error(data.error || "Nie udało się dodać wyjazdu do profilu.");
     }
-    showHomepageTripToast("Wyjazd dodany do profilu");
+    if (data.alreadyAdded) {
+      showHomepageTripToast("Wyjazd już jest dodany w profilu", true);
+    } else {
+      showHomepageTripToast("Wyjazd został dodany", false);
+    }
   } catch (error) {
     showHomepageTripToast(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
   } finally {
