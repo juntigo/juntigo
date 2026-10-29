@@ -1540,7 +1540,10 @@ function renderProfileViewTrips(profile) {
       const tag = document.createElement("span");
       tag.className = "profile-view-tag";
       const catalogTrip = profileTripCatalog.get(id);
-      tag.textContent = (catalogTrip && catalogTrip.label) || legacyTripLabels[id] || id;
+      const cityLabel = String(id).startsWith("CITY_")
+        ? String(id).slice(5).split("_").map(part => part ? part.charAt(0) + part.slice(1).toLocaleLowerCase("pl") : "").join(" ")
+        : "";
+      tag.textContent = (catalogTrip && catalogTrip.label) || legacyTripLabels[id] || cityLabel || id;
       return tag;
     })
   );
