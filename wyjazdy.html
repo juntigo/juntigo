@@ -2628,7 +2628,12 @@ return ids.map(id=>{
 const normalizedId=id.toUpperCase();
 const cityTrip=typeof CITY_TRIPS!=="undefined"?CITY_TRIPS.find(item=>String(item.tripId||"").toUpperCase()===normalizedId):null;
 if(cityTrip&&cityTrip.destination)return cityTrip.destination;
-if(normalizedId.startsWith("CITY_"))return normalizedId.slice(5).split("_").map(part=>part?part.charAt(0)+part.slice(1).toLocaleLowerCase("pl"):"").join(" ");
+if(/^CITY_/i.test(id)){
+const cityCode=id.replace(/^CITY_/i,"").replace(/_/g," ").trim();
+const cityTripByCode=typeof CITY_TRIPS!=="undefined"?CITY_TRIPS.find(item=>String(item.tripId||"").replace(/^CITY_/i,"").replace(/_/g," ").toLocaleLowerCase("pl")===cityCode.toLocaleLowerCase("pl")):null;
+if(cityTripByCode&&cityTripByCode.destination)return cityTripByCode.destination;
+return cityCode.toLocaleLowerCase("pl").replace(/(^|\s)\S/g,letter=>letter.toLocaleUpperCase("pl"));
+}
 return id;
 });
 }
