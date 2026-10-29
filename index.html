@@ -3926,10 +3926,10 @@ function showTeam(trip, button, tripLabel) {
   const sessionToken = getJuntigoSessionToken();
   const teamRequestId = String(Date.now()) + "-" + Math.random().toString(36).slice(2);
   modal.dataset.teamRequestId = teamRequestId;
-  fetch(JUNTIGO_API, {
-    method: "POST",
-    body: new URLSearchParams({ type: "tripPeople", trip: trip, sessionToken: sessionToken })
-  }).then(response => response.json()).then((data) => {
+  Promise.all([
+    fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripPeople",trip:trip,sessionToken:sessionToken})}).then(r=>r.json()),
+    fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripGroups",trip:trip,sessionToken:sessionToken})}).then(r=>r.json()).catch(()=>({success:true,groups:[]}))
+  ]).then(([data,groupData]) => {
 
     if (
       document.getElementById("team-modal") !== modal ||
@@ -3962,17 +3962,14 @@ function showTeam(trip, button, tripLabel) {
         ? data.people.filter(person => person && typeof person === "object")
         : [];
 
-      if (people.length === 0) {
-        results.innerHTML = `
-          <div class="team-empty">
-            <strong>Na razie nikogo tu nie ma.</strong>
-            <span>Bądź pierwszą osobą zainteresowaną tym wyjazdem.</span>
-          </div>
-        `;
+      const groups = Array.isArray(groupData.groups) ? groupData.groups.filter(g=>g&&typeof g==="object") : [];
+      if (people.length === 0 && groups.length === 0) {
+        results.innerHTML = `<div class="team-empty"><strong>Na razie nie ma tu osób ani ekip.</strong><span>Możesz utworzyć pierwszą ekipę na ten wyjazd.</span><button type="button" class="person-contact" data-create-trip-group>Utwórz ekipę</button></div>`;
+        results.querySelector("[data-create-trip-group]")?.addEventListener("click",()=>openCreateTripGroup(trip,tripLabel||trip));
         return;
       }
-
-      window.juntigoTeamPeople = people;
+      window.juntigoTeamPeople=people;
+      window.juntigoTeamGroups=groups;
       results.innerHTML = `
         <div class="team-heading">
           <strong>Ekipa na wyjazd</strong>
@@ -4069,6 +4066,8 @@ ${person.trips ? `
 
           </div>
         `).join("")}
+        ${groups.length ? `<div class="team-heading group-list-heading"><strong>Ekipy podróżnicze</strong><span>${groups.length} ${groups.length===1?"ekipa":"ekipy"}</span></div>${groups.map((g,index)=>{const full=g.status==="Full"||Number(g.memberCount)>=Number(g.maxMembers);const closed=g.status==="Closed";const unavailable=full||closed;const label=closed?"Ekipa zamknięta":full?"Ekipa pełna":g.requestPending?"Prośba wysłana":"Otwarta na nowych członków";const action=g.isMember?"Jesteś członkiem":g.requestPending?"Prośba wysłana":closed?"Obecnie zamknięta":full?"Brak miejsc":"Jestem zainteresowany";return `<div class="person-card trip-group-card"><div class="person-profile-verified">✈️ Ekipa podróżnicza</div><h4>${escapeHtml(g.name||"Ekipa podróżnicza")}</h4><div class="person-meta">${escapeHtml(String(g.memberCount||0))}/${escapeHtml(String(g.maxMembers||10))} osób · ${escapeHtml(label)}</div>${g.description?`<p class="person-about">${escapeHtml(g.description)}</p>`:""}<div class="person-card-actions"><button type="button" class="person-profile-button" data-group-profile-index="${index}">Profil ekipy</button><button type="button" class="person-contact" data-group-request-id="${escapeHtml(g.groupId)}" ${(!g.canRequest||unavailable)?"disabled":""}>${escapeHtml(action)}</button></div></div>`}).join("")}`:""}
+        <div class="team-create-group-row"><button type="button" class="person-profile-button" data-create-trip-group>+ Utwórz ekipę na ten wyjazd</button></div>
       `;
             results.querySelectorAll(".person-profile-button").forEach(button => {
         button.addEventListener("click", () => {
@@ -4077,8 +4076,11 @@ ${person.trips ? `
         });
       });
     results.querySelectorAll(".person-contact:not(.interest-sent)").forEach(button => {
-    button.addEventListener("click", () => openInterestForm(button));
+    if(button.dataset.groupRequestId) button.addEventListener("click",()=>requestTripGroupJoin(button.dataset.groupRequestId,button));
+    else if(!button.hasAttribute("data-create-trip-group")) button.addEventListener("click",()=>openInterestForm(button));
 });
+results.querySelectorAll("[data-group-profile-index]").forEach(button=>button.addEventListener("click",()=>showTripGroupProfile(window.juntigoTeamGroups[Number(button.dataset.groupProfileIndex)],trip)));
+results.querySelectorAll("[data-create-trip-group]").forEach(button=>button.addEventListener("click",()=>openCreateTripGroup(trip,tripLabel||trip)));
     })
     .catch(error => {
       if (
@@ -4097,7 +4099,12 @@ ${person.trips ? `
       `;
     });
 }
-  function showPersonProfile(person, currentTrip) {
+  
+async function requestTripGroupJoin(groupId,button){const token=getJuntigoSessionToken();if(!token){window.location.href="konto.html";return;}const old=button.textContent;button.disabled=true;button.textContent="Wysyłanie...";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"requestTripGroupJoin",sessionToken:token,groupId})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się wysłać prośby.");button.textContent="Prośba wysłana";button.classList.add("interest-sent");if(typeof showHomepageTripToast==="function")showHomepageTripToast("Prośba o dołączenie została wysłana do organizatora.");}catch(e){button.disabled=false;button.textContent=old;alert(e.message||"Nie udało się wysłać prośby.");}}
+async function openCreateTripGroup(trip,tripLabel){if(!getJuntigoSessionToken()){window.location.href="konto.html";return;}const old=document.getElementById("create-trip-group-modal");if(old)old.remove();const modal=document.createElement("div");modal.id="create-trip-group-modal";modal.style.cssText="position:fixed;inset:0;z-index:100400;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(7,27,51,.72)";modal.innerHTML=`<section role="dialog" aria-modal="true" style="box-sizing:border-box;width:min(100%,520px);background:#fff;border-radius:24px;padding:28px;color:#071b33"><button type="button" data-close style="float:right;border:0;border-radius:50%;width:38px;height:38px;cursor:pointer">×</button><div class="team-modal-tag">JUNTIGO</div><h2>Utwórz ekipę</h2><p>${escapeHtml(tripLabel||trip)}</p><form><label>Nazwa ekipy<input name="name" maxlength="80" required style="box-sizing:border-box;width:100%;padding:12px;margin:8px 0;border:1px solid #d2dce7;border-radius:10px"></label><label>Opis (opcjonalnie)<textarea name="description" maxlength="600" rows="3" style="box-sizing:border-box;width:100%;padding:12px;margin:8px 0;border:1px solid #d2dce7;border-radius:10px"></textarea></label><p>Limit: 10 osób łącznie z organizatorem. Każde dołączenie wymaga Twojej akceptacji.</p><p data-status role="alert"></p><button type="submit" class="person-contact" style="width:100%">Utwórz ekipę</button></form></section>`;document.body.appendChild(modal);document.body.style.overflow="hidden";const close=()=>{modal.remove();if(!document.getElementById("team-modal"))document.body.style.overflow="";};modal.querySelector("[data-close]").addEventListener("click",close);modal.addEventListener("click",e=>{if(e.target===modal)close();});modal.querySelector("form").addEventListener("submit",async e=>{e.preventDefault();const form=e.currentTarget,b=form.querySelector("button[type=submit]"),status=form.querySelector("[data-status]");b.disabled=true;b.textContent="Tworzenie...";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"createTripGroup",sessionToken:getJuntigoSessionToken(),trip,groupName:form.elements.name.value.trim(),description:form.elements.description.value.trim()})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się utworzyć ekipy.");close();if(document.getElementById("team-modal")){closeTeamModal();showTeam(trip,null,tripLabel);}if(typeof showHomepageTripToast==="function")showHomepageTripToast("Ekipa została utworzona.");}catch(err){status.textContent=err.message||"Wystąpił błąd.";b.disabled=false;b.textContent="Utwórz ekipę";}});}
+async function showTripGroupProfile(group,trip){if(!group)return;const token=getJuntigoSessionToken();if(!token){window.location.href="konto.html";return;}const prev=document.getElementById("trip-group-profile-modal");if(prev)prev.remove();const modal=document.createElement("div");modal.id="trip-group-profile-modal";modal.style.cssText="position:fixed;inset:0;z-index:100350;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(7,27,51,.72)";modal.innerHTML=`<section role="dialog" aria-modal="true" style="box-sizing:border-box;width:min(100%,560px);max-height:85vh;overflow:auto;background:#fff;border-radius:24px;padding:28px;color:#071b33"><button type="button" data-close style="float:right;border:0;border-radius:50%;width:38px;height:38px;cursor:pointer">×</button><div class="team-modal-tag">JUNTIGO · EKIPA</div><h2>${escapeHtml(group.name||"Ekipa podróżnicza")}</h2><p>${escapeHtml(group.description||"Ekipa na wspólny wyjazd.")}</p><p><strong>${escapeHtml(String(group.memberCount||0))}/${escapeHtml(String(group.maxMembers||10))} osób</strong></p><div data-content>Ładowanie profilu ekipy...</div></section>`;document.body.appendChild(modal);document.body.style.overflow="hidden";const close=()=>{modal.remove();if(!document.getElementById("team-modal"))document.body.style.overflow="";};modal.querySelector("[data-close]").addEventListener("click",close);modal.addEventListener("click",e=>{if(e.target===modal)close();});try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripGroupProfile",sessionToken:token,groupId:group.groupId})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się pobrać profilu.");const g=d.group,c=modal.querySelector("[data-content]");c.innerHTML=`<h3>Członkowie</h3>${(g.members||[]).map(m=>`<div style="padding:10px 0;border-bottom:1px solid #e5eaf0"><strong>${escapeHtml(m.name||"Użytkownik")}</strong> · ${m.role==="Organizer"?"Organizator":"Członek"}<div style="color:#536b84;font-size:13px">${escapeHtml([m.age?m.age+" lat":"",m.city].filter(Boolean).join(" · "))}</div></div>`).join("")||"Brak członków do wyświetlenia."}${g.isOrganizer&&(g.pendingRequests||[]).length?`<h3>Prośby o dołączenie</h3>${g.pendingRequests.map(m=>`<div style="padding:10px 0;border-bottom:1px solid #e5eaf0"><strong>${escapeHtml(m.name)}</strong><div>${escapeHtml([m.age?m.age+" lat":"",m.city].filter(Boolean).join(" · "))}</div><button type="button" data-review="accept" data-user="${escapeHtml(m.userId)}">Akceptuj</button> <button type="button" data-review="reject" data-user="${escapeHtml(m.userId)}">Odrzuć</button></div>`).join("")}`:""}`;c.querySelectorAll("[data-review]").forEach(b=>b.addEventListener("click",async()=>{b.disabled=true;try{const rr=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"reviewTripGroupRequest",sessionToken:token,groupId:g.groupId,targetUserId:b.dataset.user,decision:b.dataset.review})});const rd=await rr.json();if(!rd.success)throw new Error(rd.error||"Nie udało się rozpatrzyć prośby.");showTripGroupProfile(group,trip);}catch(err){b.disabled=false;alert(err.message||"Błąd");}}));}catch(err){modal.querySelector("[data-content]").textContent=err.message||"Nie udało się pobrać profilu ekipy.";}}
+
+function showPersonProfile(person, currentTrip) {
 
   const existingModal = document.getElementById("person-profile-modal");
 
