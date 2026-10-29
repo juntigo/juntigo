@@ -3751,7 +3751,7 @@ function renderHomepageTrips(){
           <div class="trip-date">${escapeHtml(t.date)}</div>
           <div class="trip-actions">
             <button class="trip-team" type="button" onclick="showFeaturedTripTeam('${escapeHtml(t.tripId)}', '${escapeHtml(t.title)}', this)">Zobacz ekipę</button>
-            <button type="button" class="trip-button" onclick="openJoinForm('${escapeHtml(t.tripId)}', '${escapeHtml(t.title)}')">Dołącz do wyjazdu</button>
+            <button type="button" class="trip-button" data-home-add-trip="${escapeHtml(t.tripId)}" data-home-trip-title="${escapeHtml(t.title)}">Dołącz do wyjazdu</button>
           </div>
         </div>
       </article>
@@ -3759,6 +3759,69 @@ function renderHomepageTrips(){
     track.appendChild(slide);
   });
 }
+
+// Obsługa przycisku „Dołącz do wyjazdu” w karuzeli strony głównej.
+function showHomepageTripToast(message, isError = false) {
+  let toast = document.getElementById("homepage-trip-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "homepage-trip-toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    toast.style.cssText = "position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:12000;max-width:calc(100vw - 32px);padding:14px 20px;border-radius:14px;background:#071b33;color:#fff;font-weight:800;font-size:14px;box-shadow:0 12px 34px rgba(7,27,51,.24);text-align:center";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.background = isError ? "#a33a2b" : "#0b6b57";
+  toast.style.display = "block";
+  if (toast._hideTimer) clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => { toast.style.display = "none"; }, 3200);
+}
+
+async function addHomepageTripToProfile(trip, title, button) {
+  const sessionToken = (typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "") ||
+    (window.sessionStorage && window.sessionStorage.getItem("juntigoSessionToken")) || "";
+  if (!sessionToken) {
+    openJoinForm(trip, title || trip);
+    return;
+  }
+  if (button.dataset.addingTrip === "true") return;
+  button.dataset.addingTrip = "true";
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Dodawanie...";
+  try {
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({type:"addProfileTrip", sessionToken, trip})
+    });
+    const data = await response.json();
+    if (!data.success) {
+      if (/sesj|zalog|token|uwierzyteln/i.test(String(data.error || ""))) {
+        if (typeof clearJuntigoSession === "function") clearJuntigoSession();
+        showHomepageTripToast("Sesja wygasła. Zaloguj się ponownie.", true);
+        return;
+      }
+      throw new Error(data.error || "Nie udało się dodać wyjazdu do profilu.");
+    }
+    showHomepageTripToast("Wyjazd dodany do profilu");
+  } catch (error) {
+    showHomepageTripToast(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
+  } finally {
+    button.textContent = oldText;
+    button.disabled = false;
+    delete button.dataset.addingTrip;
+  }
+}
+
+document.addEventListener("click", function(event) {
+  const button = event.target.closest("[data-home-add-trip]");
+  if (!button) return;
+  event.preventDefault();
+  const trip = button.getAttribute("data-home-add-trip") || "";
+  if (!trip) return;
+  addHomepageTripToProfile(trip, button.getAttribute("data-home-trip-title") || trip, button);
+});
 
 function initTripCarousel() {
   const carousel = document.querySelector("[data-trip-carousel]");
