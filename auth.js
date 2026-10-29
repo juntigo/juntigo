@@ -531,3 +531,61 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
   }
 });
+
+
+/**
+ * Wspólna obsługa przycisku dodawania wyjazdu do profilu.
+ * Używana przez karuzelę na stronie głównej i stronę wszystkich wyjazdów.
+ */
+async function addJuntigoTripToProfile(trip, title, button, toast) {
+  const notify = typeof toast === "function" ? toast : function(message, isError) {
+    if (typeof showJuntigoTripToast === "function") showJuntigoTripToast(message, isError);
+    else if (typeof showHomepageTripToast === "function") showHomepageTripToast(message, isError);
+  };
+  const sessionToken = (typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "") ||
+    (window.sessionStorage && window.sessionStorage.getItem("juntigoSessionToken")) || "";
+  if (!sessionToken) {
+    if (typeof openJoinForm === "function") {
+      openJoinForm(trip, title || trip);
+    } else {
+      notify("Zaloguj się, aby dodać wyjazd do profilu.", true);
+    }
+    return;
+  }
+  if (!button || button.dataset.addingTrip === "true") return;
+  button.dataset.addingTrip = "true";
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Dodawanie...";
+  try {
+    const response = await fetch(JUNTIGO_API, {
+      method: "POST",
+      body: new URLSearchParams({type: "addProfileTrip", sessionToken: sessionToken, trip: trip})
+    });
+    const data = await response.json();
+    const errorMessage = String(data.error || "");
+    if (!data.success) {
+      if (/nieprawidłowy wyjazd|już dodan|już jest dodan|duplicate|already exists/i.test(errorMessage)) {
+        notify("Wyjazd już jest dodany w profilu", true);
+        return;
+      }
+      if (/sesj|zalog|token|uwierzyteln/i.test(errorMessage)) {
+        if (typeof clearJuntigoSession === "function") clearJuntigoSession();
+        notify("Sesja wygasła. Zaloguj się ponownie.", true);
+        return;
+      }
+      throw new Error(errorMessage || "Nie udało się dodać wyjazdu do profilu.");
+    }
+    if (data.alreadyAdded) {
+      notify("Wyjazd już jest dodany w profilu", true);
+    } else {
+      notify("Wyjazd został dodany", false);
+    }
+  } catch (error) {
+    notify(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
+  } finally {
+    button.textContent = oldText;
+    button.disabled = false;
+    delete button.dataset.addingTrip;
+  }
+}

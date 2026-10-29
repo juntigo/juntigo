@@ -1828,7 +1828,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
     <span>© 2026 Juntigo. Łączymy podróżników</span>
   </div>
 </footer>
-<script src="auth.js"></script>
+<script src="auth.js?v=14"></script>
 <script>
 function openJoinForm(trip, tripLabel) {
     const displayTrip = String(tripLabel || trip || "").trim();
@@ -2095,53 +2095,9 @@ function showJuntigoTripToast(message, isError) {
 }
 
 async function addTripToLoggedInProfile(trip, button) {
-  const sessionToken = (typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "") || (window.sessionStorage && window.sessionStorage.getItem("juntigoSessionToken")) || "";
-  if (!sessionToken) {
-    const card = button.closest(".city-card, .trip-card");
-    const heading = card && card.querySelector("h3");
-    openJoinForm(trip, heading ? heading.textContent.trim() : trip);
-    return;
-  }
-
-  if (button.dataset.addingTrip === "true") return;
-  button.dataset.addingTrip = "true";
-  const oldText = button.textContent;
-  button.disabled = true;
-  button.textContent = "Dodawanie...";
-  try {
-    const response = await fetch(JUNTIGO_API, {
-      method: "POST",
-      body: new URLSearchParams({
-        type: "addProfileTrip",
-        sessionToken: sessionToken,
-        trip: trip
-      })
-    });
-    const data = await response.json();
-    if (!data.success) {
-      if (/nieprawidłowy wyjazd|już dodan|już jest dodan|duplicate|already exists/i.test(String(data.error || ""))) {
-        showJuntigoTripToast("Wyjazd już jest dodany w profilu", true);
-        return;
-      }
-      if (/sesj|zalog|token|uwierzyteln/i.test(String(data.error || ""))) {
-        if (typeof clearJuntigoSession === "function") clearJuntigoSession();
-        showJuntigoTripToast("Sesja wygasła. Zaloguj się ponownie.", true);
-        throw new Error("Sesja wygasła. Zaloguj się ponownie.");
-      }
-      throw new Error(data.error || "Nie udało się dodać wyjazdu do profilu.");
-    }
-    if (data.alreadyAdded) {
-      showJuntigoTripToast("Wyjazd już jest dodany w profilu", true);
-    } else {
-      showJuntigoTripToast("Wyjazd został dodany", false);
-    }
-  } catch (error) {
-    showJuntigoTripToast(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
-  } finally {
-    button.textContent = oldText;
-    button.disabled = false;
-    delete button.dataset.addingTrip;
-  }
+  const card = button.closest(".city-card, .trip-card");
+  const heading = card && card.querySelector("h3");
+  return addJuntigoTripToProfile(trip, heading ? heading.textContent.trim() : trip, button, showJuntigoTripToast);
 }
 
 document.addEventListener("click", function(event) {

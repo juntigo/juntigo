@@ -3066,7 +3066,7 @@
     </div>
     </footer>
 
-<script src="auth.js?v=13"></script>
+<script src="auth.js?v=14"></script>
 
 <script>
 
@@ -3816,47 +3816,7 @@ function showHomepageTripToast(message, isError = false) {
 }
 
 async function addHomepageTripToProfile(trip, title, button) {
-  const sessionToken = (typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "") ||
-    (window.sessionStorage && window.sessionStorage.getItem("juntigoSessionToken")) || "";
-  if (!sessionToken) {
-    openJoinForm(trip, title || trip);
-    return;
-  }
-  if (button.dataset.addingTrip === "true") return;
-  button.dataset.addingTrip = "true";
-  const oldText = button.textContent;
-  button.disabled = true;
-  button.textContent = "Dodawanie...";
-  try {
-    const response = await fetch(JUNTIGO_API, {
-      method: "POST",
-      body: new URLSearchParams({type:"addProfileTrip", sessionToken, trip})
-    });
-    const data = await response.json();
-    if (!data.success) {
-      if (/nieprawidłowy wyjazd|już dodan|już jest dodan|duplicate|already exists/i.test(String(data.error || ""))) {
-        showHomepageTripToast("Wyjazd już jest dodany w profilu", true);
-        return;
-      }
-      if (/sesj|zalog|token|uwierzyteln/i.test(String(data.error || ""))) {
-        if (typeof clearJuntigoSession === "function") clearJuntigoSession();
-        showHomepageTripToast("Sesja wygasła. Zaloguj się ponownie.", true);
-        return;
-      }
-      throw new Error(data.error || "Nie udało się dodać wyjazdu do profilu.");
-    }
-    if (data.alreadyAdded) {
-      showHomepageTripToast("Wyjazd już jest dodany w profilu", true);
-    } else {
-      showHomepageTripToast("Wyjazd został dodany", false);
-    }
-  } catch (error) {
-    showHomepageTripToast(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
-  } finally {
-    button.textContent = oldText;
-    button.disabled = false;
-    delete button.dataset.addingTrip;
-  }
+  return addJuntigoTripToProfile(trip, title, button, showHomepageTripToast);
 }
 
 document.addEventListener("click", function(event) {
