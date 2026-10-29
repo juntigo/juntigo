@@ -2122,19 +2122,16 @@ async function addTripToLoggedInProfile(trip, button) {
       if (/sesj|zalog|token|uwierzyteln/i.test(String(data.error || ""))) {
         if (typeof clearJuntigoSession === "function") clearJuntigoSession();
         showJuntigoTripToast("Sesja wygasła. Zaloguj się ponownie.", true);
-        return;
+        throw new Error("Sesja wygasła. Zaloguj się ponownie.");
       }
       throw new Error(data.error || "Nie udało się dodać wyjazdu do profilu.");
     }
     showJuntigoTripToast("Wyjazd dodany do profilu", false);
-    button.textContent = "Dodano do profilu";
-    button.classList.add("trip-added-to-profile");
-    button.disabled = true;
   } catch (error) {
     showJuntigoTripToast(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
+  } finally {
     button.textContent = oldText;
     button.disabled = false;
-  } finally {
     delete button.dataset.addingTrip;
   }
 }
