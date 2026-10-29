@@ -3923,6 +3923,8 @@ function showTeam(trip, button, tripLabel) {
 
       <p class="team-modal-trip-name">${escapeHtml(tripLabel || trip)}</p>
 
+      <button type="button" data-create-trip-group-header style="position:absolute;top:48px;right:78px;width:auto;max-width:calc(100% - 150px);min-height:38px;padding:9px 16px;border:0;border-radius:999px;background:#ff7417;color:#fff;font-weight:800;font-size:13px;white-space:nowrap;cursor:pointer;z-index:3">+ Utwórz ekipę</button>
+
       <div class="team-modal-content">
         <div class="team-results">
           <div class="team-loading">Szukamy ekipy...</div>
@@ -3930,6 +3932,8 @@ function showTeam(trip, button, tripLabel) {
       </div>
     </div>
   `;
+
+  modal.querySelector("[data-create-trip-group-header]").addEventListener("click", () => openCreateTripGroup(trip, tripLabel));
 
   document.body.appendChild(modal);
   document.body.style.overflow = "hidden";
@@ -3976,7 +3980,7 @@ function showTeam(trip, button, tripLabel) {
 
       const groups = Array.isArray(groupData.groups) ? groupData.groups.filter(g=>g&&typeof g==="object") : [];
       if (people.length === 0 && groups.length === 0) {
-        results.innerHTML = `<div class="team-empty"><strong>Na razie nie ma tu osób ani ekip.</strong><span>Możesz utworzyć pierwszą ekipę na ten wyjazd.</span><button type="button" class="person-contact" data-create-trip-group>Utwórz ekipę</button></div>`;
+        results.innerHTML = `<div class="team-empty"><strong>Na razie nie ma tu osób ani ekip.</strong><span>Możesz utworzyć pierwszą ekipę na ten wyjazd.</span></div>`;
         results.querySelector("[data-create-trip-group]")?.addEventListener("click",()=>openCreateTripGroup(trip,tripLabel||trip));
         return;
       }
@@ -4079,7 +4083,7 @@ ${person.trips ? `
           </div>
         `).join("")}
         ${groups.length ? `<div class="team-heading group-list-heading"><strong>Ekipy podróżnicze</strong><span>${groups.length} ${groups.length===1?"ekipa":"ekipy"}</span></div>${groups.map((g,index)=>{const full=g.status==="Full"||Number(g.memberCount)>=Number(g.maxMembers);const closed=g.status==="Closed";const unavailable=full||closed;const label=closed?"Ekipa zamknięta":full?"Ekipa pełna":g.requestPending?"Prośba wysłana":"Otwarta na nowych członków";const action=g.isMember?"Jesteś członkiem":g.requestPending?"Prośba wysłana":closed?"Obecnie zamknięta":full?"Brak miejsc":"Jestem zainteresowany";return `<div class="person-card trip-group-card"><div class="person-profile-verified">✈️ Ekipa podróżnicza</div><h4>${escapeHtml(g.name||"Ekipa podróżnicza")}</h4><div class="person-meta">${escapeHtml(String(g.memberCount||0))}/${escapeHtml(String(g.maxMembers||10))} osób · ${escapeHtml(label)}</div>${g.description?`<p class="person-about">${escapeHtml(g.description)}</p>`:""}<div class="person-card-actions"><button type="button" class="person-profile-button" data-group-profile-index="${index}">Profil ekipy</button><button type="button" class="person-contact" data-group-request-id="${escapeHtml(g.groupId)}" ${(!g.canRequest||unavailable)?"disabled":""}>${escapeHtml(action)}</button></div></div>`}).join("")}`:""}
-        <div class="team-create-group-row"><button type="button" class="person-profile-button" data-create-trip-group>+ Utwórz ekipę na ten wyjazd</button></div>
+        
       `;
             results.querySelectorAll(".person-profile-button").forEach(button => {
         button.addEventListener("click", () => {
