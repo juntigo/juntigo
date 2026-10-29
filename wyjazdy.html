@@ -2130,7 +2130,11 @@ async function addTripToLoggedInProfile(trip, button) {
       }
       throw new Error(data.error || "Nie udało się dodać wyjazdu do profilu.");
     }
-    showJuntigoTripToast("Wyjazd dodany do profilu", false);
+    if (data.alreadyAdded) {
+      showJuntigoTripToast("Wyjazd już jest dodany w profilu", true);
+    } else {
+      showJuntigoTripToast("Wyjazd został dodany", false);
+    }
   } catch (error) {
     showJuntigoTripToast(error.message || "Nie udało się dodać wyjazdu do profilu.", true);
   } finally {
