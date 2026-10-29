@@ -544,6 +544,18 @@ async function addJuntigoTripToProfile(trip, title, button, toast) {
   };
   const sessionToken = (typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "") ||
     (window.sessionStorage && window.sessionStorage.getItem("juntigoSessionToken")) || "";
+  // Stare karty karuzeli przekazują identyfikatory CITY_*, a Apps Script
+  // przechowuje nazwy wyjazdów jako nazwy miast. Normalizujemy je przed API.
+  const cityTripNames = {
+    CITY_MEDIOLAN: "Mediolan", CITY_BARCELONA: "Barcelona", CITY_PARIS: "Paryż",
+    CITY_PRAGUE: "Praga", CITY_ROME: "Rzym", CITY_LONDON: "Londyn",
+    CITY_MADRID: "Madryt", CITY_LISBON: "Lizbona", CITY_AMSTERDAM: "Amsterdam",
+    CITY_BERLIN: "Berlin", CITY_VIENNA: "Wiedeń", CITY_BUDAPEST: "Budapeszt",
+    CITY_ATHENS: "Ateny", CITY_DUBROVNIK: "Dubrownik", CITY_NEW_YORK: "Nowy Jork",
+    CITY_TOKYO: "Tokio"
+  };
+  const rawTrip = String(trip || "").trim();
+  const apiTrip = cityTripNames[rawTrip.toUpperCase()] || rawTrip;
   if (!sessionToken) {
     if (typeof openJoinForm === "function") {
       openJoinForm(trip, title || trip);
@@ -560,12 +572,12 @@ async function addJuntigoTripToProfile(trip, title, button, toast) {
   try {
     const response = await fetch(JUNTIGO_API, {
       method: "POST",
-      body: new URLSearchParams({type: "addProfileTrip", sessionToken: sessionToken, trip: trip})
+      body: new URLSearchParams({type: "addProfileTrip", sessionToken: sessionToken, trip: apiTrip})
     });
     const data = await response.json();
     const errorMessage = String(data.error || "");
     if (!data.success) {
-      if (/nieprawidłowy wyjazd|już dodan|już jest dodan|duplicate|already exists/i.test(errorMessage)) {
+      if (/już dodan|już jest dodan|duplicate|already exists/i.test(errorMessage)) {
         notify("Wyjazd już jest dodany w profilu", true);
         return;
       }
