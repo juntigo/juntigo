@@ -5032,7 +5032,33 @@ function closeInterestForm() {
   document.body.style.overflow = "";
 }
 
-function openInterestForm(contactButton) {
+async function openInterestForm(contactButton) {
+  // Zabezpieczenie przed wysłaniem zainteresowania do własnego profilu.
+  const targetUserId = String(contactButton && contactButton.dataset.userId || "").trim();
+  if (targetUserId && typeof validateJuntigoSession === "function") {
+    try {
+      const session = await validateJuntigoSession();
+      const profile = session && session.profile || {};
+      const identity = session && session.identity || {};
+      const ownIds = [
+        profile.userId, profile.userID, profile.id, profile.juntigoUserId, profile.juntigoUserID,
+        identity.userId, identity.userID, identity.id, identity.sub, identity.juntigoUserId,
+        identity.googleId, identity.googleID, identity.email
+      ].map(value => String(value || "").trim().toLowerCase()).filter(Boolean);
+      if ((session && session.authenticated && ownIds.includes(targetUserId.toLowerCase())) ||
+          contactButton.dataset.isSelf === "true") {
+        ["interest-form-modal", "interest-instagram-modal"].forEach(id => {
+          const openModal = document.getElementById(id);
+          if (openModal) openModal.remove();
+        });
+        if (typeof showJuntigoTripToast === "function") showJuntigoTripToast("Nie możesz wysłać zainteresowania do samego siebie.", true);
+        else if (typeof showHomepageTripToast === "function") showHomepageTripToast("Nie możesz wysłać zainteresowania do samego siebie.", true);
+        return;
+      }
+    } catch (error) {
+      console.warn("Nie udało się sprawdzić właściciela profilu przed wysłaniem zainteresowania.", error);
+    }
+  }
   const previous = document.getElementById("interest-form-modal");
   if (previous) previous.remove();
   const modal = document.createElement("div");
