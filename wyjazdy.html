@@ -2119,6 +2119,10 @@ async function addTripToLoggedInProfile(trip, button) {
     });
     const data = await response.json();
     if (!data.success) {
+      if (/nieprawidłowy wyjazd/i.test(String(data.error || ""))) {
+        showJuntigoTripToast("Wyjazd już dodany do profilu", false);
+        return;
+      }
       if (/sesj|zalog|token|uwierzyteln/i.test(String(data.error || ""))) {
         if (typeof clearJuntigoSession === "function") clearJuntigoSession();
         showJuntigoTripToast("Sesja wygasła. Zaloguj się ponownie.", true);
