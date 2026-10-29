@@ -4173,7 +4173,7 @@ ${person.trips ? `
           <h3><span class="profile-section-icon">🧳</span> Interesujące mnie wyjazdy</h3>
           <div class="person-profile-tags">
             ${trips.map(item => `
-  <span>${getTripIcon(item)} ${escapeHtml(item)}</span>
+  <span>${escapeHtml(item)}</span>
 `).join("")}
           </div>
         </div>
