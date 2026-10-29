@@ -5032,7 +5032,7 @@ function closeInterestForm() {
   document.body.style.overflow = "";
 }
 
-async async function openInterestForm(contactButton) {
+async function openInterestForm(contactButton) {
   // Zabezpieczenie przed wysłaniem zainteresowania do własnego profilu.
   const targetUserId = String(contactButton && contactButton.dataset.userId || "").trim();
   if (targetUserId && typeof validateJuntigoSession === "function") {
