@@ -2095,7 +2095,7 @@ function showJuntigoTripToast(message, isError) {
 }
 
 async function addTripToLoggedInProfile(trip, button) {
-  const sessionToken = typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "";
+  const sessionToken = (typeof getJuntigoSessionToken === "function" ? getJuntigoSessionToken() : "") || (window.sessionStorage && window.sessionStorage.getItem("juntigoSessionToken")) || "";
   if (!sessionToken) {
     const card = button.closest(".city-card, .trip-card");
     const heading = card && card.querySelector("h3");
