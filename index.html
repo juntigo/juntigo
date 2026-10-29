@@ -3135,6 +3135,31 @@ async function loadTripInterestCounts() {
 document.addEventListener("DOMContentLoaded", loadTripInterestCounts);
 let juntigoNotificationsInFlight = false;
  
+function formatJuntigoTripName(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "Wyjazd";
+  if (typeof HOME_TRIPS !== "undefined" && Array.isArray(HOME_TRIPS)) {
+    const found = HOME_TRIPS.find(item =>
+      String(item.tripId || "").trim().toLowerCase() === raw.toLowerCase() ||
+      String(item.title || "").trim().toLowerCase() === raw.toLowerCase()
+    );
+    if (found && found.title) return found.title;
+  }
+  if (/^CITY_/i.test(raw)) {
+    const cityNames = {
+      CITY_MEDIOLAN: "Mediolan", CITY_BARCELONA: "Barcelona", CITY_PARIS: "Paryż",
+      CITY_PRAGUE: "Praga", CITY_ROME: "Rzym", CITY_LONDON: "Londyn",
+      CITY_MADRID: "Madryt", CITY_LISBON: "Lizbona", CITY_AMSTERDAM: "Amsterdam",
+      CITY_BERLIN: "Berlin", CITY_VIENNA: "Wiedeń", CITY_BUDAPEST: "Budapeszt",
+      CITY_ATHENS: "Ateny", CITY_DUBROVNIK: "Dubrownik", CITY_NEW_YORK: "Nowy Jork",
+      CITY_TOKYO: "Tokio"
+    };
+    return cityNames[raw.toUpperCase()] || raw.slice(5).replace(/_/g, " ").toLowerCase()
+      .replace(/(^|\\s)\\S/g, letter => letter.toUpperCase());
+  }
+  return raw;
+}
+
 async function loadJuntigoNotificationPanel(){
   const list=document.getElementById("juntigo-notification-list");
   const summary=document.getElementById("juntigo-notification-summary");
@@ -3187,11 +3212,11 @@ async function loadJuntigoNotificationPanel(){
     const matchItems=matches.slice(0,8).map(match=>{
       const person=match.person||{};
       const name=String(person.name||"Użytkownik Juntigo");
-      const trip=String(match.trip||"Wyjazd");
+      const trip=formatJuntigoTripName(match.trip||"Wyjazd");
       const city=String(person.city||"");
       const matchId=String(match.matchId||"");
       const isUnread=!(match.isRead===true||String(match.isRead||"").trim().toLowerCase()==="tak");
-      return {sortKey:"m:"+matchId,html:'<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-notification-type="match" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">♥</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Otwórz konto, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>'};
+      return {sortKey:"m:"+matchId,html:'<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-notification-type="match" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">✈️</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Otwórz konto, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>'};
     });
     const messageItems=unreadMessages.slice(0,12).map(message=>{
       const matchId=String(message.matchId||"");
