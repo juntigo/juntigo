@@ -3218,6 +3218,13 @@ async function loadJuntigoNotificationPanel(){
       const isUnread=!(match.isRead===true||String(match.isRead||"").trim().toLowerCase()==="tak");
       return {sortKey:"m:"+matchId,html:'<a class="juntigo-notification-item '+(isUnread?'is-new':'')+'" href="konto.html" data-notification-type="match" data-match-id="'+escapeHtml(matchId)+'" title="Otwórz dopasowanie"><span class="juntigo-notification-avatar is-match" aria-hidden="true">✈️</span><span class="juntigo-notification-copy"><strong>'+(isUnread?'Masz nowe dopasowanie z ':'Dopasowanie z ')+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' · Otwórz konto, aby przejść do czatu</span></span>'+(isUnread?'<span class="juntigo-notification-dot" aria-hidden="true"></span>':'')+'</a>'};
     });
+    const groupRequests=notificationData&&notificationData.success&&Array.isArray(notificationData.groupRequestItems)?notificationData.groupRequestItems:[];
+    const groupRequestItems=groupRequests.slice(0,12).map(request=>{
+      const groupId=String(request.groupId||"");
+      const groupName=String(request.groupName||"Ekipa podróżnicza");
+      const trip=formatJuntigoTripName(request.trip||"Wyjazd");
+      return {sortKey:"g:"+String(request.timestamp||""),html:'<a href="#" class="juntigo-notification-item is-new" data-notification-type="group-request" data-group-id="'+escapeHtml(groupId)+'" data-group-name="'+escapeHtml(groupName)+'" data-group-trip="'+escapeHtml(trip)+'" title="Rozpatrz prośbę"><span class="juntigo-notification-avatar" aria-hidden="true">✈️</span><span class="juntigo-notification-copy"><strong>Prośba o dołączenie do ekipy</strong><span>'+escapeHtml(groupName)+' · '+escapeHtml(trip)+' · Otwórz profil ekipy, aby rozpatrzyć</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
+    });
     const messageItems=unreadMessages.slice(0,12).map(message=>{
       const matchId=String(message.matchId||"");
       const name=String(message.senderName||"Użytkownik Juntigo");
@@ -3227,7 +3234,7 @@ async function loadJuntigoNotificationPanel(){
       const messageKey=getNotificationMessageKey(message);
       return {sortKey:"w:"+String(message.timestamp||""),html:'<a class="juntigo-notification-item is-new" href="konto.html?matchId='+encodeURIComponent(matchId)+'" data-notification-type="message" data-match-id="'+escapeHtml(matchId)+'" data-message-key="'+escapeHtml(messageKey)+'" title="Otwórz rozmowę"><span class="juntigo-notification-avatar" aria-hidden="true">✉</span><span class="juntigo-notification-copy"><strong>Nowa wiadomość od '+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' — '+escapeHtml(preview)+'</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
     });
-    const items=messageItems.concat(matchItems);
+    const items=groupRequestItems.concat(messageItems,matchItems).sort((a,b)=>String(b.sortKey||"").localeCompare(String(a.sortKey||"")));
     if(!items.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz nowych wiadomości ani powiadomień o dopasowaniach.</div>';return;}
     list.innerHTML=items.map(item=>item.html).join("");
   }catch(error){
@@ -3283,6 +3290,11 @@ async function loadJuntigoNotificationPanel(){
         if(dot)dot.remove();
         const heading=item.querySelector(".juntigo-notification-copy strong");
         if(heading)heading.textContent=heading.textContent.replace("Masz nowe dopasowanie z ","Dopasowanie z ");
+      }
+      if(notificationType==="group-request"){
+        event.preventDefault();
+        showTripGroupProfile({groupId:String(item.dataset.groupId||""),name:String(item.dataset.groupName||"Ekipa podróżnicza"),trip:String(item.dataset.groupTrip||"Wyjazd")},String(item.dataset.groupTrip||"Wyjazd"));
+        return;
       }
       if(matchId&&notificationType==="match"){
         try{
