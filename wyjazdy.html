@@ -2622,7 +2622,18 @@ grid.appendChild(c);
 allView.appendChild(grid);
 }
 
+let initialCityListPresentation=true;
+
 function render(){
+if(initialCityListPresentation){
+const initialTrips=CITY_TRIPS;
+resultCount.textContent=initialTrips.length+" "+(initialTrips.length===1?"wyjazd":initialTrips.length<5?"wyjazdy":"wyjazdów");
+activeFilters.replaceChildren();
+const initialClear=document.createElement("button");initialClear.type="button";initialClear.className="clear-filters";initialClear.textContent="Wyczyść filtry";initialClear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";initialCityListPresentation=false;render()};activeFilters.appendChild(initialClear);
+cityBreakView.classList.remove("hidden");allView.classList.add("hidden");
+renderCountryGroups(initialTrips);
+return;
+}
 const trips=filteredTrips();
 resultCount.textContent=trips.length+" "+(trips.length===1?"wyjazd":trips.length<5?"wyjazdy":"wyjazdów");
 activeFilters.replaceChildren();
@@ -2639,8 +2650,9 @@ allView.classList.toggle("hidden",cityMode);
 if(cityMode)renderCountryGroups(trips);else if(sportMode)renderSportGroups(trips);else renderAllTrips(trips);
 }
 
-[monthFilter,typeFilter,directionFilter].forEach(el=>el.addEventListener("change",render));
+[monthFilter,typeFilter,directionFilter].forEach(el=>el.addEventListener("change",()=>{initialCityListPresentation=false;render()}));
 document.querySelectorAll(".view-switch button").forEach(btn=>btn.addEventListener("click",()=>{
+initialCityListPresentation=false;
 document.querySelectorAll(".view-switch button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
 const all=btn.dataset.view==="all";
 cityBreakView.classList.toggle("hidden",all);allView.classList.toggle("hidden",!all);
