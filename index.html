@@ -3846,7 +3846,7 @@ function initTripCarousel() {
   updateButtons();
 }
 
-document.addEventListener("DOMContentLoaded", () => { renderHomepageTrips(); initTripCarousel(); });
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",()=>{renderHomepageTrips();initTripCarousel();},{once:true});}else{renderHomepageTrips();initTripCarousel();}
 
 function showTeam(trip, button, tripLabel) {
   const existingModal = document.getElementById("team-modal");
