@@ -3435,6 +3435,25 @@ function toggleMobileMenu() {
         }
     });
 });
+function showTripActionConfirm({title="Potwierdź działanie",message="Czy na pewno chcesz kontynuować?",confirmText="Potwierdź",danger=false}={}){
+ return new Promise(resolve=>{
+  const overlay=document.createElement("div");
+  overlay.style.cssText="position:fixed;inset:0;z-index:100900;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(7,27,51,.66);backdrop-filter:blur(4px)";
+  const dialog=document.createElement("section");
+  dialog.setAttribute("role","alertdialog");dialog.setAttribute("aria-modal","true");
+  dialog.style.cssText="box-sizing:border-box;width:min(100%,440px);padding:25px;border:1px solid #e2e9f2;border-radius:22px;background:#fff;color:#071b33;box-shadow:0 24px 70px rgba(0,0,0,.28)";
+  const heading=document.createElement("h3");heading.textContent=title;heading.style.cssText="margin:0 0 10px;font-size:21px";
+  const body=document.createElement("p");body.textContent=message;body.style.cssText="margin:0;color:#536b84;line-height:1.6";
+  const actions=document.createElement("div");actions.style.cssText="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:24px";
+  const cancel=document.createElement("button");cancel.type="button";cancel.textContent="Anuluj";cancel.style.cssText="min-height:44px;padding:10px 18px;border:1px solid #d5deea;border-radius:999px;background:#fff;color:#071b33;font-weight:700;cursor:pointer";
+  const accept=document.createElement("button");accept.type="button";accept.textContent=confirmText;accept.style.cssText="min-height:44px;padding:10px 20px;border:0;border-radius:999px;background:"+(danger?"#c83d35":"#071b33")+";color:#fff;font-weight:800;cursor:pointer";
+  let settled=false;const finish=value=>{if(settled)return;settled=true;overlay.remove();document.removeEventListener("keydown",onKey);resolve(value);};
+  const onKey=e=>{if(e.key==="Escape")finish(false);};
+  cancel.addEventListener("click",()=>finish(false));accept.addEventListener("click",()=>finish(true));overlay.addEventListener("click",e=>{if(e.target===overlay)finish(false);});
+  actions.append(cancel,accept);dialog.append(heading,body,actions);overlay.appendChild(dialog);document.body.appendChild(overlay);document.addEventListener("keydown",onKey);cancel.focus();
+ });
+}
+
 function closeTeamModal() {
   const modal = document.getElementById("team-modal");
 
@@ -4123,7 +4142,7 @@ async function openCreateTripGroup(trip,tripLabel){
  catch(err){status.textContent=err.message||"Nie udało się utworzyć ekipy.";b.disabled=false;b.style.opacity="1";b.textContent="Utwórz ekipę";}
  });
 }
-function setupTripGroupOrganizerControls(container,group,token){if(!group.isOrganizer||!Array.isArray(group.members))return;const members=group.members.filter(m=>m.userId&&m.role!=="Organizer");if(!members.length)return;const wrap=document.createElement("section");wrap.style.cssText="margin-top:18px;padding-top:16px;border-top:1px solid #e5eaf0";wrap.innerHTML='<h3>Przekazanie organizacji</h3><p style="color:#536b84">Możesz przekazać rolę organizatora aktywnemu członkowi ekipy.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><select data-organizer-target aria-label="Nowy organizator" style="flex:1;min-width:180px;padding:10px;border:1px solid #d2dce7;border-radius:10px"></select><button type="button" data-transfer-organizer class="person-profile-button">Przekaż rolę</button></div><p data-organizer-status role="status"></p>';const select=wrap.querySelector("[data-organizer-target]");members.forEach(m=>{const option=document.createElement("option");option.value=m.userId;option.textContent=m.name||"Członek ekipy";select.appendChild(option);});const button=wrap.querySelector("[data-transfer-organizer]"),status=wrap.querySelector("[data-organizer-status]");button.addEventListener("click",async()=>{if(!confirm("Przekazać rolę organizatora wybranej osobie? Po zmianie nie będziesz już organizatorem."))return;button.disabled=true;status.textContent="Przekazywanie roli…";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"transferTripGroupOrganizer",sessionToken:token,groupId:group.groupId,targetUserId:select.value})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się przekazać roli.");status.textContent="Rola przekazana. Odświeżam…";window.location.reload();}catch(e){status.textContent=e.message||"Błąd";button.disabled=false;}});container.appendChild(wrap);}
+function setupTripGroupOrganizerControls(container,group,token){if(!group.isOrganizer||!Array.isArray(group.members))return;const members=group.members.filter(m=>m.userId&&m.role!=="Organizer");if(!members.length)return;const wrap=document.createElement("section");wrap.style.cssText="margin-top:18px;padding-top:16px;border-top:1px solid #e5eaf0";wrap.innerHTML='<h3>Przekazanie organizacji</h3><p style="color:#536b84">Możesz przekazać rolę organizatora aktywnemu członkowi ekipy.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><select data-organizer-target aria-label="Nowy organizator" style="flex:1;min-width:180px;padding:10px;border:1px solid #d2dce7;border-radius:10px"></select><button type="button" data-transfer-organizer class="person-profile-button">Przekaż rolę</button></div><p data-organizer-status role="status"></p>';const select=wrap.querySelector("[data-organizer-target]");members.forEach(m=>{const option=document.createElement("option");option.value=m.userId;option.textContent=m.name||"Członek ekipy";select.appendChild(option);});const button=wrap.querySelector("[data-transfer-organizer]"),status=wrap.querySelector("[data-organizer-status]");button.addEventListener("click",async()=>{if(!(await showTripActionConfirm({title:"Przekazać rolę organizatora?",message:"Wybrana osoba zostanie nowym organizatorem ekipy. Utracisz uprawnienia organizatora, w tym możliwość zarządzania członkami i usunięcia ekipy.",confirmText:"Przekaż rolę"})))return;button.disabled=true;status.textContent="Przekazywanie roli…";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"transferTripGroupOrganizer",sessionToken:token,groupId:group.groupId,targetUserId:select.value})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się przekazać roli.");status.textContent="Rola przekazana. Odświeżam…";window.location.reload();}catch(e){status.textContent=e.message||"Błąd";button.disabled=false;}});container.appendChild(wrap);}
 function setupTripGroupChat(container,group,token){
 const section=document.createElement("section");section.className="trip-group-chat";section.style.cssText="margin-top:22px;padding-top:18px;border-top:1px solid #e5eaf0";
 if(!group.isMember){section.innerHTML='<h3>Czat ekipy</h3><p style="color:#536b84">Czat jest dostępny dla zaakceptowanych członków ekipy.</p>';container.appendChild(section);return;}
