@@ -2766,7 +2766,7 @@ const people=Array.isArray(data.people)?data.people.filter(p=>p&&typeof p==="obj
 let groupData={groups:[]};
 try{const groupResponse=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripGroups",trip:trip,sessionToken:token})});groupData=await groupResponse.json();}catch(groupLoadError){console.warn("Nie udało się pobrać ekip:",groupLoadError);}
 const groups=Array.isArray(groupData.groups)?groupData.groups.filter(g=>g&&typeof g==="object"):[];
-if(!people.length&&!groups.length){results.innerHTML='<div class="team-empty"><strong>Na razie nie ma tu osób ani ekip.</strong><span>Możesz utworzyć pierwszą ekipę, używając przycisku u góry.</span></div>';return;}
+if(!people.length&&!groups.length){results.innerHTML='<div class="team-empty"><strong>Na razie nikt nie zgłosił zainteresowania tym wyjazdem ani nie utworzył ekipy.</strong><span>Gdy ktoś będzie zainteresowany, pojawi się tutaj jako pojedyncza osoba. Możesz też utworzyć ekipę i zaprosić innych podróżników.</span></div>';return;}
 
 // Odtwórz stan wysłanych zainteresowań z konta, aby przycisk był poprawny
 // również po zamknięciu i ponownym otwarciu ekipy.
