@@ -2627,7 +2627,8 @@ let initialCityListPresentation=true;
 function render(){
 if(initialCityListPresentation){
 const initialTrips=CITY_TRIPS;
-resultCount.textContent=initialTrips.length+" "+(initialTrips.length===1?"wyjazd":initialTrips.length<5?"wyjazdy":"wyjazdów");
+const totalAvailableTrips=filteredTrips().length;
+resultCount.textContent=totalAvailableTrips+" "+(totalAvailableTrips===1?"wyjazd":totalAvailableTrips<5?"wyjazdy":"wyjazdów");
 activeFilters.replaceChildren();
 const initialClear=document.createElement("button");initialClear.type="button";initialClear.className="clear-filters";initialClear.textContent="Wyczyść filtry";initialClear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render()};activeFilters.appendChild(initialClear);
 cityBreakView.classList.remove("hidden");allView.classList.add("hidden");
