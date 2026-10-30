@@ -1,0 +1,33 @@
+/* Wspólny nagłówek okna ekipy – index.html i wyjazdy.html */
+.team-modal-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 2px;
+}
+.team-modal-intro { flex: 1 1 auto; min-width: 0; }
+.team-create-group-button {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  min-height: 40px;
+  padding: 10px 17px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.team-create-group-button:hover { background: var(--navy); transform: translateY(-1px); }
+@media (max-width: 600px) {
+  .team-modal-header { align-items: flex-end; gap: 10px; }
+  .team-modal-box h2 { font-size: 25px; }
+  .team-modal-trip-name { margin-bottom: 16px; }
+  .team-create-group-button { min-height: 36px; padding: 9px 12px; font-size: 11px; }
+}
