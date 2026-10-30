@@ -3959,7 +3959,7 @@ function showTeam(trip, button, tripLabel) {
         }catch(statusLoadError){console.warn("Nie udało się odtworzyć statusów zainteresowań i dopasowań na stronie głównej:",statusLoadError);}
       }
       if (people.length === 0 && groups.length === 0) {
-        results.innerHTML = `<div class="team-empty"><strong>Na razie nie ma tu osób ani ekip.</strong><span>Możesz utworzyć pierwszą ekipę na ten wyjazd.</span></div>`;
+        results.innerHTML = `<div class="team-empty"><strong>Na razie nikt nie zgłosił zainteresowania tym wyjazdem ani nie utworzył ekipy.</strong><span>Gdy ktoś będzie zainteresowany, pojawi się tutaj jako pojedyncza osoba. Możesz też utworzyć ekipę i zaprosić innych podróżników.</span></div>`;
         results.querySelector("[data-create-trip-group]")?.addEventListener("click",()=>openCreateTripGroup(trip,tripLabel||trip));
         return;
       }
