@@ -2629,7 +2629,7 @@ if(initialCityListPresentation){
 const initialTrips=CITY_TRIPS;
 resultCount.textContent=initialTrips.length+" "+(initialTrips.length===1?"wyjazd":initialTrips.length<5?"wyjazdy":"wyjazdów");
 activeFilters.replaceChildren();
-const initialClear=document.createElement("button");initialClear.type="button";initialClear.className="clear-filters";initialClear.textContent="Wyczyść filtry";initialClear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";initialCityListPresentation=false;render()};activeFilters.appendChild(initialClear);
+const initialClear=document.createElement("button");initialClear.type="button";initialClear.className="clear-filters";initialClear.textContent="Wyczyść filtry";initialClear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render()};activeFilters.appendChild(initialClear);
 cityBreakView.classList.remove("hidden");allView.classList.add("hidden");
 renderCountryGroups(initialTrips);
 return;
@@ -2642,7 +2642,7 @@ if(select.value==="all")return;
 const chip=document.createElement("span");chip.className="filter-chip";chip.innerHTML=escapeHtml(select.options[select.selectedIndex].textContent)+' <button type="button" aria-label="Usuń filtr">×</button>';
 chip.querySelector("button").onclick=()=>{select.value="all";render()};activeFilters.appendChild(chip);
 });
-const clear=document.createElement("button");clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";clear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";render()};activeFilters.appendChild(clear);
+const clear=document.createElement("button");clear.type="button";clear.className="clear-filters";clear.textContent="Wyczyść filtry";clear.onclick=()=>{monthFilter.value="all";typeFilter.value="all";directionFilter.value="all";initialCityListPresentation=true;render()};activeFilters.appendChild(clear);
 const cityMode=typeFilter.value==="city";
 const sportMode=typeFilter.value==="sport";
 cityBreakView.classList.toggle("hidden",!cityMode);
