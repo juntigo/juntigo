@@ -590,32 +590,6 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
   color: white;
 }
 
-.team-modal-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 2px;
-}
-.team-modal-intro { flex: 1 1 auto; min-width: 0; }
-.team-create-group-button {
-  flex: 0 0 auto;
-  align-self: flex-end;
-  min-height: 40px;
-  padding: 10px 17px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--orange);
-  color: #fff;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background .2s ease, transform .2s ease;
-}
-.team-create-group-button:hover { background: var(--navy); transform: translateY(-1px); }
 .team-modal-tag {
   color: var(--orange);
   font-size: 13px;
@@ -948,10 +922,6 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
     padding: 28px 20px;
     border-radius: 20px;
   }
-  .team-modal-header { align-items: flex-end; gap: 10px; }
-  .team-modal-box h2 { font-size: 25px; }
-  .team-modal-trip-name { margin-bottom: 16px; }
-  .team-create-group-button { min-height: 36px; padding: 9px 12px; font-size: 11px; }
 
   .team-results:has(.person-card) {
     grid-template-columns: 1fr;
@@ -1789,6 +1759,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 @media(max-width:600px){.site-footer-inner{flex-direction:column;text-align:center}.site-footer-brand img{width:54px;height:54px}}
 </style>
   <link rel="stylesheet" href="brand-refresh.css?v=7">
+  <link rel="stylesheet" href="/trip-team-modal.css?v=20261030-1">
 </head>
 <body>
 <nav>
