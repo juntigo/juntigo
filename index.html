@@ -3900,7 +3900,7 @@ function showTeam(trip, button, tripLabel) {
   Promise.all([
     fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripPeople",trip:trip,sessionToken:sessionToken})}).then(r=>r.json()),
     fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"tripGroups",trip:trip,sessionToken:sessionToken})}).then(r=>r.json()).catch(()=>({success:true,groups:[]}))
-  ]).then(([data,groupData]) => {
+  ]).then(async ([data,groupData]) => {
 
     if (
       document.getElementById("team-modal") !== modal ||
