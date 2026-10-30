@@ -4051,7 +4051,7 @@ ${person.trips ? `
   data-user-name="${escapeHtml(person.name)}"
   ${interestSent ? "disabled" : ""}
 >
-  ${interestSent ? "Zainteresowanie wysłane" : "Jestem zainteresowany"}
+  ${person.alreadyMatched ? "Dopasowanie utworzone" : (interestSent ? "Zainteresowanie wysłane" : "Jestem zainteresowany")}
 </button>
 
 </div>
