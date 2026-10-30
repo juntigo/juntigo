@@ -2715,6 +2715,7 @@
 
   </style>
   <link rel="stylesheet" href="brand-refresh.css?v=7">
+  <link rel="stylesheet" href="/trip-team-modal.css?v=20261030-1">
 </head>
 
 <body>
@@ -3881,13 +3882,14 @@ function showTeam(trip, button, tripLabel) {
         ×
       </button>
 
-      <div class="team-modal-tag">JUNTIGO</div>
-
-      <h2>Ekipa na wyjazd</h2>
-
-      <p class="team-modal-trip-name">${escapeHtml(tripLabel || trip)}</p>
-
-      <button type="button" data-create-trip-group-header style="position:absolute;top:48px;right:78px;width:auto;max-width:calc(100% - 150px);min-height:38px;padding:9px 16px;border:0;border-radius:999px;background:#ff7417;color:#fff;font-weight:800;font-size:13px;white-space:nowrap;cursor:pointer;z-index:3">+ Utwórz ekipę</button>
+      <div class="team-modal-header">
+        <div class="team-modal-intro">
+          <div class="team-modal-tag">JUNTIGO</div>
+          <h2>Ekipa na wyjazd</h2>
+          <p class="team-modal-trip-name">${escapeHtml(tripLabel || trip)}</p>
+        </div>
+        <button type="button" class="team-create-group-button" data-create-trip-group-header>+ Utwórz ekipę</button>
+      </div>
 
       <div class="team-modal-content">
         <div class="team-results">
