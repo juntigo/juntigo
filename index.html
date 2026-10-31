@@ -1391,6 +1391,7 @@
 }
 
 .person-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 18px;
@@ -1400,12 +1401,36 @@
   border-radius: 18px;
 }
 
+.person-card-avatar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, var(--brand-navy), #124d78);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
+  box-shadow: 0 3px 10px rgba(7, 28, 52, .16);
+}
+.person-card-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 .person-card:last-child {
   margin-bottom: 0;
 }
 
 .person-card h4 {
-  margin: 0 0 5px;
+  margin: 0 54px 5px 0;
   color: var(--navy);
   font-size: 20px;
   line-height: 1.2;
@@ -4019,6 +4044,9 @@ function showTeam(trip, button, tripLabel) {
         ${people.map((person, index) => `
           <div class="person-card">
 
+            <div class="person-card-avatar" aria-hidden="true">
+              ${/^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(person.photo || "")) ? `<img src="${escapeHtml(String(person.photo))}" alt="">` : escapeHtml((person.name || "J").trim().charAt(0).toUpperCase() || "J")}
+            </div>
             <h4>${escapeHtml(person.name)}</h4>
 
             <div class="person-meta">
