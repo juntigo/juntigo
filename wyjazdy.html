@@ -655,6 +655,7 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
 }
 
 .person-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 18px;
@@ -664,12 +665,36 @@ footer{background:var(--navy);color:#b8c5d3;padding:34px 0;text-align:center;fon
   border-radius: 18px;
 }
 
+.person-card-avatar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, var(--brand-navy), #124d78);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
+  box-shadow: 0 3px 10px rgba(7, 28, 52, .16);
+}
+.person-card-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 .person-card:last-child {
   margin-bottom: 0;
 }
 
 .person-card h4 {
-  margin: 0 0 5px;
+  margin: 0 54px 5px 0;
   color: var(--navy);
   font-size: 20px;
   line-height: 1.2;
@@ -2819,7 +2844,7 @@ if(token){
   }
 }
 window.juntigoTeamPeople=people;window.juntigoTeamGroups=groups;
-results.innerHTML=(people.length?'<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+escapeHtml(String(Number(data.count)||people.length))+'</span></div>'+people.map((p,index)=>'<article class="person-card"><h4>'+escapeHtml(p.name||"Użytkownik Juntigo")+'</h4><div class="person-card-topline"><div class="person-meta">'+(p.age?escapeHtml(String(p.age))+' lat':'')+(p.city?' · '+escapeHtml(p.city):'')+'</div>'+(p.verified?'<div class="person-profile-verified">✓ Profil uzupełniony</div>':'')+'</div>'+(p.interests?'<div class="person-interests">'+escapeHtml(p.interests)+'</div>':'')+(p.travelStyle?'<div class="person-interests">Styl: '+escapeHtml(p.travelStyle)+'</div>':'')+(p.trips?'<div class="person-interests">Wyjazdy: '+escapeHtml(formatPersonTripLabels(p.trips).join(", "))+'</div>':'')+(p.about?'<p class="person-about">„'+escapeHtml(p.about)+'”</p>':'')+(p.instagram?'<a class="person-instagram" target="_blank" rel="noopener noreferrer" href="'+getInstagramUrl(p.instagram)+'">'+escapeHtml(p.instagram)+'</a>':'')+(p.userId?'<div class="person-card-actions"><button type="button" class="person-profile-button" data-person-index="'+index+'">Zobacz profil</button><button type="button" class="person-contact" data-person-index="'+index+'" data-trip="'+escapeHtml(trip)+'" data-user-id="'+escapeHtml(p.userId)+'" data-user-name="'+escapeHtml(p.name||"Użytkownik Juntigo")+'" '+(p.alreadyInterested?'disabled':'')+'>'+(p.alreadyMatched?'Dopasowanie utworzone':(p.alreadyInterested?'Zainteresowanie wysłane':'Jestem zainteresowany'))+'</button></div>':'')+'</article>').join(""):'')+(groups.length?'<div class="team-heading"><strong>Ekipy podróżnicze</strong><span>'+groups.length+'</span></div>'+groups.map((g,index)=>{const full=g.status==="Full"||Number(g.memberCount)>=Number(g.maxMembers);const closed=g.status==="Closed";const label=closed?"Ekipa zamknięta":full?"Ekipa pełna":g.requestPending?"Prośba wysłana":"Otwarta na nowych członków";const action=g.isMember?"Jesteś członkiem":g.requestPending?"Prośba wysłana":closed?"Obecnie zamknięta":full?"Brak miejsc":"Jestem zainteresowany";return '<article class="person-card trip-group-card"><div class="person-profile-verified">✈️ Ekipa podróżnicza</div><h4>'+escapeHtml(g.name||"Ekipa podróżnicza")+'</h4><div class="person-meta">'+escapeHtml(String(g.memberCount||0))+'/'+escapeHtml(String(g.maxMembers||10))+' osób · '+escapeHtml(label)+'</div>'+(g.description?'<p class="person-about">'+escapeHtml(g.description)+'</p>':'')+'<div class="person-card-actions"><button type="button" class="person-profile-button" data-group-profile-index="'+index+'">Profil ekipy</button><button type="button" class="person-contact" data-group-request-id="'+escapeHtml(g.groupId)+'" '+(!g.canRequest||full||closed?'disabled':'')+'>'+escapeHtml(action)+'</button></div></article>';}).join(""):'');
+results.innerHTML=(people.length?'<div class="team-heading"><strong>Osoby zainteresowane</strong><span>'+escapeHtml(String(Number(data.count)||people.length))+'</span></div>'+people.map((p,index)=>'<article class="person-card"><div class="person-card-avatar" aria-hidden="true">'+(/^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(String(p.photo||''))?'<img src="'+escapeHtml(String(p.photo))+'" alt="">':escapeHtml((p.name||"J").trim().charAt(0).toUpperCase()||"J"))+'</div><h4>'+escapeHtml(p.name||"Użytkownik Juntigo")+'</h4><div class="person-card-topline"><div class="person-meta">'+(p.age?escapeHtml(String(p.age))+' lat':'')+(p.city?' · '+escapeHtml(p.city):'')+'</div>'+(p.verified?'<div class="person-profile-verified">✓ Profil uzupełniony</div>':'')+'</div>'+(p.interests?'<div class="person-interests">'+escapeHtml(p.interests)+'</div>':'')+(p.travelStyle?'<div class="person-interests">Styl: '+escapeHtml(p.travelStyle)+'</div>':'')+(p.trips?'<div class="person-interests">Wyjazdy: '+escapeHtml(formatPersonTripLabels(p.trips).join(", "))+'</div>':'')+(p.about?'<p class="person-about">„'+escapeHtml(p.about)+'”</p>':'')+(p.instagram?'<a class="person-instagram" target="_blank" rel="noopener noreferrer" href="'+getInstagramUrl(p.instagram)+'">'+escapeHtml(p.instagram)+'</a>':'')+(p.userId?'<div class="person-card-actions"><button type="button" class="person-profile-button" data-person-index="'+index+'">Zobacz profil</button><button type="button" class="person-contact" data-person-index="'+index+'" data-trip="'+escapeHtml(trip)+'" data-user-id="'+escapeHtml(p.userId)+'" data-user-name="'+escapeHtml(p.name||"Użytkownik Juntigo")+'" '+(p.alreadyInterested?'disabled':'')+'>'+(p.alreadyMatched?'Dopasowanie utworzone':(p.alreadyInterested?'Zainteresowanie wysłane':'Jestem zainteresowany'))+'</button></div>':'')+'</article>').join(""):'')+(groups.length?'<div class="team-heading"><strong>Ekipy podróżnicze</strong><span>'+groups.length+'</span></div>'+groups.map((g,index)=>{const full=g.status==="Full"||Number(g.memberCount)>=Number(g.maxMembers);const closed=g.status==="Closed";const label=closed?"Ekipa zamknięta":full?"Ekipa pełna":g.requestPending?"Prośba wysłana":"Otwarta na nowych członków";const action=g.isMember?"Jesteś członkiem":g.requestPending?"Prośba wysłana":closed?"Obecnie zamknięta":full?"Brak miejsc":"Jestem zainteresowany";return '<article class="person-card trip-group-card"><div class="person-profile-verified">✈️ Ekipa podróżnicza</div><h4>'+escapeHtml(g.name||"Ekipa podróżnicza")+'</h4><div class="person-meta">'+escapeHtml(String(g.memberCount||0))+'/'+escapeHtml(String(g.maxMembers||10))+' osób · '+escapeHtml(label)+'</div>'+(g.description?'<p class="person-about">'+escapeHtml(g.description)+'</p>':'')+'<div class="person-card-actions"><button type="button" class="person-profile-button" data-group-profile-index="'+index+'">Profil ekipy</button><button type="button" class="person-contact" data-group-request-id="'+escapeHtml(g.groupId)+'" '+(!g.canRequest||full||closed?'disabled':'')+'>'+escapeHtml(action)+'</button></div></article>';}).join(""):'');
 results.querySelectorAll(".person-profile-button[data-person-index]").forEach(b=>b.addEventListener("click",()=>showTripPersonProfile(window.juntigoTeamPeople[Number(b.dataset.personIndex)])));
 results.querySelectorAll(".person-contact[data-user-id]").forEach(b=>b.addEventListener("click",event=>saveInterest(event,b.dataset.trip,b.dataset.userId,b.dataset.userName)));
 results.querySelectorAll("[data-group-request-id]").forEach(b=>b.addEventListener("click",()=>requestTripGroupJoin(b.dataset.groupRequestId,b)));
