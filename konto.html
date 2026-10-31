@@ -707,6 +707,7 @@ async function openAccountTripGroup(groupId,sessionToken){
      try{
       const rr=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"removeTripGroupMember",sessionToken,groupId,targetUserId})});
       const rd=await rr.json();if(!rd.success)throw new Error(rd.error||"Nie udało się usunąć członka.");
+      await showAccountGroupConfirm({title:"Członek został usunięty",message:"Pomyślnie usunięto użytkownika "+memberName+" z ekipy. Nie ma już dostępu do jej czatu ani funkcji członkowskich.",confirmText:"OK"});
       close();await loadAccountTripGroups(sessionToken);await openAccountTripGroup(groupId,sessionToken);
      }catch(error){button.disabled=false;button.textContent="Usuń z ekipy";await showAccountGroupConfirm({title:"Nie udało się usunąć członka",message:error.message||"Wystąpił błąd.",confirmText:"Zamknij"});}
     });
