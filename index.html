@@ -3215,6 +3215,15 @@ async function loadJuntigoNotificationPanel(){
       const trip=formatJuntigoTripName(request.trip||"Wyjazd");
       return {sortKey:"g:"+String(request.timestamp||""),html:'<a href="#" class="juntigo-notification-item is-new" data-notification-type="group-request" data-group-id="'+escapeHtml(groupId)+'" data-group-name="'+escapeHtml(groupName)+'" data-group-trip="'+escapeHtml(trip)+'" title="Rozpatrz prośbę"><span class="juntigo-notification-avatar" aria-hidden="true">✈️</span><span class="juntigo-notification-copy"><strong>Prośba o dołączenie do ekipy</strong><span>'+escapeHtml(groupName)+' · '+escapeHtml(trip)+' · Otwórz profil ekipy, aby rozpatrzyć</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
     });
+    const organizerChanges=notificationData&&notificationData.success&&Array.isArray(notificationData.organizerChangeItems)?notificationData.organizerChangeItems:[];
+    const organizerChangeItems=organizerChanges.slice(0,12).map(notification=>{
+      const groupId=String(notification.groupId||"");
+      const groupName=String(notification.groupName||"Ekipa podróżnicza");
+      const trip=formatJuntigoTripName(notification.trip||"Wyjazd");
+      const title=String(notification.title||"Zostałeś organizatorem ekipy");
+      const message=String(notification.message||("Otrzymałeś uprawnienia organizatora ekipy "+groupName+" — "+trip+"."));
+      return {sortKey:"o:"+String(notification.timestamp||""),html:'<a href="konto.html" class="juntigo-notification-item is-new" data-notification-type="organizer-change" data-notification-id="'+escapeHtml(String(notification.notificationId||""))+'" data-group-id="'+escapeHtml(groupId)+'" data-group-name="'+escapeHtml(groupName)+'" data-group-trip="'+escapeHtml(trip)+'" title="Otwórz swoje ekipy"><span class="juntigo-notification-avatar" aria-hidden="true">👑</span><span class="juntigo-notification-copy"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(message)+' · Otwórz Moje konto, aby zarządzać ekipą</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
+    });
     const messageItems=unreadMessages.slice(0,12).map(message=>{
       const matchId=String(message.matchId||"");
       const name=String(message.senderName||"Użytkownik Juntigo");
@@ -3224,7 +3233,7 @@ async function loadJuntigoNotificationPanel(){
       const messageKey=getNotificationMessageKey(message);
       return {sortKey:"w:"+String(message.timestamp||""),html:'<a class="juntigo-notification-item is-new" href="konto.html?matchId='+encodeURIComponent(matchId)+'" data-notification-type="message" data-match-id="'+escapeHtml(matchId)+'" data-message-key="'+escapeHtml(messageKey)+'" title="Otwórz rozmowę"><span class="juntigo-notification-avatar" aria-hidden="true">✉</span><span class="juntigo-notification-copy"><strong>Nowa wiadomość od '+escapeHtml(name)+'</strong><span>'+escapeHtml(trip)+(city?' · '+escapeHtml(city):'')+' — '+escapeHtml(preview)+'</span></span><span class="juntigo-notification-dot" aria-hidden="true"></span></a>'};
     });
-    const items=groupRequestItems.concat(messageItems,matchItems).sort((a,b)=>String(b.sortKey||"").localeCompare(String(a.sortKey||"")));
+    const items=organizerChangeItems.concat(groupRequestItems,messageItems,matchItems).sort((a,b)=>String(b.sortKey||"").localeCompare(String(a.sortKey||"")));
     if(!items.length){list.innerHTML='<div class="juntigo-notification-empty">Nie masz nowych wiadomości ani powiadomień o dopasowaniach.</div>';return;}
     list.innerHTML=items.map(item=>item.html).join("");
   }catch(error){
@@ -3280,6 +3289,17 @@ async function loadJuntigoNotificationPanel(){
         if(dot)dot.remove();
         const heading=item.querySelector(".juntigo-notification-copy strong");
         if(heading)heading.textContent=heading.textContent.replace("Masz nowe dopasowanie z ","Dopasowanie z ");
+      }
+      if(notificationType==="organizer-change"){
+        event.preventDefault();
+        const notificationId=String(item.dataset.notificationId||"");
+        if(notificationId&&token){
+          try{
+            await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"markGroupNotificationRead",sessionToken:token,notificationId})});
+          }catch(readError){console.warn("Nie udało się oznaczyć powiadomienia o przekazaniu organizacji jako przeczytanego:",readError);}
+        }
+        window.location.href="konto.html";
+        return;
       }
       if(notificationType==="group-request"){
         event.preventDefault();
