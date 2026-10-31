@@ -5200,12 +5200,6 @@ async function saveInterest(trip, toUserId, instagram, contactButton) {
   if (!sessionToken) {
     window.location.href = "konto.html?loginNotice=join";
     return false;
-    const error = document.getElementById("interest-form-error");
-    if (error) {
-      error.innerHTML = 'Aby wysłać zainteresowanie, zaloguj się do Juntigo. <a href="konto.html" style="color:#ff7417;font-weight:700">Przejdź do logowania</a>.';
-      error.style.display = "block";
-    } else window.location.href = "konto.html";
-    return false;
   }
   const normalizedTrip = String(trip || "").trim();
   const normalizedUserId = String(toUserId || "").trim();
