@@ -4164,7 +4164,7 @@ results.querySelectorAll("[data-create-trip-group]").forEach(button=>button.addE
   
 async function requestTripGroupJoin(groupId,button){const token=getJuntigoSessionToken();if(!token){window.location.href="konto.html?loginNotice=join";return;}const old=button.textContent;button.disabled=true;button.textContent="Wysyłanie...";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"requestTripGroupJoin",sessionToken:token,groupId})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się wysłać prośby.");button.textContent="Prośba wysłana";button.classList.add("interest-sent");if(typeof showHomepageTripToast==="function")showHomepageTripToast("Prośba o dołączenie została wysłana do organizatora.");}catch(e){button.disabled=false;button.textContent=old;alert(e.message||"Nie udało się wysłać prośby.");}}
 async function openCreateTripGroup(trip,tripLabel){
- if(!getJuntigoSessionToken()){window.location.href="konto.html";return;}
+ if(!getJuntigoSessionToken()){window.location.href="konto.html?loginNotice=join";return;}
  const old=document.getElementById("create-trip-group-modal");if(old)old.remove();
  const m=document.createElement("div");m.id="create-trip-group-modal";
  m.style.cssText="position:fixed;inset:0;z-index:100400;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(7,27,51,.72);backdrop-filter:blur(3px)";
