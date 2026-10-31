@@ -4162,7 +4162,7 @@ results.querySelectorAll("[data-create-trip-group]").forEach(button=>button.addE
     });
 }
   
-async function requestTripGroupJoin(groupId,button){const token=getJuntigoSessionToken();if(!token){window.location.href="konto.html";return;}const old=button.textContent;button.disabled=true;button.textContent="Wysyłanie...";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"requestTripGroupJoin",sessionToken:token,groupId})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się wysłać prośby.");button.textContent="Prośba wysłana";button.classList.add("interest-sent");if(typeof showHomepageTripToast==="function")showHomepageTripToast("Prośba o dołączenie została wysłana do organizatora.");}catch(e){button.disabled=false;button.textContent=old;alert(e.message||"Nie udało się wysłać prośby.");}}
+async function requestTripGroupJoin(groupId,button){const token=getJuntigoSessionToken();if(!token){window.location.href="konto.html?loginNotice=join";return;}const old=button.textContent;button.disabled=true;button.textContent="Wysyłanie...";try{const r=await fetch(JUNTIGO_API,{method:"POST",body:new URLSearchParams({type:"requestTripGroupJoin",sessionToken:token,groupId})});const d=await r.json();if(!d.success)throw new Error(d.error||"Nie udało się wysłać prośby.");button.textContent="Prośba wysłana";button.classList.add("interest-sent");if(typeof showHomepageTripToast==="function")showHomepageTripToast("Prośba o dołączenie została wysłana do organizatora.");}catch(e){button.disabled=false;button.textContent=old;alert(e.message||"Nie udało się wysłać prośby.");}}
 async function openCreateTripGroup(trip,tripLabel){
  if(!getJuntigoSessionToken()){window.location.href="konto.html";return;}
  const old=document.getElementById("create-trip-group-modal");if(old)old.remove();
@@ -5058,6 +5058,10 @@ function closeInterestForm() {
 }
 
 async function openInterestForm(contactButton) {
+  if (!getJuntigoSessionToken()) {
+    window.location.href = "konto.html?loginNotice=join";
+    return;
+  }
   // Zabezpieczenie przed wysłaniem zainteresowania do własnego profilu.
   const targetUserId = String(contactButton && contactButton.dataset.userId || "").trim();
   if (targetUserId && typeof validateJuntigoSession === "function") {
@@ -5194,6 +5198,8 @@ function showJuntigoMatchModal(personName, tripName) {
 async function saveInterest(trip, toUserId, instagram, contactButton) {
   const sessionToken = getJuntigoSessionToken();
   if (!sessionToken) {
+    window.location.href = "konto.html?loginNotice=join";
+    return false;
     const error = document.getElementById("interest-form-error");
     if (error) {
       error.innerHTML = 'Aby wysłać zainteresowanie, zaloguj się do Juntigo. <a href="konto.html" style="color:#ff7417;font-weight:700">Przejdź do logowania</a>.';
