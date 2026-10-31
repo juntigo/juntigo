@@ -203,7 +203,7 @@
 </script>
 <section class="account-header"><div class="avatar" id="account-avatar">J</div><div><h2 id="account-name">Twój profil</h2><p id="account-city">Zaloguj się, aby wczytać profil.</p><div class="verified" id="account-status">Konto Juntigo</div></div></section>
 <section class="dashboard-grid" aria-label="Nawigacja konta">
-<a href="profil.html" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path></svg></div><div><h3>Mój profil</h3><p>Edytuj zdjęcie, opis, zainteresowania i styl podróżowania.</p></div><span class="arrow">›</span></a>
+<a href="konto.html?loginNotice=profile" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path></svg></div><div><h3>Mój profil</h3><p>Edytuj zdjęcie, opis, zainteresowania i styl podróżowania.</p></div><span class="arrow">›</span></a>
 <a href="#moje-wyjazdy" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 7h18v13H3z"></path><path d="M7 7V4h10v3M8 12h8M8 16h5"></path></svg></div><div><h3>Moje wyjazdy</h3><p>Wyjazdy, którymi jesteś zainteresowany.</p></div><span class="arrow">›</span></a>
 <a href="#moje-ekipy" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M20 8v6M17 11h6"></path></svg></div><div><h3>Moje ekipy</h3><p>Czaty grupowe, prośby i ekipy, które organizujesz.</p></div><span class="arrow">›</span></a>
 <a href="#zainteresowania" class="dashboard-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8A4.6 4.6 0 0 1 12 6.2a4.6 4.6 0 0 1 8.8 2.6Z"></path></svg></div><div><h3>Wysłane zainteresowania</h3><p>Sprawdzaj osoby, którymi jesteś zainteresowany.</p></div><span class="arrow">›</span></a>
@@ -1813,7 +1813,8 @@ function logoutJuntigo(){document.getElementById("logout-button").style.display=
 <script>
 (function showJoinLoginNotice(){
   const params = new URLSearchParams(window.location.search);
-  if (params.get("loginNotice") !== "join") return;
+  const noticeType = params.get("loginNotice");
+  if (noticeType !== "join" && noticeType !== "profile") return;
 
   const modal = document.createElement("div");
   modal.id = "juntigo-login-required-modal";
@@ -1824,7 +1825,7 @@ function logoutJuntigo(){document.getElementById("logout-button").style.display=
       <div aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:62px;height:62px;margin-bottom:18px;border-radius:18px;background:#fff1e7;font-size:30px">✈️</div>
       <div style="margin-bottom:8px;color:#ff7417;font-size:12px;font-weight:900;letter-spacing:2.5px">JUNTIGO</div>
       <h2 id="juntigo-login-required-title" style="margin:0 42px 12px 0;font-size:27px;line-height:1.2">Zaloguj się, aby kontynuować</h2>
-      <p style="margin:0 0 24px;color:#536b84;font-size:16px;line-height:1.65">Aby wysłać zainteresowanie wybranej osobie, dołączyć do istniejącej ekipy lub — jeśli chcesz — utworzyć własną ekipę na wyjazd, musisz zalogować się do Juntigo.</p>
+      <p style="margin:0 0 24px;color:#536b84;font-size:16px;line-height:1.65">${noticeType === "profile" ? "Aby uzupełnić i edytować swój profil, musisz zalogować się do Juntigo." : "Aby wysłać zainteresowanie wybranej osobie, dołączyć do istniejącej ekipy lub — jeśli chcesz — utworzyć własną ekipę na wyjazd, musisz zalogować się do Juntigo."}</p>
       <button type="button" data-go-login style="width:100%;min-height:50px;border:0;border-radius:999px;background:#ff7417;color:#fff;font:inherit;font-weight:800;cursor:pointer">Przejdź do logowania</button>
     </section>`;
   document.body.appendChild(modal);
