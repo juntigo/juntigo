@@ -1824,13 +1824,20 @@ function logoutJuntigo(){document.getElementById("logout-button").style.display=
       <div aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:62px;height:62px;margin-bottom:18px;border-radius:18px;background:#fff1e7;font-size:30px">✈️</div>
       <div style="margin-bottom:8px;color:#ff7417;font-size:12px;font-weight:900;letter-spacing:2.5px">JUNTIGO</div>
       <h2 id="juntigo-login-required-title" style="margin:0 42px 12px 0;font-size:27px;line-height:1.2">Zaloguj się, aby kontynuować</h2>
-      <p style="margin:0 0 24px;color:#536b84;font-size:16px;line-height:1.65">Aby wysłać zainteresowanie wybranej osobie lub wysłać prośbę o dołączenie do ekipy, musisz zalogować się do Juntigo.</p>
-      <button type="button" data-close-login-notice style="width:100%;min-height:50px;border:0;border-radius:999px;background:#ff7417;color:#fff;font:inherit;font-weight:800;cursor:pointer">Przejdź do logowania</button>
+      <p style="margin:0 0 24px;color:#536b84;font-size:16px;line-height:1.65">Aby wysłać zainteresowanie wybranej osobie, dołączyć do ekipy lub utworzyć własną ekipę na wyjazd, musisz zalogować się do Juntigo.</p>
+      <button type="button" data-go-login style="width:100%;min-height:50px;border:0;border-radius:999px;background:#ff7417;color:#fff;font:inherit;font-weight:800;cursor:pointer">Przejdź do logowania</button>
     </section>`;
   document.body.appendChild(modal);
 
   const close = () => modal.remove();
-  modal.querySelectorAll("[data-close-login-notice]").forEach(button => button.addEventListener("click", close));
+  modal.querySelector("[data-close-login-notice]").addEventListener("click", close);
+  modal.querySelector("[data-go-login]").addEventListener("click", () => {
+    close();
+    const loginSection = document.querySelector(".login-section");
+    if (loginSection) loginSection.scrollIntoView({behavior:"smooth",block:"center"});
+    const emailInput = document.getElementById("login-email");
+    if (emailInput) window.setTimeout(() => emailInput.focus({preventScroll:true}), 350);
+  });
   modal.addEventListener("click", event => { if (event.target === modal) close(); });
   document.addEventListener("keydown", function onEscape(event) {
     if (event.key === "Escape" && document.getElementById("juntigo-login-required-modal")) {
