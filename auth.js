@@ -277,6 +277,22 @@ window.fetch = function(input, init) {
         }
       });
     }
+
+    if (
+      method === "POST" &&
+      ["requestEmailCode", "verifyEmailCode"].includes(body.get("type"))
+    ) {
+      return JUNTIGO_NATIVE_FETCH(input, {
+        ...init,
+        body: body.toString(),
+        redirect: "follow",
+        credentials: "omit",
+        headers: {
+          ...(init.headers || {}),
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        }
+      });
+    }
   }
 
   if (isJuntigoGetRequest(input, init)) {
